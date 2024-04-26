@@ -1,8 +1,9 @@
-module org.example.driveractivity {
+module org.driveractivity {
     requires javafx.controls;
     requires javafx.fxml;
+    requires static lombok;
 
 
-    opens org.example.driveractivity to javafx.fxml;
-    exports org.example.driveractivity;
+    opens org.driveractivity to javafx.fxml;
+    exports org.driveractivity;
 }
