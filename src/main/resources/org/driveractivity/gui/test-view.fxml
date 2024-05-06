@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import org.driveractivity.gui.ActivityPane?>
+<?import java.net.URL?>
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.driveractivity.gui.TestController">
+    <stylesheets>
+        <URL value="@activity-pane.css" />
+    </stylesheets>
+    <center>
+        <ActivityPane fx:id="activityPane">
+            
+        </ActivityPane>
+    </center>
+</BorderPane>
