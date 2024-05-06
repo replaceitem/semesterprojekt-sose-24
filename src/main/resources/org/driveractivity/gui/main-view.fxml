@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
-<?import javafx.scene.layout.BorderPane?>
 <?import org.driveractivity.gui.ActivityPane?>
 <?import java.net.URL?>
 <?import javafx.scene.control.*?>
@@ -13,14 +12,10 @@
 </stylesheets>
 <top>
     <MenuBar>
-        <menus>
-            <Menu text="File">
-                <items>
-                    <MenuItem text="Open"/>
-                    <MenuItem text="Save"/>
-                </items>
-            </Menu>
-        </menus>
+        <Menu text="File">
+            <MenuItem text="Open"/>
+            <MenuItem text="Save"/>
+        </Menu>
     </MenuBar>
 </top>
 
