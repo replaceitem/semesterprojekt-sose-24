@@ -1,0 +1,28 @@
+ActivityPane {
+    -fx-padding: 8px;
+    -fx-hgap: 1px;
+    -fx-vgap: 16px;
+}
+
+ActivityBlock {
+    -fx-background-radius: 8px;
+    -fx-pref-height: 70px;
+    -fx-max-height: 70px;
+}
+
+ActivityBlock.activity-block-rest {
+    -fx-background-color: #AAAAAA;
+    -fx-pref-width: 60px;
+}
+ActivityBlock.activity-block-driving {
+    -fx-background-color: #3388CC;
+    -fx-pref-width: 90px;
+}
+ActivityBlock.activity-block-work {
+    -fx-background-color: #CCCC44;
+    -fx-pref-width: 80px;
+}
+ActivityBlock.activity-block-available {
+    -fx-background-color: #33AA33;
+    -fx-pref-width: 120px;
+}

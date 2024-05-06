@@ -4,6 +4,8 @@ module org.driveractivity {
     requires static lombok;
 
 
-    opens org.driveractivity to javafx.fxml;
+    opens org.driveractivity.gui to javafx.fxml;
     exports org.driveractivity;
+    exports org.driveractivity.gui;
+    exports org.driveractivity.entity;
 }
