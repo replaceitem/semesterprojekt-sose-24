@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.layout.BorderPane?>
+<?import org.driveractivity.gui.ActivityPane?>
+<?import java.net.URL?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.driveractivity.gui.MainController">
+<stylesheets>
+    <URL value="@main-view.css" />
+    <URL value="@activity-pane.css" />
+</stylesheets>
+<top>
+    <MenuBar>
+        <menus>
+            <Menu text="File">
+                <items>
+                    <MenuItem text="Open"/>
+                    <MenuItem text="Save"/>
+                </items>
+            </Menu>
+        </menus>
+    </MenuBar>
+</top>
+
+<left>
+    <HBox spacing="10">
+        <Pane/> <!-- Empty space -->
+        <VBox spacing="10">
+            <Pane/> <!-- Empty space -->
+            <Button fx:id="restButton" text="Rest" styleClass="activity-button, activity-rest" onAction="#addActivity"/>
+            <Button fx:id="driveButton" text="Drive" styleClass="activity-button, activity-drive" onAction="#addActivity"/>
+            <Button fx:id="workButton" text="Work" styleClass="activity-button, activity-work" onAction="#addActivity"/>
+            <Button fx:id="availableButton" text="Available" styleClass="activity-button, activity-available" onAction="#addActivity"/>
+        </VBox>
+        <Separator orientation="VERTICAL"/> <!-- Divider -->
+    </HBox>
+</left>
+
+<center>
+    <ActivityPane fx:id="activityPane"/>
+</center>
+</BorderPane>

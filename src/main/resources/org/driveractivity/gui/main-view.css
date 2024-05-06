@@ -1,0 +1,47 @@
+.activity-button {
+    -fx-background-radius: 8px;
+    -fx-pref-width: 75px;
+    -fx-padding: 10px;
+}
+
+.activity-rest {
+    -fx-background-color: #AAAAAA;
+}
+.activity-rest:hover {
+    -fx-background-color: #999999;
+}
+.activity-rest:pressed {
+    -fx-background-color: #777777;
+}
+
+.activity-drive {
+    -fx-background-color: #3388CC;
+}
+.activity-drive:hover {
+    -fx-background-color: #1F6DBE;
+}
+.activity-drive:pressed {
+    -fx-background-color: #125491;
+}
+
+
+.activity-work {
+    -fx-background-color: #CCCC44;
+}
+.activity-work:hover {
+    -fx-background-color: #B3B31D;
+}
+.activity-work:pressed {
+    -fx-background-color: #99991A;
+}
+
+
+.activity-available {
+    -fx-background-color: #33AA33;
+}
+.activity-available:hover {
+    -fx-background-color: #269326;
+}
+.activity-available:pressed {
+    -fx-background-color: #1A751A;
+}
