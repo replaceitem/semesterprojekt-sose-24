@@ -13,4 +13,8 @@ public class ActivityPane extends FlowPane implements ActivityDisplay {
         ObservableList<Node> children = this.getChildren();
         activities.stream().map(ActivityBlock::new).forEach(children::add);
     }
+    public void load(Activity activity) {
+        ObservableList<Node> children = this.getChildren();
+        children.add(new ActivityBlock(activity));
+    }
 }
