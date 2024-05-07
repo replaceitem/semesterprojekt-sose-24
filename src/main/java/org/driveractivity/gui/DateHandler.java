@@ -1,4 +1,4 @@
-package org.example.demo1;
+package org.driveractivity.gui;
 
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -14,62 +14,85 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.scene.control.Button;
 import javafx.stage.StageStyle;
+import lombok.Setter;
+import org.driveractivity.entity.Activity;
+import org.driveractivity.entity.ActivityType;
 
-import javax.swing.*;
-import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
+import java.time.Duration;
+import java.time.LocalDateTime;
 import java.util.ResourceBundle;
 
-public class DateHandler extends Component implements Initializable {
+public class DateHandler implements Initializable {
 
-    public Label errorLable;
-    private String acktivity;
+    @FXML
+    private Label errorLable;
+
+    private Activity return_activity = new Activity(ActivityType.AVAILABLE,Duration.between(LocalDateTime.now(),LocalDateTime.now()),LocalDateTime.now());;
+    @FXML
     private Stage dialogStage;
-    public GridPane myGridPane;
-    public ComboBox cb_Hour_start;
-    public ComboBox cb_Hour_end;
-    public ComboBox cb_Hour_duration;
-    public ComboBox cb_minute_start;
-    public ComboBox cb_minute_end;
-    public ComboBox cb_minute_duration;
-    public ComboBox cb_second_start;
-    public ComboBox cb_second_end;
-    public ComboBox cb_second_duration;
-    public CheckBox aktiv_duration;
-    public CheckBox aktiv_end;
-    public CheckBox aktiv_start;
+    @FXML
+    private GridPane myGridPane;
+    @FXML
+    private ComboBox cb_Hour_start;
+    @FXML
+    private ComboBox cb_Hour_end;
+    @FXML
+    private ComboBox cb_Hour_duration;
+    @FXML
+    private ComboBox cb_minute_start;
+    @FXML
+    private ComboBox cb_minute_end;
+    @FXML
+    private ComboBox cb_minute_duration;
+    @FXML
+    private ComboBox cb_second_start;
+    @FXML
+    private ComboBox cb_second_end;
+    @FXML
+    private ComboBox cb_second_duration;
+    @FXML
+    private CheckBox aktiv_duration;
+    @FXML
+    private CheckBox aktiv_end;
+    @FXML
+    private CheckBox aktiv_start;
     @FXML
     private Button processButton;
+    @Setter
+    private ActivityType activityType;
 
 
-
-    public String openDateHandlerStage(Stage ownerStage,String type) {
+    public Activity openDateHandlerStage() {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/example/demo1/DataHandler.fxml"));
+            FXMLLoader loader = new FXMLLoader(getClass().getResource("/org/driveractivity/gui/DataHandler.fxml"));
+            //    org/driveractivity/gui/DataHandler.fxml
             Parent root = loader.load();
             // Erhalte die aktuelle Instanz, um auf FXML-Elemente zuzugreifen
             DateHandler controller = loader.getController();
             dialogStage = new Stage();
-            dialogStage.initOwner(ownerStage);
+            //dialogStage.initOwner(ownerStage);
 
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initStyle(StageStyle.UTILITY);
             // Scene und Titel festlegen
             dialogStage.setScene(new Scene(root, 300, 200));
-            dialogStage.setTitle("Setting up "+ type +"...");
-
+            dialogStage.setTitle("Setting up "+ activityType +"...");
+            return_activity = new Activity(activityType,Duration.between(LocalDateTime.now(),LocalDateTime.now()),LocalDateTime.now());
             // Zeige das neue Fenster und setze es in den Vordergrund
             dialogStage.toFront();
-            //dialogStage.show();
-            dialogStage.showAndWait();
-            return acktivity;
+
+            dialogStage.show();
+            //dialogStage.showAndWait();
+            return return_activity;
 
         } catch (IOException e) {
             e.printStackTrace();
         }
         return null;
     }
+
     private ComboBox<String> cloneComboBox(ComboBox<String> original) {
         // Erstellen einer neuen ComboBox und Kopieren von Eigenschaften
         ComboBox<String> newComboBox = new ComboBox<>();
@@ -178,6 +201,30 @@ public class DateHandler extends Component implements Initializable {
     }
 
     public void processButtonAonAction(ActionEvent actionEvent) {
+
+
+        Integer hour = Integer.valueOf(cb_Hour_start.getValue().toString());
+        Integer minute = Integer.valueOf(cb_minute_start.getValue().toString());
+        Integer second = Integer.valueOf(cb_second_start.getValue().toString());
+
+        LocalDateTime startValue =  LocalDateTime.now()
+                .withHour(hour)
+                .withMinute(minute)
+                .withSecond(second);
+
+        hour = Integer.valueOf(cb_Hour_start.getValue().toString());
+        minute = Integer.valueOf(cb_minute_start.getValue().toString());
+        second = Integer.valueOf(cb_second_start.getValue().toString());
+
+        LocalDateTime endValue =  LocalDateTime.now()
+                .withHour(hour)
+                .withMinute(minute)
+                .withSecond(second);
+
+
+        return_activity.setDuration(Duration.between(startValue,endValue));
+        return_activity.setStartTime(startValue);
+
         Stage stage = (Stage) processButton.getScene().getWindow();
         stage.close();
     }

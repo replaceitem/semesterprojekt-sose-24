@@ -5,9 +5,12 @@ import javafx.fxml.Initializable;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
+import org.driveractivity.entity.Activity;
 
 import java.net.URL;
 import java.util.ResourceBundle;
+
+import static org.driveractivity.entity.ActivityType.*;
 
 public class MainController implements Initializable {
     @FXML
@@ -30,21 +33,22 @@ public class MainController implements Initializable {
     @FXML
     private void addActivity(ActionEvent event) {
         Button button = (Button) event.getSource();
-
+        DateHandler dh = new DateHandler();
         if (button == restButton) {
-            // open dialog
+            dh.setActivityType(REST);
+            Activity a = dh.openDateHandlerStage();
             System.out.println("restButton");
         }
         else if (button == driveButton) {
-            // open dialog
+            dh.openDateHandlerStage();
             System.out.println("driveButton");
         }
         else if (button == workButton) {
-            // open dialog
+            dh.openDateHandlerStage();
             System.out.println("workButton");
         }
         else if (button == availableButton) {
-            // open dialog
+            dh.openDateHandlerStage();
             System.out.println("availableButton");
         }
         else{
