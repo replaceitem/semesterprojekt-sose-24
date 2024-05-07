@@ -8,6 +8,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.driveractivity.entity.ActivityType.WORK;
@@ -67,9 +68,11 @@ public class DriverServiceTest {
     @Test
     public void importFrom() {
         ClassLoader classLoader = getClass().getClassLoader();
-        File file = new File(classLoader.getResource("Beispiel2.xml").getFile());
+        File file = new File(Objects.requireNonNull(classLoader.getResource("Beispiel2.xml")).getFile());
         DriverService driverService = new DriverService();
         List<Day> days = driverService.importFrom(file);
         assertThat(days.size()).isEqualTo(2);
+        //first activity of first day should be one hour long
+        assertThat(days.getFirst().getActivities().getFirst().getDuration()).isEqualTo(Duration.of(1, ChronoUnit.HOURS));
     }
 }

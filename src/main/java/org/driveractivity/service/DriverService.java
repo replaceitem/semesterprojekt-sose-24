@@ -1,5 +1,6 @@
 package org.driveractivity.service;
 
+import lombok.Getter;
 import org.driveractivity.DTO.ITFTestFileDTO;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityGroup;
@@ -13,8 +14,9 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
+@Getter
 public class DriverService implements DriverInterface {
-    private ArrayList<Activity> activities;
+    private final ArrayList<Activity> activities;
 
     public DriverService() {
         activities = new ArrayList<>();
@@ -23,7 +25,7 @@ public class DriverService implements DriverInterface {
     @Override
     public ArrayList<Activity> addBlock(Activity activity) {
         if(!activities.isEmpty()) {
-            Activity last = activities.get(activities.size()-1);
+            Activity last = activities.getLast();
             activity.setStartTime(last.getEndTime());
         }
         activities.add(activity);
@@ -37,7 +39,7 @@ public class DriverService implements DriverInterface {
         }
         // X X X X X X
         if(index == 0) {
-            activity.setStartTime(activities.get(0).getStartTime());
+            activity.setStartTime(activities.getFirst().getStartTime());
         } else {
             activity.setStartTime(activities.get(index-1).getEndTime());
         }
@@ -76,7 +78,4 @@ public class DriverService implements DriverInterface {
         }
     }
 
-    public ArrayList<Activity> getActivities() {
-        return activities;
-    }
 }

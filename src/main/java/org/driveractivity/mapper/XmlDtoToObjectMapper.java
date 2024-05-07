@@ -1,6 +1,5 @@
 package org.driveractivity.mapper;
 
-import javafx.util.converter.LocalDateStringConverter;
 import org.driveractivity.DTO.ActivityDTO;
 import org.driveractivity.DTO.ActivityGroupDTO;
 import org.driveractivity.DTO.DayDTO;
@@ -9,14 +8,11 @@ import org.driveractivity.entity.ActivityGroup;
 import org.driveractivity.entity.ActivityType;
 import org.driveractivity.entity.Day;
 
-import javax.swing.text.DateFormatter;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
 import java.util.List;
 
 public class XmlDtoToObjectMapper { //name is WIP
@@ -36,9 +32,21 @@ public class XmlDtoToObjectMapper { //name is WIP
                 .activities(mapActivities(dayDTO.getActivities(), LocalDate.parse(dayDTO.getDate(), formatter)))
                 .build();
     }
+    private static List<Activity> addDurationToActivities(List<Activity> activities) {
+        var it = activities.iterator();
+        Activity current = it.next();
+        while(it.hasNext()) {
+            Activity next = it.next();
+            current.setDuration(Duration.between(current.getStartTime(), next.getStartTime()));
+            current = next;
+            if(!it.hasNext()) {
+                current.setDuration(Duration.between(current.getStartTime(), LocalDateTime.of(current.getStartTime().toLocalDate(), LocalTime.of(23, 59))));
+            }
+        }
+        return activities;
+    }
     private static List<Activity> mapActivities(List<ActivityDTO> activities, LocalDate date) {
-
-        return activities.stream().map(x -> mapActivity(x, date)).toList();
+        return addDurationToActivities(activities.stream().map(x -> mapActivity(x, date)).toList());
     }
     private static Activity mapActivity(ActivityDTO activityDTO, LocalDate date) {
         return Activity.builder()
