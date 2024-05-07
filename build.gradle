@@ -36,6 +36,10 @@ javafx {
 
 
 dependencies {
+
+    implementation("jakarta.xml.bind:jaxb-api:2.3.1")
+    implementation("org.glassfish.jaxb:jaxb-runtime:2.3.1")
+    implementation("com.sun.xml.bind:2.3.3")
     compileOnly 'org.projectlombok:lombok:1.18.32'
     annotationProcessor 'org.projectlombok:lombok:1.18.32'
 

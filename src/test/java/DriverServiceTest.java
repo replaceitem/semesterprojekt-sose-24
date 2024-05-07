@@ -1,10 +1,13 @@
 import org.driveractivity.entity.Activity;
+import org.driveractivity.entity.Day;
 import org.driveractivity.service.DriverService;
 import org.junit.jupiter.api.Test;
 
+import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.driveractivity.entity.ActivityType.WORK;
@@ -60,5 +63,13 @@ public class DriverServiceTest {
         } catch (IndexOutOfBoundsException e) {
             assertThat(e).isInstanceOf(IndexOutOfBoundsException.class);
         }
+    }
+    @Test
+    public void importFrom() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(classLoader.getResource("Beispiel2.xml").getFile());
+        DriverService driverService = new DriverService();
+        List<Day> days = driverService.importFrom(file);
+        assertThat(days.size()).isEqualTo(2);
     }
 }

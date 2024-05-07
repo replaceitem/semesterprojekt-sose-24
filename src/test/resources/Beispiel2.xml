@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ITFTestFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<Activities>
+		<!-- Monday -->	
+		<Day date="03.01.2005" presenceCounter = "1" distance="100">
+            <Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="03:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+		</Day>
+		<Day date="04.01.2005" presenceCounter = "2" distance="100">
+            <Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+		</Day>
+		
+
+	</Activities>
+	<SpecificConditions>
+		<SpecificCondition timestamp="31.12.2004 18:50" type="beginOutOfScope" />
+		<SpecificCondition timestamp="31.12.2004 18:51" type="endOutOfScope" />
+		
+		<SpecificCondition timestamp="03.01.2005 03:00" type="beginFT" />
+		<SpecificCondition timestamp="03.01.2005 03:01" type="endFT" />
+	</SpecificConditions>
+    
+     <Places>
+		<Place timestamp="03.05.2005 03:30" type="endManual" country="13" region="0" odometer="100" />
+		<Place timestamp="03.05.2005 18:30" type="beginManual" country="13" region="0" odometer="100" />
+	</Places>
+    
+</ITFTestFile>

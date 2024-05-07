@@ -15,7 +15,6 @@ import java.time.temporal.ChronoUnit;
 public class Activity {
     @NonNull
     private ActivityType type;
-    @NonNull
     private Duration duration;
     private LocalDateTime startTime;
 
