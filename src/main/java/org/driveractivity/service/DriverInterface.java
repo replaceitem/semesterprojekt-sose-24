@@ -1,9 +1,11 @@
 package org.driveractivity.service;
 
 import org.driveractivity.entity.Activity;
+import org.driveractivity.entity.Day;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface DriverInterface {
     ArrayList<Activity> addBlock(Activity activity);
@@ -11,5 +13,5 @@ public interface DriverInterface {
     ArrayList<Activity> removeBlock(int index);
     ArrayList<Activity> changeBlock(int index);
     void exportToXML();
-    void importFrom(File f);
+    List<Day> importFrom(File f);
 }

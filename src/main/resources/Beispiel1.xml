@@ -1,0 +1,263 @@
+<ITFTestFile xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+	<Activities>
+		<Day date="04.12.2004" presenceCounter="1" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular weekly  -->
+		</Day>
+		<Day date="05.12.2004" presenceCounter="2" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular weekly  -->
+			<Activity time="23:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+		</Day>
+		<!--  Monday  -->
+		<Day date="06.12.2004" presenceCounter="3" distance="100">
+			<Activity time="00:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+		</Day>
+		<Day date="07.12.2004" presenceCounter="4" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+		</Day>
+		<Day date="08.12.2004" presenceCounter="5" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+		</Day>
+		<Day date="09.12.2004" presenceCounter="6" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+		</Day>
+		<Day date="10.12.2004" presenceCounter="7" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular weekly  -->
+		</Day>
+		<Day date="11.12.2004" presenceCounter="8" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular weekly  -->
+		</Day>
+		<Day date="12.12.2004" presenceCounter="9" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular weekly  -->
+			<Activity time="23:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+		</Day>
+		<!--  Monday  -->
+		<Day date="13.12.2004" presenceCounter="10" distance="100">
+			<Activity time="00:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+		</Day>
+		<Day date="14.12.2004" presenceCounter="11" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+		</Day>
+		<Day date="15.12.2004" presenceCounter="12" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+		</Day>
+		<Day date="16.12.2004" presenceCounter="13" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+		</Day>
+		<Day date="17.12.2004" presenceCounter="14" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+		</Day>
+		<Day date="18.12.2004" presenceCounter="15" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+			<Activity time="01:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="14:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  reduced weekly  -->
+		</Day>
+		<Day date="19.12.2004" presenceCounter="16" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  reduced weekly  -->
+			<Activity time="23:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+		</Day>
+		<!--  Monday  -->
+		<Day date="20.12.2004" presenceCounter="17" distance="100">
+			<Activity time="00:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+		</Day>
+		<Day date="21.12.2004" presenceCounter="18" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+		</Day>
+		<Day date="22.12.2004" presenceCounter="19" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+		</Day>
+		<Day date="23.12.2004" presenceCounter="20" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+		</Day>
+		<Day date="24.12.2004" presenceCounter="21" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+		</Day>
+		<Day date="25.12.2004" presenceCounter="22" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+			<Activity time="01:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="04:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular weekly  -->
+		</Day>
+		<Day date="26.12.2004" presenceCounter="23" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular weekly  -->
+		</Day>
+		<!--  Monday  -->
+		<Day date="27.12.2004" presenceCounter="24" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular weekly  -->
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+		</Day>
+		<Day date="28.12.2004" presenceCounter="25" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+		</Day>
+		<Day date="29.12.2004" presenceCounter="26" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+		</Day>
+		<Day date="30.12.2004" presenceCounter="27" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+		</Day>
+		<Day date="31.12.2004" presenceCounter="28" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="06:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="10:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  reduced daily  -->
+		</Day>
+		<Day date="01.01.2005" presenceCounter="29" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular daily  -->
+			<Activity time="01:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="04:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular weekly  -->
+		</Day>
+		<Day date="02.01.2005" presenceCounter="30" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  regular weekly  -->
+		</Day>
+		<!--  Monday  -->
+		<Day date="03.01.2005" presenceCounter="31" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="driving" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="05:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<!--  reduced daily  -->
+			<Activity time="14:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+		</Day>
+		<Day date="04.01.2005" presenceCounter="32" distance="100">
+			<Activity time="00:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+		</Day>
+		<Day date="05.01.2005" presenceCounter="33" distance="100">
+			<Activity time="00:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+		</Day>
+		<Day date="06.01.2005" presenceCounter="34" distance="100">
+			<Activity time="00:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+		</Day>
+		<Day date="07.01.2005" presenceCounter="35" distance="100">
+			<Activity time="00:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+		</Day>
+		<Day date="08.01.2005" presenceCounter="36" distance="100">
+			<Activity time="00:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="08:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="08:30" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+		</Day>
+		<Day date="09.01.2005" presenceCounter="37" distance="100">
+			<Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:30" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="01:35" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="02:35" activity="work" slot="driver" status="single" cardStatus="inserted"/>
+		</Day>
+	</Activities>
+	<SpecificConditions>
+		<SpecificCondition timestamp="31.12.2004 18:50" type="beginOutOfScope"/>
+		<SpecificCondition timestamp="31.12.2004 18:51" type="endOutOfScope"/>
+		<SpecificCondition timestamp="08.01.2005 01:00" type="beginFT"/>
+		<SpecificCondition timestamp="08.01.2005 01:01" type="endFT"/>
+	</SpecificConditions>
+	<Places>
+		<Place timestamp="03.01.2005 03:30" type="endManual" country="13" region="0" odometer="100"/>
+		<Place timestamp="03.01.2005 18:30" type="beginManual" country="13" region="0" odometer="100"/>
+	</Places>
+</ITFTestFile>

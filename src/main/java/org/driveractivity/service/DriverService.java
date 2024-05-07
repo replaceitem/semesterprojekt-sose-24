@@ -1,9 +1,17 @@
 package org.driveractivity.service;
 
+import org.driveractivity.DTO.ITFTestFileDTO;
 import org.driveractivity.entity.Activity;
+import org.driveractivity.entity.ActivityGroup;
+import org.driveractivity.entity.Day;
+import org.driveractivity.mapper.XmlDtoToObjectMapper;
 
+import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBException;
+import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public class DriverService implements DriverInterface {
     private ArrayList<Activity> activities;
@@ -56,8 +64,16 @@ public class DriverService implements DriverInterface {
     }
 
     @Override
-    public void importFrom(File f) {
-
+    public List<Day> importFrom(File f) {
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(ITFTestFileDTO.class);
+            Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
+            ITFTestFileDTO itfTestFileDTO = (ITFTestFileDTO) unmarshaller.unmarshal(f);
+            ActivityGroup group = XmlDtoToObjectMapper.map(itfTestFileDTO.getActivityGroup());
+            return group.getDays();
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     public ArrayList<Activity> getActivities() {
