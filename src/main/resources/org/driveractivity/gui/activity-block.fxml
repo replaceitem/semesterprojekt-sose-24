@@ -4,6 +4,7 @@
 <?import javafx.scene.layout.*?>
 
 <fx:root type="StackPane" xmlns="http://javafx.com/javafx" xmlns:fx="http://javafx.com/fxml">
+    <Pane fx:id="dividers"/>
     <AnchorPane>
         <Label fx:id="startTime" AnchorPane.bottomAnchor="2" AnchorPane.leftAnchor="2"/>
     </AnchorPane>

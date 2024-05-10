@@ -26,3 +26,9 @@ ActivityBlock.activity-block-available {
     -fx-background-color: #33AA33;
     -fx-pref-width: 120px;
 }
+
+.day-divider-line {
+    -fx-stroke-width: 1px;
+    -fx-stroke: #CC5555;
+    -fx-stroke-dash-array: 4 4;
+}
