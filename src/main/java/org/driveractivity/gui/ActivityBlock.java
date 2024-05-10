@@ -27,7 +27,7 @@ public class ActivityBlock extends StackPane implements Initializable {
             .appendValue(ChronoField.MINUTE_OF_HOUR, 2)
             .toFormatter();
 
-    private Activity activity;
+    private final Activity activity;
     
     @FXML
     public Label name;
@@ -35,8 +35,8 @@ public class ActivityBlock extends StackPane implements Initializable {
     public Label startTime;
     @FXML
     public Label duration;
-
-    public ActivityBlock() {
+    
+    public ActivityBlock(Activity activity) {
         FXMLLoader loader = new FXMLLoader(LAYOUT_URL);
         loader.setRoot(this);
         loader.setController(this);
@@ -45,19 +45,10 @@ public class ActivityBlock extends StackPane implements Initializable {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-    }
-    
-    public ActivityBlock(Activity activity) {
-        this();
-        this.setActivity(activity);
-    }
-
-    private void setActivity(Activity activity) {
         this.activity = activity;
         name.setText(formatTypeName(activity.getType()));
         startTime.setText(activity.getStartTime().format(START_TIME_FORMATTER));
         duration.setText(formatDuration(activity.getDuration()));
-        this.getStyleClass().removeIf(string -> string.contains("activity-block-"));
         this.getStyleClass().add(getCssClassForType(activity.getType()));
     }
 
