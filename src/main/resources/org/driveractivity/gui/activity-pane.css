@@ -10,19 +10,19 @@ ActivityBlock {
     -fx-max-height: 70px;
 }
 
-ActivityBlock.activity-block-rest {
+ActivityBlock.activity-rest {
     -fx-background-color: #AAAAAA;
     -fx-pref-width: 60px;
 }
-ActivityBlock.activity-block-driving {
+ActivityBlock.activity-driving {
     -fx-background-color: #3388CC;
     -fx-pref-width: 90px;
 }
-ActivityBlock.activity-block-work {
+ActivityBlock.activity-work {
     -fx-background-color: #CCCC44;
     -fx-pref-width: 80px;
 }
-ActivityBlock.activity-block-available {
+ActivityBlock.activity-available {
     -fx-background-color: #33AA33;
     -fx-pref-width: 120px;
 }

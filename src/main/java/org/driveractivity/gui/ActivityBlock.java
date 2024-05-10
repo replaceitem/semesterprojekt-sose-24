@@ -23,6 +23,8 @@ import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.time.temporal.TemporalField;
+import java.util.EnumMap;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 public class ActivityBlock extends StackPane implements Initializable {
@@ -62,7 +64,7 @@ public class ActivityBlock extends StackPane implements Initializable {
         name.setText(formatTypeName(activity.getType()));
         startTime.setText(activity.getStartTime().format(START_TIME_FORMATTER));
         duration.setText(formatDuration(activity.getDuration()));
-        this.getStyleClass().add(getCssClassForType(activity.getType()));
+        this.getStyleClass().add(CSS_CLASS.get(activity.getType()));
         createDivisorLines();
     }
     
@@ -104,8 +106,11 @@ public class ActivityBlock extends StackPane implements Initializable {
             return String.format("%.01fh", decimalHours);
         }
     }
-
-    private static String getCssClassForType(ActivityType type) {
-        return "activity-block-" + type.name().toLowerCase();
-    }
+    
+    private static final Map<ActivityType,String> CSS_CLASS = new EnumMap<>(Map.of(
+            ActivityType.REST, "activity-rest",
+            ActivityType.DRIVING, "activity-drive",
+            ActivityType.WORK, "activity-work",
+            ActivityType.AVAILABLE, "activity-available"
+    ));
 }
