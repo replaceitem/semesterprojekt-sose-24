@@ -16,9 +16,8 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
-import java.util.ResourceBundle;
 
-public class ActivityBlock extends StackPane implements Initializable {
+public class ActivityBlock extends StackPane {
     
     private static final URL LAYOUT_URL = ActivityBlock.class.getResource("activity-block.fxml");
     private static final DateTimeFormatter START_TIME_FORMATTER = new DateTimeFormatterBuilder()
@@ -50,11 +49,6 @@ public class ActivityBlock extends StackPane implements Initializable {
         startTime.setText(activity.getStartTime().format(START_TIME_FORMATTER));
         duration.setText(formatDuration(activity.getDuration()));
         this.getStyleClass().add(getCssClassForType(activity.getType()));
-    }
-
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
-        StackPane.setAlignment(startTime, Pos.BOTTOM_LEFT);
     }
     
     private static String formatTypeName(ActivityType type) {
