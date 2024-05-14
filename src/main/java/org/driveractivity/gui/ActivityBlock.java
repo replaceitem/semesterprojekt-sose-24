@@ -12,6 +12,7 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;
+import lombok.Getter;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
 
@@ -38,6 +39,8 @@ public class ActivityBlock extends StackPane implements Initializable {
             .toFormatter();
 
     private final Activity activity;
+    @Getter
+    private final int activityIndex;
     
     @FXML
     public Label name;
@@ -58,8 +61,9 @@ public class ActivityBlock extends StackPane implements Initializable {
     @FXML
     public Menu contextMenuInsertAfter;
     
-    public ActivityBlock(Activity activity) {
+    public ActivityBlock(Activity activity, int activityIndex) {
         this.activity = activity;
+        this.activityIndex = activityIndex;
         FXMLLoader loader = new FXMLLoader(LAYOUT_URL);
         loader.setRoot(this);
         loader.setController(this);

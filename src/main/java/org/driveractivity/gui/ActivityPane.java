@@ -6,15 +6,27 @@ import javafx.scene.layout.FlowPane;
 import org.driveractivity.entity.Activity;
 
 import java.util.List;
+import java.util.ListIterator;
 
 public class ActivityPane extends FlowPane implements ActivityDisplay {
     @Override
     public void load(List<Activity> activities) {
         ObservableList<Node> children = this.getChildren();
-        activities.stream().map(ActivityBlock::new).forEach(children::add);
+        children.clear();
+        ListIterator<Activity> iterator = activities.listIterator();
+        while (iterator.hasNext()) {
+            int activityIndex = iterator.nextIndex();
+            Activity activity = iterator.next();
+            children.add(new ActivityBlock(activity, activityIndex));
+        }
     }
-    public void load(Activity activity) {
+    public void addBack(Activity activity) {
         ObservableList<Node> children = this.getChildren();
-        children.add(new ActivityBlock(activity));
+        int newIndex = children.reversed().stream()
+                .filter(node -> node instanceof ActivityBlock)
+                .findFirst()
+                .map(node -> ((ActivityBlock) node).getActivityIndex())
+                .orElse(0) + 1;
+        children.add(new ActivityBlock(activity, newIndex));
     }
 }

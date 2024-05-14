@@ -9,7 +9,6 @@ import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.ResourceBundle;
 
@@ -45,25 +44,25 @@ public class MainController implements Initializable {
             currentActivityType = REST;
             dh.openDateHandlerStage();
             System.out.println("restButton");
-            activityPane.load(activities.getLast());
+            activityPane.addBack(activities.getLast());
         }
         else if (button == driveButton) {
             currentActivityType = DRIVING;
             dh.openDateHandlerStage();
             System.out.println("driveButton");
-            activityPane.load(activities.getLast());
+            activityPane.addBack(activities.getLast());
         }
         else if (button == workButton) {
             currentActivityType = WORK;
             dh.openDateHandlerStage();
             System.out.println("workButton");
-            activityPane.load(activities.getLast());
+            activityPane.addBack(activities.getLast());
         }
         else if (button == availableButton) {
             currentActivityType = AVAILABLE;
             dh.openDateHandlerStage();
             System.out.println("availableButton");
-            activityPane.load(activities.getLast());
+            activityPane.addBack(activities.getLast());
         }
         else{
             System.out.println("unknown button");
