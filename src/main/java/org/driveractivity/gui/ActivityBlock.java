@@ -4,9 +4,11 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Group;
 import javafx.scene.Node;
+import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
+import javafx.scene.control.Menu;
+import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;
@@ -22,7 +24,6 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeFormatterBuilder;
 import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
-import java.time.temporal.TemporalField;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -46,6 +47,16 @@ public class ActivityBlock extends StackPane implements Initializable {
     public Label duration;
     @FXML
     public Pane dividers;
+    @FXML
+    public ContextMenu contextMenu;
+    @FXML
+    public MenuItem contextMenuEdit;
+    @FXML
+    public MenuItem contextMenuDelete;
+    @FXML
+    public Menu contextMenuInsertBefore;
+    @FXML
+    public Menu contextMenuInsertAfter;
     
     public ActivityBlock(Activity activity) {
         this.activity = activity;
@@ -66,6 +77,30 @@ public class ActivityBlock extends StackPane implements Initializable {
         duration.setText(formatDuration(activity.getDuration()));
         this.getStyleClass().add(CSS_CLASS.get(activity.getType()));
         createDivisorLines();
+        this.setOnContextMenuRequested(event -> contextMenu.show(this, event.getScreenX(), event.getScreenY()));
+        contextMenuEdit.setOnAction(actionEvent -> {
+            System.out.println("Edit");
+        });
+        contextMenuDelete.setOnAction(actionEvent -> {
+            System.out.println("Delete");
+        });
+
+        setContextMenuInsertAction(contextMenuInsertBefore, 0);
+        setContextMenuInsertAction(contextMenuInsertAfter, 1);
+    }
+    
+    private void setContextMenuInsertAction(Menu menu, int shift) {
+        for (MenuItem item : menu.getItems()) {
+            String userData = item.getUserData().toString();
+            try {
+                ActivityType activityType = ActivityType.valueOf(userData.toUpperCase());
+                item.setOnAction(actionEvent -> {
+                    System.out.println("Adding " + activityType + " with shift " + shift);
+                });
+            } catch (IllegalArgumentException e) {
+                System.err.println("Invalid userData does not match an ActivityType: " + userData);
+            }
+        }
     }
     
     private void createDivisorLines() {
