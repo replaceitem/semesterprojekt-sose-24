@@ -23,6 +23,11 @@ public class DriverService implements DriverInterface {
     }
 
     @Override
+    public ArrayList<Activity> getBlocks() {
+        return activities;
+    }
+
+    @Override
     public ArrayList<Activity> addBlock(Activity activity) {
         if(!activities.isEmpty()) {
             Activity last = activities.getLast();

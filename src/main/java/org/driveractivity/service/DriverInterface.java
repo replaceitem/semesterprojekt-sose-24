@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public interface DriverInterface {
+    ArrayList<Activity> getBlocks();
     ArrayList<Activity> addBlock(Activity activity);
     ArrayList<Activity> addBlock(int index, Activity activity);
     ArrayList<Activity> removeBlock(int index);
