@@ -20,6 +20,8 @@ public class ActivityPane extends FlowPane implements ActivityDisplay {
             children.add(new ActivityBlock(activity, activityIndex));
         }
     }
+    
+    @Override
     public void addBack(Activity activity) {
         ObservableList<Node> children = this.getChildren();
         int newIndex = children.reversed().stream()
