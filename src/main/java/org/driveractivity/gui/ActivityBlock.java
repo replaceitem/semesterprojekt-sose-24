@@ -13,6 +13,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;
 import lombok.Getter;
+import lombok.Setter;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
 
@@ -39,9 +40,10 @@ public class ActivityBlock extends StackPane implements Initializable {
             .toFormatter();
 
     private final Activity activity;
-    @Getter
-    private final int activityIndex;
-    
+    @Getter @Setter
+    private int activityIndex;
+    private final ActivityDisplay display;
+
     @FXML
     public Label name;
     @FXML
@@ -61,8 +63,9 @@ public class ActivityBlock extends StackPane implements Initializable {
     @FXML
     public Menu contextMenuInsertAfter;
     
-    public ActivityBlock(Activity activity, int activityIndex) {
+    public ActivityBlock(ActivityDisplay display, Activity activity, int activityIndex) {
         this.activity = activity;
+        this.display = display;
         this.activityIndex = activityIndex;
         FXMLLoader loader = new FXMLLoader(LAYOUT_URL);
         loader.setRoot(this);
@@ -76,21 +79,29 @@ public class ActivityBlock extends StackPane implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        name.setText(formatTypeName(activity.getType()));
-        startTime.setText(activity.getStartTime().format(START_TIME_FORMATTER));
-        duration.setText(formatDuration(activity.getDuration()));
-        this.getStyleClass().add(CSS_CLASS.get(activity.getType()));
-        createDivisorLines();
+        reload();
         this.setOnContextMenuRequested(event -> contextMenu.show(this, event.getScreenX(), event.getScreenY()));
         contextMenuEdit.setOnAction(actionEvent -> {
             System.out.println("Edit");
         });
         contextMenuDelete.setOnAction(actionEvent -> {
-            System.out.println("Delete");
+            display.removeActivity(activityIndex);
         });
 
         setContextMenuInsertAction(contextMenuInsertBefore, 0);
         setContextMenuInsertAction(contextMenuInsertAfter, 1);
+    }
+    
+    public void reload() {
+        name.setText(formatTypeName(activity.getType()));
+        startTime.setText(activity.getStartTime().format(START_TIME_FORMATTER));
+        duration.setText(formatDuration(activity.getDuration()));
+        String cssClass = CSS_CLASS.get(activity.getType());
+        if(!getStyleClass().contains(cssClass)) {
+            this.getStyleClass().removeIf(string -> string.contains("activity-"));
+            this.getStyleClass().add(cssClass);
+        }
+        createDivisorLines();
     }
     
     private void setContextMenuInsertAction(Menu menu, int shift) {
@@ -99,7 +110,8 @@ public class ActivityBlock extends StackPane implements Initializable {
             try {
                 ActivityType activityType = ActivityType.valueOf(userData.toUpperCase());
                 item.setOnAction(actionEvent -> {
-                    System.out.println("Adding " + activityType + " with shift " + shift);
+                    // TODO: test data, open dialog instead
+                    display.addActivity(this.activityIndex + shift, new Activity(activityType, Duration.ofHours(3), LocalDateTime.now()));
                 });
             } catch (IllegalArgumentException e) {
                 System.err.println("Invalid userData does not match an ActivityType: " + userData);
@@ -114,6 +126,7 @@ public class ActivityBlock extends StackPane implements Initializable {
         LocalDate startDate = start.toLocalDate();
         LocalDate endDate = end.toLocalDate();
         ObservableList<Node> dividerChildren = this.dividers.getChildren();
+        dividerChildren.clear();
         // Find all timestamps between start and end where a new day begins
         startDate.datesUntil(endDate.plusDays(1))
                 .map(LocalDate::atStartOfDay)

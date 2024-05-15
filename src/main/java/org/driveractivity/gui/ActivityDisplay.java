@@ -1,10 +1,18 @@
 package org.driveractivity.gui;
 
 import org.driveractivity.entity.Activity;
+import org.driveractivity.service.DriverInterface;
 
 import java.util.List;
 
 public interface ActivityDisplay {
-    void load(List<Activity> activities);
+    void load(DriverInterface driverData);
+
+    void reload();
+
     void addBack(Activity activity);
+
+    void addActivity(int index, Activity activity);
+
+    void removeActivity(int index);
 }

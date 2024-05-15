@@ -22,12 +22,13 @@ import java.net.URL;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.ResourceBundle;
 
 public class DateHandler implements Initializable {
 
+    private final MainController mainController;
+    private final ActivityType currentActivityType;
+    
     @FXML
     private Label errorLabel;
 
@@ -57,6 +58,11 @@ public class DateHandler implements Initializable {
     @FXML
     private Button processButton;
 
+    public DateHandler(MainController mainController, ActivityType currentActivityType) {
+        this.mainController = mainController;
+        this.currentActivityType = currentActivityType;
+    }
+
     public void openDateHandlerStage() {
         try {
             FXMLLoader loader = new FXMLLoader(getClass().getResource("DataHandler.fxml"));
@@ -70,7 +76,7 @@ public class DateHandler implements Initializable {
             dialogStage.initStyle(StageStyle.UTILITY);
             // Scene und Titel festlegen
             dialogStage.setScene(new Scene(root, 300, 200));
-            dialogStage.setTitle("Setting up "+ MainController.currentActivityType +"...");
+            dialogStage.setTitle("Setting up "+ currentActivityType +"...");
             // Zeige das neue Fenster und setze es in den Vordergrund
             dialogStage.toFront();
 
@@ -182,23 +188,16 @@ public class DateHandler implements Initializable {
 
         int duration = hour*60 + minute;
 
-        if(MainController.activities.isEmpty()){
+        hour = Integer.parseInt(cbHourStart.getValue());
+        minute = Integer.parseInt(cbMinuteStart.getValue());
 
-            hour = Integer.parseInt(cbHourStart.getValue());
-            minute = Integer.parseInt(cbMinuteStart.getValue());
+        LocalDateTime startTime = LocalDateTime.now()
+                .withHour(hour)
+                .withMinute(minute);
 
-            LocalDateTime startTime = LocalDateTime.now()
-                    .withHour(hour)
-                    .withMinute(minute);
+        activity = new Activity(currentActivityType, Duration.of(duration, ChronoUnit.MINUTES), startTime);
 
-            activity = new Activity(MainController.currentActivityType, Duration.of(duration, ChronoUnit.MINUTES), startTime);
-        }else{
-            activity = new Activity(MainController.currentActivityType, Duration.of(duration, ChronoUnit.MINUTES), MainController.activities.getLast().getEndTime().plusMinutes(1));
-        }
-
-        MainController.activities.add(activity);
-
-        System.out.println(MainController.activities.size());
+        mainController.activityPane.addBack(activity);
 
         Stage stage = (Stage) processButton.getScene().getWindow();
         stage.close();
