@@ -59,7 +59,24 @@ public class DriverService implements DriverInterface {
 
     @Override
     public ArrayList<Activity> removeBlock(int index) {
-        return null;
+        if(index < 0 || index >= activities.size()) {
+            throw new IndexOutOfBoundsException();
+        }
+        if(index != 0 && index+1 != activities.size()) {
+            Activity activityBefore = activities.get(index-1);
+            Activity activityAfter = activities.get(index+1);
+            if(activityBefore.getType() == activityAfter.getType()) {
+                activityBefore.setDuration(activityBefore.getDuration().plus(activityAfter.getDuration()));
+                activities.remove(activityAfter);
+            }
+        }
+        activities.remove(index);
+        if (index != 0) {
+            for(int i = index; i < activities.size(); i++) {
+                activities.get(i).setStartTime(activities.get(i-1).getEndTime());
+            }
+        }
+        return activities;
     }
 
     @Override
@@ -80,7 +97,8 @@ public class DriverService implements DriverInterface {
             ITFTestFileDTO itfTestFileDTO = (ITFTestFileDTO) unmarshaller.unmarshal(f);
             ActivityGroup group = XmlDtoToObjectMapper.map(itfTestFileDTO.getActivityGroup());
             ArrayList<Activity> activities = new ArrayList<>(XmlDtoToObjectMapper.mapDayToActivity(group.getDays()));
-
+            this.activities.clear();
+            this.activities.addAll(activities);
             return activities;
         } catch (JAXBException e) {
             throw new RuntimeException(e);
