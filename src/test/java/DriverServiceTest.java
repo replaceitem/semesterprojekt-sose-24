@@ -9,6 +9,7 @@ import java.io.File;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -72,10 +73,9 @@ public class DriverServiceTest {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource("Beispiel2.xml")).getFile());
         DriverService driverService = DriverService.getInstance();
-        List<Day> days = driverService.importFrom(file);
-        assertThat(days.size()).isEqualTo(2);
-        //first activity of first day should be one hour long
-        assertThat(days.getFirst().getActivities().getFirst().getDuration()).isEqualTo(Duration.of(1, ChronoUnit.HOURS));
+        ArrayList<Activity> activities = new ArrayList<>(driverService.importFrom(file));
+        assertThat(activities.size()).isEqualTo(4); //xml contains 5 activities, but 1 spans over 2 days, so it is merged
+        assertThat(activities.getFirst().getDuration()).isEqualTo(Duration.of(1, ChronoUnit.HOURS));
     }
 
     @AfterEach

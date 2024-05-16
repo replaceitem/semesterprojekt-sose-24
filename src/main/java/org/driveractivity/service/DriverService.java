@@ -73,16 +73,17 @@ public class DriverService implements DriverInterface {
     }
 
     @Override
-    public List<Day> importFrom(File f) {
+    public ArrayList<Activity> importFrom(File f) {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(ITFTestFileDTO.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             ITFTestFileDTO itfTestFileDTO = (ITFTestFileDTO) unmarshaller.unmarshal(f);
             ActivityGroup group = XmlDtoToObjectMapper.map(itfTestFileDTO.getActivityGroup());
-            return group.getDays();
+            ArrayList<Activity> activities = new ArrayList<>(XmlDtoToObjectMapper.mapDayToActivity(group.getDays()));
+
+            return activities;
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
     }
-
 }

@@ -8,6 +8,7 @@ import org.driveractivity.entity.Activity;
 
 import javax.xml.bind.annotation.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Data
@@ -20,5 +21,5 @@ public class DayDTO {
     @XmlAttribute(name = "distance")
     private long distance;
     @XmlElement(name = "Activity")
-    private List<ActivityDTO> activities;
+    private ArrayList<ActivityDTO> activities;
 }

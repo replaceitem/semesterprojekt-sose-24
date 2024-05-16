@@ -13,5 +13,5 @@ public class Day {
     private LocalDate date;
     private long presenceCounter;
     private long distance;
-    private List<Activity> activities;
+    private ArrayList<Activity> activities;
 }

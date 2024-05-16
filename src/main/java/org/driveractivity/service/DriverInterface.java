@@ -15,5 +15,5 @@ public interface DriverInterface {
     ArrayList<Activity> removeBlock(int index);
     ArrayList<Activity> changeBlock(int index);
     void exportToXML();
-    List<Day> importFrom(File f);
+    ArrayList<Activity> importFrom(File f);
 }
