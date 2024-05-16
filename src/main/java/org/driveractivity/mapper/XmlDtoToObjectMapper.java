@@ -15,7 +15,6 @@ import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.stream.Collectors;
 
 public class XmlDtoToObjectMapper { //name is WIP
@@ -28,12 +27,12 @@ public class XmlDtoToObjectMapper { //name is WIP
     public static ArrayList<Activity> mapDayToActivity(ArrayList<Day> days) {
         Iterator<Day> it = days.iterator();
         Day current = it.next();
-        Day next = null;
+        Day next;
         while(it.hasNext()) {
             next = it.next();
             if(current.getActivities().getLast().getType() == next.getActivities().getFirst().getType()) {
                 current.getActivities().getLast().setDuration(Duration.between(current.getActivities().getLast().getStartTime(), next.getActivities().getFirst().getEndTime()));
-                next.getActivities().remove(0);
+                next.getActivities().removeFirst();
             }
             current = next;
         }

@@ -1,15 +1,8 @@
 package org.driveractivity.DTO;
 
-
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
-import org.driveractivity.entity.Activity;
-
 import javax.xml.bind.annotation.*;
-import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.List;
 
 @Data
 @XmlAccessorType(XmlAccessType.FIELD)

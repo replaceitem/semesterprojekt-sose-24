@@ -4,7 +4,6 @@ import lombok.Getter;
 import org.driveractivity.DTO.ITFTestFileDTO;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityGroup;
-import org.driveractivity.entity.Day;
 import org.driveractivity.mapper.XmlDtoToObjectMapper;
 
 import javax.xml.bind.JAXBContext;
@@ -12,7 +11,6 @@ import javax.xml.bind.JAXBException;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 public class DriverService implements DriverInterface {
@@ -80,8 +78,36 @@ public class DriverService implements DriverInterface {
     }
 
     @Override
-    public ArrayList<Activity> changeBlock(int index) {
-        return null;
+    public ArrayList<Activity> changeBlock(int index, Activity activity) {
+        if(index < 0 || index >= activities.size()) {
+            throw new IndexOutOfBoundsException();
+        }
+
+        activities.get(index).setDuration(activity.getDuration());
+        activities.get(index).setType(activity.getType());
+
+        if(index != 0) {
+            Activity activityBefore = activities.get(index-1);
+            if(activityBefore.getType() == activity.getType()) {
+                activityBefore.setDuration(activityBefore.getDuration().plus(activity.getDuration()));
+                removeBlock(index);
+                index = index-1;
+            }
+        }
+
+        if(index+1 != activities.size()) {
+            Activity activityAfter = activities.get(index+1);
+            if(activityAfter.getType() == activity.getType()) {
+                activityAfter.setStartTime(activity.getEndTime());
+                activityAfter.setDuration(activityAfter.getDuration().plus(activity.getDuration()));
+                removeBlock(index);
+            }
+        }
+
+        for(int i = index+1; i < activities.size(); i++) {
+            activities.get(i).setStartTime(activities.get(i-1).getEndTime());
+        }
+        return activities;
     }
 
     @Override
