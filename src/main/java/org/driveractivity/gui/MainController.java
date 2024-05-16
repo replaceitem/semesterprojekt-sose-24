@@ -5,9 +5,14 @@ import javafx.fxml.Initializable;
 
 import javafx.event.ActionEvent;
 import javafx.scene.control.Button;
+import javafx.scene.control.MenuItem;
+import javafx.stage.FileChooser;
+import javafx.stage.Stage;
+import lombok.Setter;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
 
+import java.io.File;
 import java.net.URL;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -27,8 +32,14 @@ public class MainController implements Initializable {
     @FXML
     private Button availableButton;
 
+    @FXML
+    private MenuItem openMenu;
+
     public static List<Activity> activities;
     public static ActivityType currentActivityType;
+
+    @Setter
+    private Stage stage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
@@ -68,4 +79,21 @@ public class MainController implements Initializable {
             System.out.println("unknown button");
         }
     }
+
+    @FXML
+    private void openFile(ActionEvent event) {
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Open XML-File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Files", "*.*"));
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+
+        File file = fileChooser.showOpenDialog(stage);
+    }
+
+    @FXML
+    private void saveFile(ActionEvent event) {
+            //ActivitiesList to XML, save to File
+    }
+
 }
