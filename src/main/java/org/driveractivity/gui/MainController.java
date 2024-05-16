@@ -46,7 +46,6 @@ public class MainController implements Initializable {
         else if (button == availableButton) type = AVAILABLE;
         else System.out.println("unknown button");
         
-        DateHandler dh = new DateHandler(this, type);
-        dh.openDateHandlerStage();
+        DateHandler.openDateHandlerStage(this, type);
     }
 }

@@ -26,15 +26,11 @@ import java.util.ResourceBundle;
 
 public class DateHandler implements Initializable {
 
-    private final MainController mainController;
-    private final ActivityType currentActivityType;
+    private MainController mainController;
+    private ActivityType currentActivityType;
     
     @FXML
     private Label errorLabel;
-
-    private Activity activity;
-    @FXML
-    private Stage dialogStage;
     @FXML
     private GridPane myGridPane;
     @FXML
@@ -58,19 +54,17 @@ public class DateHandler implements Initializable {
     @FXML
     private Button processButton;
 
-    public DateHandler(MainController mainController, ActivityType currentActivityType) {
-        this.mainController = mainController;
-        this.currentActivityType = currentActivityType;
-    }
-
-    public void openDateHandlerStage() {
+    public static DateHandler openDateHandlerStage(MainController mainController, ActivityType currentActivityType) {
         try {
-            FXMLLoader loader = new FXMLLoader(getClass().getResource("DataHandler.fxml"));
+            FXMLLoader loader = new FXMLLoader(DateHandler.class.getResource("DataHandler.fxml"));
             //    org/driveractivity/gui/DataHandler.fxml
             Parent root = loader.load();
             // Erhalte die aktuelle Instanz, um auf FXML-Elemente zuzugreifen
             DateHandler controller = loader.getController();
-            dialogStage = new Stage();
+            controller.currentActivityType = currentActivityType;
+            controller.mainController = mainController;
+            
+            Stage dialogStage = new Stage();
 
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initStyle(StageStyle.UTILITY);
@@ -82,9 +76,9 @@ public class DateHandler implements Initializable {
 
             //dialogStage.show();
             dialogStage.showAndWait();
-
+            return controller;
         } catch (IOException e) {
-            System.out.println(e.getMessage());
+            throw new RuntimeException(e);
         }
     }
 
@@ -195,7 +189,7 @@ public class DateHandler implements Initializable {
                 .withHour(hour)
                 .withMinute(minute);
 
-        activity = new Activity(currentActivityType, Duration.of(duration, ChronoUnit.MINUTES), startTime);
+        Activity activity = new Activity(currentActivityType, Duration.of(duration, ChronoUnit.MINUTES), startTime);
 
         mainController.activityPane.addBack(activity);
 
