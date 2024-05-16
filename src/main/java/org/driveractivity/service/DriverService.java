@@ -17,8 +17,10 @@ import java.util.List;
 @Getter
 public class DriverService implements DriverInterface {
     private final ArrayList<Activity> activities;
+    @Getter
+    private static final DriverService instance = new DriverService();
 
-    public DriverService() {
+    private DriverService() {
         activities = new ArrayList<>();
     }
 

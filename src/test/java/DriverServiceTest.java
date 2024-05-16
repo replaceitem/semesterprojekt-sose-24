@@ -1,6 +1,8 @@
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.Day;
+import org.driveractivity.service.DriverInterface;
 import org.driveractivity.service.DriverService;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
 import java.io.File;
@@ -16,7 +18,7 @@ import static org.driveractivity.entity.ActivityType.WORK;
 public class DriverServiceTest {
     @Test
     public void testAddBlock() {
-        DriverService driverService = new DriverService();
+        DriverService driverService = DriverService.getInstance();
         Activity activity = Activity.builder()
                 .type(WORK)
                 .startTime(LocalDateTime.now())
@@ -28,7 +30,7 @@ public class DriverServiceTest {
 
     @Test
     public void testAddBlockWithIndex() {
-        DriverService driverService = new DriverService();
+        DriverService driverService = DriverService.getInstance();
         Activity activity = Activity.builder()
                 .type(WORK)
                 .startTime(LocalDateTime.now())
@@ -47,7 +49,7 @@ public class DriverServiceTest {
     }
     @Test
     public void testAddBlockWithIndexException() {
-        DriverService driverService = new DriverService();
+        DriverService driverService = DriverService.getInstance();
         Activity activity = Activity.builder()
                 .type(WORK)
                 .startTime(LocalDateTime.now())
@@ -69,10 +71,15 @@ public class DriverServiceTest {
     public void importFrom() {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource("Beispiel2.xml")).getFile());
-        DriverService driverService = new DriverService();
+        DriverService driverService = DriverService.getInstance();
         List<Day> days = driverService.importFrom(file);
         assertThat(days.size()).isEqualTo(2);
         //first activity of first day should be one hour long
         assertThat(days.getFirst().getActivities().getFirst().getDuration()).isEqualTo(Duration.of(1, ChronoUnit.HOURS));
+    }
+
+    @AfterEach
+    public void cleanUp() {
+        DriverService.getInstance().getActivities().clear();
     }
 }
