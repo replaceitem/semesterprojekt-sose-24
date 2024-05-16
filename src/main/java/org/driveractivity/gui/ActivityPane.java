@@ -6,6 +6,7 @@ import javafx.scene.layout.FlowPane;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.service.DriverInterface;
 
+import java.time.LocalDateTime;
 import java.util.ListIterator;
 
 public class ActivityPane extends FlowPane implements ActivityDisplay {
@@ -54,5 +55,10 @@ public class ActivityPane extends FlowPane implements ActivityDisplay {
         driverData.removeBlock(index);
         this.getChildren().remove(index);
         reload();
+    }
+
+    @Override
+    public LocalDateTime getStartTime() {
+        return driverData.getBlocks().getFirst().getStartTime();
     }
 }
