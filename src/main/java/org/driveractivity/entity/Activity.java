@@ -7,7 +7,6 @@ import lombok.NonNull;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.time.temporal.ChronoUnit;
 
 @Data
 @Builder(toBuilder = true)
@@ -19,6 +18,6 @@ public class Activity {
     private LocalDateTime startTime;
 
     public LocalDateTime getEndTime() {
-        return startTime.plus(duration.toMinutes(), ChronoUnit.MINUTES);
+        return startTime.plusMinutes(duration.toMinutes());
     }
 }
