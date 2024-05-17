@@ -1,248 +1,170 @@
 package org.driveractivity.gui;
-
-import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.CheckBox;
-import javafx.scene.control.ComboBox;
-import javafx.scene.control.Label;
-import javafx.scene.layout.GridPane;
-import javafx.stage.Modality;
+
+import javafx.scene.control.*;
 import javafx.stage.Stage;
-import javafx.scene.control.Button;
-import javafx.stage.StageStyle;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
 
-import java.io.IOException;
 import java.net.URL;
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ResourceBundle;
 
 public class DateHandler implements Initializable {
-
-    private MainController mainController;
-    private ActivityType currentActivityType;
+    static MainController mainController;
+    ActivityType currentActivityType;
     
     @FXML
     private Label errorLabel;
     @FXML
-    private GridPane myGridPane;
+    private TextField cbHourStart;
     @FXML
-    private ComboBox<String> cbHourStart;
+    private TextField cbHourEnd;
     @FXML
-    private ComboBox<String> cbHourEnd;
+    private TextField cbHourDuration;
     @FXML
-    private ComboBox<String> cbHourDuration;
+    private TextField cbMinuteStart;
     @FXML
-    private ComboBox<String> cbMinuteStart;
+    private TextField cbMinuteEnd;
     @FXML
-    private ComboBox<String> cbMinuteEnd;
-    @FXML
-    private ComboBox<String> cbMinuteDuration;
-    @FXML
-    private CheckBox activeDuration;
-    @FXML
-    private CheckBox activeEnd;
-    @FXML
-    private CheckBox activeStart;
+    private TextField cbMinuteDuration;
     @FXML
     private Button processButton;
-
-    public static DateHandler openDateHandlerStage(MainController mainController, ActivityType currentActivityType) {
-        try {
-            FXMLLoader loader = new FXMLLoader(DateHandler.class.getResource("DataHandler.fxml"));
-            //    org/driveractivity/gui/DataHandler.fxml
-            Parent root = loader.load();
-            // Erhalte die aktuelle Instanz, um auf FXML-Elemente zuzugreifen
-            DateHandler controller = loader.getController();
-            controller.currentActivityType = currentActivityType;
-            controller.mainController = mainController;
-            
-            Stage dialogStage = new Stage();
-
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-            dialogStage.initStyle(StageStyle.UTILITY);
-            // Scene und Titel festlegen
-            dialogStage.setScene(new Scene(root, 300, 200));
-            dialogStage.setTitle("Setting up "+ currentActivityType +"...");
-            // Zeige das neue Fenster und setze es in den Vordergrund
-            dialogStage.toFront();
-
-            //dialogStage.show();
-            dialogStage.showAndWait();
-            return controller;
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    private ComboBox<String> cloneComboBox(ComboBox<String> original) {
-        // Erstellen einer neuen ComboBox und Kopieren von Eigenschaften
-        ComboBox<String> newComboBox = new ComboBox<>();
-        newComboBox.getItems().addAll(original.getItems()); // Kopieren der Elemente
-        newComboBox.setEditable(original.isEditable()); // Editierbarkeit kopieren
-        newComboBox.getSelectionModel().select(original.getSelectionModel().getSelectedIndex()); // Auswahl kopieren
-        return newComboBox;
-    }
 
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         errorLabel.setVisible(false);
-        for (int i = 0; i <= 23; i++) {
-            String hours;
-            if (i < 10) {
-                hours = "0" + i;
+        System.out.println(mainController.activityPane.getChildren().getLast());
+        if(mainController.activityPane.getChildren().isEmpty()){
+            cbHourStart.setText(String.valueOf(0));
+            cbMinuteStart.setText(String.valueOf(0));
+        }else {
+            cbHourStart.setText(String.valueOf(mainController.driverInterface.getBlocks().getLast().getEndTime().getHour()));
+            cbMinuteStart.setText(String.valueOf(mainController.driverInterface.getBlocks().getLast().getEndTime().getHour()));
+        }
+
+        cbHourEnd.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(checkforValidTime()&&!newValue){
+                processStartEnd();
             }
-            hours = String.valueOf(i);
-            cbHourDuration.getItems().add(hours);
-            cbHourStart.getItems().add(hours);
-            cbHourEnd.getItems().add(hours);
-        }
-
-
-        for (int i = 0; i <= 59; i++) {
-            String minutes;
-            if(i<10){
-                minutes = "0"+i;
+        });
+        cbMinuteEnd.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(checkforValidTime()&&!newValue){
+                processStartEnd();
             }
-            minutes = String.valueOf(i);
+        });
 
-            cbMinuteStart.getItems().add(minutes);
-            cbMinuteEnd.getItems().add(minutes);
-            cbMinuteDuration.getItems().add(minutes);
-        }
+        cbHourDuration.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(checkforValidTime()&&!newValue){
+                durationWithStart();
+            }
+        });
+        cbMinuteDuration.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(checkforValidTime()&&!newValue){
+                durationWithStart();
+            }
+        });
+    }
 
-    }
-    public void onHandleStart(ActionEvent actionEvent) {
-        checkForValidBoxes();
-        if(activeStart.isSelected()&& activeEnd.isSelected()) {
-            processStartEnd();
-        }else if(activeStart.isSelected()&& activeDuration.isSelected()){
-            durationWithStart();
-        }
-    }
-    public void onHandleEnd(ActionEvent actionEvent) {
-        checkForValidBoxes();
-        if(activeEnd.isSelected()&& activeStart.isSelected()) {
-            processStartEnd();
-        }else if(activeEnd.isSelected()&& activeDuration.isSelected()){
-            durationWithEnd();
-        }
 
+    private boolean checkforValidTime() {
+        try{
+            int ValueofMituesEnd = Integer.parseInt(cbMinuteEnd.getText());
+            int ValueofMituesDuration = Integer.parseInt(cbMinuteDuration.getText());
+            int ValueofHoursEnd = Integer.parseInt(cbHourEnd.getText());
+            int ValueofHoursDuration = Integer.parseInt(cbHourDuration.getText());
+
+            if(ValueofMituesEnd<60&&ValueofMituesEnd>=0&&ValueofMituesDuration<60&&ValueofMituesDuration>=0){
+                if(ValueofHoursEnd>=0&&ValueofHoursDuration>=0){
+                    processButton.setDisable(false);
+                    errorLabel.setVisible(false);
+                    return true;
+                }
+            }
+            else {
+                processButton.setDisable(true);
+                errorLabel.setVisible(true);
+                errorLabel.setText("bitte nur eingaben zwichen 0 und 59 für Minuten");
+            }
+        } catch (NumberFormatException e) {
+            processButton.setDisable(true);
+            errorLabel.setVisible(true);
+            errorLabel.setText("ungültiges Datum");
+        }
+        return false;
     }
+
+
 
     private boolean checkForValidDuration() {
-        boolean t = (cbHourDuration.getValue() != null && cbMinuteDuration.getValue() != null);
-        return (cbHourStart.getValue() != null && cbMinuteStart.getValue() != null && t) ||
-                (cbHourEnd.getValue() != null && cbMinuteEnd.getValue() != null) && t;
+        return true;
     }
-
-    private void checkForValidBoxes(){
-        if(activeStart.isSelected()&& activeEnd.isSelected()&& activeDuration.isSelected()){
-            showError("Alle drei sind Aktiv bitte nur 2 Aktiv haben!");
-            //JOptionPane.showMessageDialog (null, "Alle drei sind Aktiv bitte nur 2 Aktiv haben!", "Something went Wrong", JOptionPane.ERROR_MESSAGE);
-        }else {
-            showError("");
-        }
-    }
-    private void processStartEnd(){
-        if (cbHourStart.getValue() != null && cbMinuteStart.getValue() != null ) {
-            if (cbHourEnd.getValue() != null && cbMinuteEnd.getValue() != null ) {
-                if (Integer.parseInt(cbHourStart.getValue()) <= Integer.parseInt(cbHourEnd.getValue())) {
-                    if (Integer.parseInt(cbMinuteStart.getValue()) <= Integer.parseInt(cbMinuteEnd.getValue())) {
-
+        private void processStartEnd(){
+            if (cbHourEnd.getText() != null && cbMinuteEnd.getText() != null ) {
+                if (Integer.parseInt(cbHourStart.getText()) == Integer.parseInt(cbHourEnd.getText())) {
+                    if (Integer.parseInt(cbMinuteStart.getText()) <= Integer.parseInt(cbMinuteEnd.getText())) {
                         showError("");
                         processButton.setDisable(false);
                         errorLabel.setVisible(false);
-                        cbHourDuration.setValue(String.valueOf(Integer.parseInt(cbHourEnd.getValue()) - Integer.parseInt(cbHourStart.getValue())));
-                        cbMinuteDuration.setValue(String.valueOf(Integer.parseInt(cbMinuteEnd.getValue()) - Integer.parseInt(cbMinuteStart.getValue())));
+
+                        cbHourDuration.setText(String.valueOf(Integer.parseInt(cbHourEnd.getText()) - Integer.parseInt(cbHourStart.getText())));
+                        cbMinuteDuration.setText(String.valueOf(Integer.parseInt(cbMinuteEnd.getText()) - Integer.parseInt(cbMinuteStart.getText())));
+
 
                     } else {
                         showError("Start Zeit größer oder gleich Endzeit");
                         //a.showMessageDialog(null, "Start Zeit größer oder gleich Endzeit", "Something went Wrong", JOptionPane.WARNING_MESSAGE);
                     }
-                } else {
-                    showError("Start Zeit größer oder gleich Endzeit");
-                    //a.showMessageDialog(null, "Start Zeit größer oder gleich Endzeit", "Something went Wrong", JOptionPane.WARNING_MESSAGE);
+                } else if(Integer.parseInt(cbHourStart.getText()) < Integer.parseInt(cbHourEnd.getText())){
+                    showError("");
+                    processButton.setDisable(false);
+                    errorLabel.setVisible(false);
+                    cbHourDuration.setText(String.valueOf(Integer.parseInt(cbHourEnd.getText()) - Integer.parseInt(cbHourStart.getText())));
+                    if(Integer.parseInt(cbMinuteStart.getText()) < Integer.parseInt(cbMinuteEnd.getText())){
+                        cbMinuteDuration.setText(String.valueOf(Integer.parseInt(cbMinuteEnd.getText()) - Integer.parseInt(cbMinuteStart.getText())));
+                    }else {
+                        cbMinuteDuration.setText(String.valueOf(Integer.parseInt(cbMinuteStart.getText()) - Integer.parseInt(cbMinuteEnd.getText())));
+                    }
+
+                }else {
+                    showError("");
+                    processButton.setDisable(false);
+                    errorLabel.setVisible(false);
+                    cbHourDuration.setText(String.valueOf(Integer.parseInt(cbHourEnd.getText()) - Integer.parseInt(cbHourStart.getText())));
+                    if(Integer.parseInt(cbMinuteStart.getText()) > Integer.parseInt(cbMinuteEnd.getText())){
+                        cbMinuteDuration.setText(String.valueOf(Integer.parseInt(cbMinuteStart.getText()) - Integer.parseInt(cbMinuteEnd.getText())));
+                    }else {
+                        cbMinuteDuration.setText(String.valueOf(Integer.parseInt(cbMinuteEnd.getText()) - Integer.parseInt(cbMinuteStart.getText())));
+                    }
                 }
             }
-        }
     }
 
     public void onActionProcess() {
-        int hour = Integer.parseInt(cbHourDuration.getValue());
-        int minute = Integer.parseInt(cbMinuteDuration.getValue());
+        int hour = Integer.parseInt(cbHourDuration.getText());
+        int minute = Integer.parseInt(cbMinuteDuration.getText());
 
         int duration = hour*60 + minute;
 
-        hour = Integer.parseInt(cbHourStart.getValue());
-        minute = Integer.parseInt(cbMinuteStart.getValue());
 
-        LocalDateTime startTime = LocalDateTime.now()
-                .withHour(hour)
-                .withMinute(minute);
-
-        Activity activity = new Activity(currentActivityType, Duration.of(duration, ChronoUnit.MINUTES), startTime);
-
+        Activity activity = new Activity(currentActivityType, Duration.of(duration, ChronoUnit.MINUTES), mainController.driverInterface.getBlocks().getLast().getEndTime());
+        checkAcitvi(activity);
+        mainController.driverInterface.addBlock(activity);
         mainController.activityPane.addBack(activity);
 
         Stage stage = (Stage) processButton.getScene().getWindow();
         stage.close();
     }
 
-    public void onActionActiveStart(ActionEvent actionEvent) {
-        checkForValidBoxes();
-        if(activeStart.isSelected()){
-            cbHourStart.setDisable(false);
-            cbMinuteStart.setDisable(false);
-            cbHourStart.setValue(null);
-            cbMinuteStart.setValue(null);
-        }else {
-            cbHourStart.setDisable(true);
-            cbHourStart.setValue(null);
-            cbMinuteStart.setDisable(true);
-            cbMinuteStart.setValue(null);
-        }
+    private void checkAcitvi(Activity activity) {
+        System.out.println(activity.getStartTime());
+        System.out.println(activity.getDuration());
+        System.out.println(activity.getEndTime());
     }
 
-    public void onActionActiveEnd(ActionEvent actionEvent) {
-        //noinspection DuplicatedCode
-        checkForValidBoxes();
-        if(activeEnd.isSelected()){
-            cbHourEnd.setValue(null);
-            cbMinuteEnd.setValue(null);
-            cbHourEnd.setDisable(false);
-            cbMinuteEnd.setDisable(false);
-        }else {
-            cbHourEnd.setDisable(true);
-            cbMinuteEnd.setDisable(true);
-            cbHourEnd.setValue(null);
-            cbMinuteEnd.setValue(null);
-        }
-    }
-
-    public void onActionActiveDuration(ActionEvent actionEvent) {
-        //noinspection DuplicatedCode
-        checkForValidBoxes();
-        if(activeDuration.isSelected()){
-            cbHourDuration.setValue(null);
-            cbMinuteDuration.setValue(null);
-            cbHourDuration.setDisable(false);
-            cbMinuteDuration.setDisable(false);
-        }else {
-            cbHourDuration.setDisable(true);
-            cbMinuteDuration.setDisable(true);
-            cbHourDuration.setValue(null);
-            cbMinuteDuration.setValue(null);
-        }
-    }
     private void showError(String error){
         if(error.isEmpty()){
             errorLabel.setVisible(false);
@@ -254,24 +176,20 @@ public class DateHandler implements Initializable {
         }
     }
 
-    public void onHandleDuration(ActionEvent actionEvent) {
-        if(activeDuration.isSelected()&& activeStart.isSelected()){
-            durationWithStart();
-        }
-        else if((activeDuration.isSelected()&& activeEnd.isSelected())){
-            durationWithEnd();
-        }
-    }
     private void durationWithStart(){
         if(checkForValidDuration()) {
-            cbHourEnd.setValue(String.valueOf(Integer.parseInt(cbHourDuration.getValue()) + Integer.parseInt(cbHourStart.getValue())));
-            cbMinuteEnd.setValue(String.valueOf(Integer.parseInt(cbMinuteDuration.getValue()) + Integer.parseInt(cbMinuteStart.getValue())));
-        }
-    }
-    private void durationWithEnd(){
-        if(checkForValidDuration()){
-            cbHourStart.setValue(String.valueOf(Integer.parseInt(cbHourEnd.getValue()) - Integer.parseInt(cbHourDuration.getValue())));
-            cbMinuteStart.setValue(String.valueOf(Integer.parseInt(cbMinuteEnd.getValue()) - Integer.parseInt(cbMinuteDuration.getValue())));
+            int newDruationMin = Integer.parseInt(cbMinuteDuration.getText());
+            int newStartMin = Integer.parseInt(cbMinuteStart.getText());
+            if(newDruationMin+newStartMin>=60){
+                cbHourEnd.setText(String.valueOf(1+Integer.parseInt(cbHourDuration.getText()) + Integer.parseInt(cbHourStart.getText())));
+                cbMinuteEnd.setText(String.valueOf(Integer.parseInt(cbMinuteDuration.getText()) + Integer.parseInt(cbMinuteStart.getText())-60));
+            }
+            else {
+                cbHourEnd.setText(String.valueOf(Integer.parseInt(cbHourDuration.getText()) + Integer.parseInt(cbHourStart.getText())));
+                cbMinuteEnd.setText(String.valueOf(Integer.parseInt(cbMinuteDuration.getText()) + Integer.parseInt(cbMinuteStart.getText())));
+            }
+
+
         }
     }
 }
