@@ -9,7 +9,6 @@ import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import lombok.Setter;
-import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
 import org.driveractivity.service.DriverInterface;
 import org.driveractivity.service.DriverService;
@@ -70,11 +69,14 @@ public class MainController implements Initializable {
         fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
 
         File file = fileChooser.showOpenDialog(stage);
+
+        driverInterface.importFrom(file);
+        activityPane.load(driverInterface);
     }
 
     @FXML
     private void saveFile(ActionEvent event) {
-            //ActivitiesList to XML, save to File
+            driverInterface.exportToXML();
     }
 
 }
