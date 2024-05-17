@@ -55,4 +55,6 @@ public class ActivityPane extends FlowPane implements ActivityDisplay {
         this.getChildren().remove(index);
         reload();
     }
+
+
 }
