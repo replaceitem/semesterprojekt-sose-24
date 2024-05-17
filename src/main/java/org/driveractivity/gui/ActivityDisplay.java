@@ -16,5 +16,5 @@ public interface ActivityDisplay {
 
     void removeActivity(int index);
 
-    LocalDateTime getStartTime();
+    DriverInterface getDriverInterface();
 }

@@ -56,9 +56,9 @@ public class ActivityPane extends FlowPane implements ActivityDisplay {
         this.getChildren().remove(index);
         reload();
     }
-
+    
     @Override
-    public LocalDateTime getStartTime() {
-        return driverData.getBlocks().getFirst().getStartTime();
+    public DriverInterface getDriverInterface() {
+        return driverData;
     }
 }

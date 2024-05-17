@@ -31,6 +31,7 @@ import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.function.Consumer;
 
 public class ActivityBlock extends StackPane implements Initializable {
     
@@ -146,32 +147,36 @@ public class ActivityBlock extends StackPane implements Initializable {
                 .map(LocalDate::atStartOfDay)
                 .filter(startOfDay -> !startOfDay.isBefore(start) && startOfDay.isBefore(end))
                 .toList();
+        
+        if(activityIndex == 0) {
+            addMarker(0, dividerChildren, startDate.format(DATE_MARKER_FORMATTER_YEAR));
+        } else if(activityIndex == display.getDriverInterface().getBlocks().size()-1) {
+            addMarker(1, dividerChildren, endDate.format(DATE_MARKER_FORMATTER_YEAR));
+        }
 
         for (LocalDateTime newDayTime : newDayTimes) {
             LocalDate date = newDayTime.toLocalDate();
             long millisAfterStart = start.until(newDayTime, ChronoUnit.MILLIS);
             double blockPercentage = ((double) millisAfterStart) / durationMillis;
-            boolean isInitial = newDayTime.isBefore(display.getStartTime().plusDays(1));
-
-            Line line = new Line();
-            line.getStyleClass().add("day-divider-line");
-            line.endYProperty().bind(block.heightProperty());
-            line.layoutXProperty().bind(block.widthProperty().multiply(blockPercentage));
-            dividerChildren.add(line);
-
-            DateTimeFormatter markerFormatter = getMarkerFormatter(date, isInitial);
-            Label label = new Label(date.format(markerFormatter));
-            label.layoutXProperty().bind(line.layoutXProperty().subtract(label.widthProperty().divide(2)));
-            label.layoutYProperty().bind(line.layoutYProperty().subtract(label.heightProperty()));
-            dividerChildren.add(label);
+            String dateLabel = null;
+            if(date.getDayOfMonth() == 1) dateLabel = date.format(date.getMonth() == Month.JANUARY ? DATE_MARKER_FORMATTER_YEAR : DATE_MARKER_FORMATTER_MONTH);
+            addMarker(blockPercentage, dividerChildren, dateLabel);
         }
     }
     
-    private DateTimeFormatter getMarkerFormatter(LocalDate date, boolean first) {
-        // Omit fields when they are the same as the previous marker or the very first one
-        if(activityIndex == 0 && first) return DATE_MARKER_FORMATTER_YEAR;
-        if(date.getDayOfMonth() == 1) return date.getMonth() == Month.JANUARY ? DATE_MARKER_FORMATTER_YEAR : DATE_MARKER_FORMATTER_MONTH;
-        return DATE_MARKER_FORMATTER_DAY;
+    private void addMarker(double percentage, List<Node> nodes, String labelText) {
+        Line line = new Line();
+        line.getStyleClass().add("day-divider-line");
+        line.endYProperty().bind(block.heightProperty());
+        line.layoutXProperty().bind(block.widthProperty().multiply(percentage));
+        nodes.add(line);
+        
+        if(labelText != null) {
+            Label label = new Label(labelText);
+            label.layoutXProperty().bind(line.layoutXProperty());
+            label.layoutYProperty().bind(line.layoutYProperty().subtract(label.heightProperty()));
+            nodes.add(label);
+        }
     }
 
     private static String formatTypeName(ActivityType type) {
