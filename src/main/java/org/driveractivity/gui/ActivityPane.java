@@ -31,10 +31,7 @@ public class ActivityPane extends FlowPane implements ActivityDisplay {
         while (iterator.hasNext()) {
             int index = iterator.nextIndex();
             Node node = iterator.next();
-            if(node instanceof ActivityBlock activityBlock) {
-                activityBlock.reload();
-                activityBlock.setActivityIndex(index);
-            }
+            // TODO
         }
     }
     

@@ -9,7 +9,7 @@ ActivityBlock {
     -fx-max-height: 70px;
 }
 
-#block {
+.activity-block-inner {
     -fx-background-radius: 8px;
 }
 
@@ -34,7 +34,4 @@ ActivityBlock {
     -fx-stroke-width: 1px;
     -fx-stroke: #CC5555;
     -fx-stroke-dash-array: 4 4;
-}
-
-#overlays * {
 }
