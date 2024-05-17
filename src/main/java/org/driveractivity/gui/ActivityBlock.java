@@ -50,8 +50,6 @@ public class ActivityBlock extends StackPane {
     private final Pane overlays = new Pane();
     private final StackPane block = new StackPane();
     
-    private final ContextMenu contextMenu;
-    
     public ActivityBlock(ActivityDisplay display, Activity activity, int activityIndex) {
         this.activity = activity;
         this.display = display;
@@ -75,12 +73,10 @@ public class ActivityBlock extends StackPane {
         
         this.getChildren().addAll(block, overlays);
         
-        contextMenu = createContextMenu();
-        
         this.getStyleClass().add(CSS_DIMENSIONS_CLASS.get(activity.getType()));
         block.getStyleClass().add(CSS_STYLE_CLASS.get(activity.getType()));
         createDivisorLines();
-        block.setOnContextMenuRequested(event -> contextMenu.show(this, event.getScreenX(), event.getScreenY()));
+        block.setOnContextMenuRequested(event -> createContextMenu().show(this, event.getScreenX(), event.getScreenY()));
     }
     
     public static FontIcon createIcon(String name) {
