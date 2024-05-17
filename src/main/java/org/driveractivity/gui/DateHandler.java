@@ -133,7 +133,7 @@ public class DateHandler implements Initializable {
                     showError("");
                     processButton.setDisable(false);
                     errorLabel.setVisible(false);
-                    cbHourDuration.setText(String.valueOf(Integer.parseInt(cbHourEnd.getText()) - Integer.parseInt(cbHourStart.getText())));
+                    cbHourDuration.setText(String.valueOf(Integer.parseInt(cbHourStart.getText()) - Integer.parseInt(cbHourEnd.getText())));
                     if(Integer.parseInt(cbMinuteStart.getText()) > Integer.parseInt(cbMinuteEnd.getText())){
                         cbMinuteDuration.setText(String.valueOf(Integer.parseInt(cbMinuteStart.getText()) - Integer.parseInt(cbMinuteEnd.getText())));
                     }else {
