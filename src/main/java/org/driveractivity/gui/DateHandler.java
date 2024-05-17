@@ -37,7 +37,6 @@ public class DateHandler implements Initializable {
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
         errorLabel.setVisible(false);
-        System.out.println(mainController.activityPane.getChildren().getLast());
         if(mainController.activityPane.getChildren().isEmpty()){
             cbHourStart.setText(String.valueOf(0));
             cbMinuteStart.setText(String.valueOf(0));
@@ -151,19 +150,12 @@ public class DateHandler implements Initializable {
 
 
         Activity activity = new Activity(currentActivityType, Duration.of(duration, ChronoUnit.MINUTES), mainController.driverInterface.getBlocks().getLast().getEndTime());
-        checkAcitvi(activity);
-        mainController.driverInterface.addBlock(activity);
         mainController.activityPane.addBack(activity);
 
         Stage stage = (Stage) processButton.getScene().getWindow();
         stage.close();
     }
 
-    private void checkAcitvi(Activity activity) {
-        System.out.println(activity.getStartTime());
-        System.out.println(activity.getDuration());
-        System.out.println(activity.getEndTime());
-    }
 
     private void showError(String error){
         if(error.isEmpty()){
