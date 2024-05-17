@@ -142,15 +142,18 @@ public class ActivityBlock extends StackPane implements Initializable {
         LocalDate endDate = end.toLocalDate();
         ObservableList<Node> dividerChildren = this.overlays.getChildren();
         dividerChildren.clear();
+        
+        boolean isFirstBlock = activityIndex == 0;
+        boolean isLastBlock = activityIndex == display.getDriverInterface().getBlocks().size()-1;
         // Find all timestamps between start and end where a new day begins
         List<LocalDateTime> newDayTimes = startDate.datesUntil(endDate.plusDays(1))
                 .map(LocalDate::atStartOfDay)
-                .filter(startOfDay -> !startOfDay.isBefore(start) && startOfDay.isBefore(end))
+                .filter(startOfDay -> (isFirstBlock ? startOfDay.isAfter(start) : !startOfDay.isBefore(start)) && startOfDay.isBefore(end))
                 .toList();
         
-        if(activityIndex == 0) {
+        if(isFirstBlock) {
             addMarker(0, dividerChildren, startDate.format(DATE_MARKER_FORMATTER_YEAR));
-        } else if(activityIndex == display.getDriverInterface().getBlocks().size()-1) {
+        } else if(isLastBlock) {
             addMarker(1, dividerChildren, endDate.format(DATE_MARKER_FORMATTER_YEAR));
         }
 

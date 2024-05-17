@@ -3,8 +3,6 @@ package org.driveractivity.gui;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.service.DriverInterface;
 
-import java.time.LocalDateTime;
-
 public interface ActivityDisplay {
     void load(DriverInterface driverData);
 
