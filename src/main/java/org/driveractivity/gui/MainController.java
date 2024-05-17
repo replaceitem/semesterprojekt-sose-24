@@ -11,10 +11,11 @@ import javafx.stage.Stage;
 import lombok.Setter;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
+import org.driveractivity.service.DriverInterface;
+import org.driveractivity.service.DriverService;
 
 import java.io.File;
 import java.net.URL;
-import java.util.List;
 import java.util.ResourceBundle;
 
 import static org.driveractivity.entity.ActivityType.*;
@@ -35,49 +36,29 @@ public class MainController implements Initializable {
     @FXML
     private MenuItem openMenu;
 
-    public static List<Activity> activities;
-    public static ActivityType currentActivityType;
+    public DriverInterface driverInterface;
 
     @Setter
     private Stage stage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
-        activities = SampleData.getSampleData(40);
-        activityPane.load(activities);
+        driverInterface = DriverService.getInstance();
+        SampleData.populate(driverInterface, 40);
+        activityPane.load(driverInterface);
     }
 
     @FXML
     private void addActivity(ActionEvent event) {
         Button button = (Button) event.getSource();
-        DateHandler dh = new DateHandler();
-        if (button == restButton) {
-            currentActivityType = REST;
-            dh.openDateHandlerStage();
-            System.out.println("restButton");
-            activityPane.addBack(activities.getLast());
-        }
-        else if (button == driveButton) {
-            currentActivityType = DRIVING;
-            dh.openDateHandlerStage();
-            System.out.println("driveButton");
-            activityPane.addBack(activities.getLast());
-        }
-        else if (button == workButton) {
-            currentActivityType = WORK;
-            dh.openDateHandlerStage();
-            System.out.println("workButton");
-            activityPane.addBack(activities.getLast());
-        }
-        else if (button == availableButton) {
-            currentActivityType = AVAILABLE;
-            dh.openDateHandlerStage();
-            System.out.println("availableButton");
-            activityPane.addBack(activities.getLast());
-        }
-        else{
-            System.out.println("unknown button");
-        }
+        ActivityType type = null;
+        if (button == restButton) type = REST;
+        else if (button == driveButton) type = DRIVING;
+        else if (button == workButton) type = WORK;
+        else if (button == availableButton) type = AVAILABLE;
+        else System.out.println("unknown button");
+
+        DateHandler.openDateHandlerStage(this, type);
     }
 
     @FXML

@@ -13,4 +13,5 @@ module org.driveractivity {
     exports org.driveractivity;
     exports org.driveractivity.gui;
     exports org.driveractivity.entity;
+    exports org.driveractivity.service;
 }

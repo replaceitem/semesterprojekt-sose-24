@@ -2,6 +2,7 @@ package org.driveractivity.gui;
 
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
+import org.driveractivity.service.DriverInterface;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -14,18 +15,16 @@ import java.util.stream.Stream;
 public class SampleData {
 
     private static final Random RANDOM = new Random();
-    
-    public static List<Activity> getSampleData(int size) {
-        List<Duration> durations = Stream.generate(SampleData::getRandomDuration).limit(size).toList();
-        ArrayList<Activity> activities = new ArrayList<>();
+
+    public static void populate(DriverInterface driverInterface, int count) {
+        List<Duration> durations = Stream.generate(SampleData::getRandomDuration).limit(count).toList();
         Activity last = null;
         for (Duration duration : durations) {
-            last = new Activity(getRandomType(last == null ? null : last.getType()), duration, last == null ? LocalDateTime.now() : last.getEndTime());
-            activities.add(last);
+            last = Activity.builder().type(getRandomType(last == null ? null : last.getType())).startTime(LocalDateTime.now()).duration(duration).build();
+            driverInterface.addBlock(last);
         }
-        return activities;
     }
-    
+
     public static Duration getRandomDuration() {
         int i = RANDOM.nextInt(2);
         return switch (i) {
@@ -34,7 +33,7 @@ public class SampleData {
             default -> throw new RuntimeException();
         };
     }
-    
+
     public static ActivityType getRandomType(ActivityType except) {
         List<ActivityType> list = Arrays.stream(ActivityType.values()).filter(activityType -> activityType != except).toList();
         return list.get(RANDOM.nextInt(list.size()));

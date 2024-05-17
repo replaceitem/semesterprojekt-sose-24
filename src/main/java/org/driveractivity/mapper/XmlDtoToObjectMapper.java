@@ -13,7 +13,9 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.stream.Collectors;
 
 public class XmlDtoToObjectMapper { //name is WIP
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
@@ -21,8 +23,24 @@ public class XmlDtoToObjectMapper { //name is WIP
         return ActivityGroup.builder()
                 .days(mapDays(dto.getDays())).build();
     }
-    private static List<Day> mapDays(List<DayDTO> days) {
-        return days.stream().map(XmlDtoToObjectMapper::mapDay).toList();
+
+    public static ArrayList<Activity> mapDayToActivity(ArrayList<Day> days) {
+        Iterator<Day> it = days.iterator();
+        Day current = it.next();
+        Day next;
+        while(it.hasNext()) {
+            next = it.next();
+            if(current.getActivities().getLast().getType() == next.getActivities().getFirst().getType()) {
+                current.getActivities().getLast().setDuration(Duration.between(current.getActivities().getLast().getStartTime(), next.getActivities().getFirst().getEndTime()));
+                next.getActivities().removeFirst();
+            }
+            current = next;
+        }
+        return days.stream().flatMap(day -> day.getActivities().stream()).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private static ArrayList<Day> mapDays(ArrayList<DayDTO> days) {
+        return days.stream().map(XmlDtoToObjectMapper::mapDay).collect(Collectors.toCollection(ArrayList::new));
     }
     private static Day mapDay(DayDTO dayDTO) {
         return Day.builder()
@@ -32,7 +50,7 @@ public class XmlDtoToObjectMapper { //name is WIP
                 .activities(mapActivities(dayDTO.getActivities(), LocalDate.parse(dayDTO.getDate(), formatter)))
                 .build();
     }
-    private static List<Activity> addDurationToActivities(List<Activity> activities) {
+    private static ArrayList<Activity> addDurationToActivities(ArrayList<Activity> activities) {
         var it = activities.iterator();
         Activity current = it.next();
         while(it.hasNext()) {
@@ -45,8 +63,8 @@ public class XmlDtoToObjectMapper { //name is WIP
         }
         return activities;
     }
-    private static List<Activity> mapActivities(List<ActivityDTO> activities, LocalDate date) {
-        return addDurationToActivities(activities.stream().map(x -> mapActivity(x, date)).toList());
+    private static ArrayList<Activity> mapActivities(ArrayList<ActivityDTO> activities, LocalDate date) {
+        return addDurationToActivities(activities.stream().map(x -> mapActivity(x, date)).collect(Collectors.toCollection(ArrayList::new)));
     }
     private static Activity mapActivity(ActivityDTO activityDTO, LocalDate date) {
         return Activity.builder()

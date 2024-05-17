@@ -11,19 +11,15 @@ ActivityBlock {
 }
 
 ActivityBlock.activity-rest {
-    -fx-background-color: #AAAAAA;
     -fx-pref-width: 60px;
 }
-ActivityBlock.activity-driving {
-    -fx-background-color: #3388CC;
+ActivityBlock.activity-drive {
     -fx-pref-width: 90px;
 }
 ActivityBlock.activity-work {
-    -fx-background-color: #CCCC44;
     -fx-pref-width: 80px;
 }
 ActivityBlock.activity-available {
-    -fx-background-color: #33AA33;
     -fx-pref-width: 120px;
 }
 
