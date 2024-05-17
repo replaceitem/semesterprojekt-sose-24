@@ -1,14 +1,9 @@
 package org.driveractivity.gui;
 
-import javafx.beans.Observable;
-import javafx.beans.value.ObservableValue;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.geometry.Bounds;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
 import javafx.scene.control.Label;
@@ -17,7 +12,6 @@ import javafx.scene.control.MenuItem;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.shape.Line;
-import javafx.util.Callback;
 import lombok.Getter;
 import lombok.Setter;
 import org.driveractivity.entity.Activity;
@@ -63,7 +57,9 @@ public class ActivityBlock extends StackPane implements Initializable {
     @FXML
     public Label duration;
     @FXML
-    public Pane dividers;
+    public Pane overlays;
+    @FXML
+    public Pane block;
     @FXML
     public ContextMenu contextMenu;
     @FXML
@@ -92,7 +88,7 @@ public class ActivityBlock extends StackPane implements Initializable {
     @Override
     public void initialize(URL location, ResourceBundle resources) {
         reload();
-        this.setOnContextMenuRequested(event -> contextMenu.show(this, event.getScreenX(), event.getScreenY()));
+        block.setOnContextMenuRequested(event -> contextMenu.show(this, event.getScreenX(), event.getScreenY()));
         contextMenuEdit.setOnAction(actionEvent -> {
             System.out.println("Edit");
         });
@@ -102,16 +98,22 @@ public class ActivityBlock extends StackPane implements Initializable {
 
         setContextMenuInsertAction(contextMenuInsertBefore, 0);
         setContextMenuInsertAction(contextMenuInsertAfter, 1);
+        toFront();
     }
     
     public void reload() {
         name.setText(formatTypeName(activity.getType()));
         startTime.setText(activity.getStartTime().format(START_TIME_FORMATTER));
         duration.setText(formatDuration(activity.getDuration()));
-        String cssClass = CSS_CLASS.get(activity.getType());
-        if(!getStyleClass().contains(cssClass)) {
-            this.getStyleClass().removeIf(string -> string.contains("activity-"));
-            this.getStyleClass().add(cssClass);
+        String styleClass = CSS_STYLE_CLASS.get(activity.getType());
+        String dimensionsClass = CSS_DIMENSIONS_CLASS.get(activity.getType());
+        if(!this.getStyleClass().contains(dimensionsClass)) {
+            this.getStyleClass().removeIf(string -> string.contains("activity-dimensions-"));
+            this.getStyleClass().add(dimensionsClass);
+        }
+        if(!block.getStyleClass().contains(styleClass)) {
+            block.getStyleClass().removeIf(string -> string.contains("activity-"));
+            block.getStyleClass().add(styleClass);
         }
         createDivisorLines();
     }
@@ -137,7 +139,7 @@ public class ActivityBlock extends StackPane implements Initializable {
         long durationMillis = activity.getDuration().toMillis();
         LocalDate startDate = start.toLocalDate();
         LocalDate endDate = end.toLocalDate();
-        ObservableList<Node> dividerChildren = this.dividers.getChildren();
+        ObservableList<Node> dividerChildren = this.overlays.getChildren();
         dividerChildren.clear();
         // Find all timestamps between start and end where a new day begins
         List<LocalDateTime> newDayTimes = startDate.datesUntil(endDate.plusDays(1))
@@ -153,8 +155,8 @@ public class ActivityBlock extends StackPane implements Initializable {
 
             Line line = new Line();
             line.getStyleClass().add("day-divider-line");
-            line.endYProperty().bind(this.heightProperty());
-            line.layoutXProperty().bind(this.widthProperty().multiply(blockPercentage));
+            line.endYProperty().bind(block.heightProperty());
+            line.layoutXProperty().bind(block.widthProperty().multiply(blockPercentage));
             dividerChildren.add(line);
 
             DateTimeFormatter markerFormatter = getMarkerFormatter(date, isInitial);
@@ -186,10 +188,16 @@ public class ActivityBlock extends StackPane implements Initializable {
         }
     }
     
-    private static final Map<ActivityType,String> CSS_CLASS = new EnumMap<>(Map.of(
+    private static final Map<ActivityType,String> CSS_STYLE_CLASS = new EnumMap<>(Map.of(
             ActivityType.REST, "activity-rest",
             ActivityType.DRIVING, "activity-drive",
             ActivityType.WORK, "activity-work",
             ActivityType.AVAILABLE, "activity-available"
+    ));
+    private static final Map<ActivityType,String> CSS_DIMENSIONS_CLASS = new EnumMap<>(Map.of(
+            ActivityType.REST, "activity-dimensions-rest",
+            ActivityType.DRIVING, "activity-dimensions-drive",
+            ActivityType.WORK, "activity-dimensions-work",
+            ActivityType.AVAILABLE, "activity-dimensions-available"
     ));
 }
