@@ -3,6 +3,7 @@ import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 
 import javafx.scene.control.*;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
@@ -14,6 +15,7 @@ import java.util.ResourceBundle;
 
 public class DateHandler implements Initializable {
     static MainController mainController;
+    public Text DayText;
     ActivityType currentActivityType;
     
     @FXML
@@ -108,7 +110,8 @@ public class DateHandler implements Initializable {
                         showError("");
                         processButton.setDisable(false);
                         errorLabel.setVisible(false);
-
+                        errorLabel.setVisible(false);
+                        DayText.setText("");
                         cbHourDuration.setText(String.valueOf(Integer.parseInt(cbHourEnd.getText()) - Integer.parseInt(cbHourStart.getText())));
                         cbMinuteDuration.setText(String.valueOf(Integer.parseInt(cbMinuteEnd.getText()) - Integer.parseInt(cbMinuteStart.getText())));
 
@@ -121,6 +124,7 @@ public class DateHandler implements Initializable {
                     showError("");
                     processButton.setDisable(false);
                     errorLabel.setVisible(false);
+                    DayText.setText("");
                     cbHourDuration.setText(String.valueOf(Integer.parseInt(cbHourEnd.getText()) - Integer.parseInt(cbHourStart.getText())));
                     if(Integer.parseInt(cbMinuteStart.getText()) < Integer.parseInt(cbMinuteEnd.getText())){
                         cbMinuteDuration.setText(String.valueOf(Integer.parseInt(cbMinuteEnd.getText()) - Integer.parseInt(cbMinuteStart.getText())));
@@ -132,11 +136,12 @@ public class DateHandler implements Initializable {
                     showError("");
                     processButton.setDisable(false);
                     errorLabel.setVisible(false);
-                    cbHourDuration.setText(String.valueOf(Integer.parseInt(cbHourStart.getText()) - Integer.parseInt(cbHourEnd.getText())));
+                    DayText.setText("Über eine Nacht");
+                    cbHourDuration.setText(String.valueOf(24-Integer.parseInt(cbHourStart.getText()) + Integer.parseInt(cbHourEnd.getText())));
                     if(Integer.parseInt(cbMinuteStart.getText()) > Integer.parseInt(cbMinuteEnd.getText())){
-                        cbMinuteDuration.setText(String.valueOf(Integer.parseInt(cbMinuteStart.getText()) - Integer.parseInt(cbMinuteEnd.getText())));
+                        cbMinuteDuration.setText(String.valueOf(60-Integer.parseInt(cbMinuteStart.getText()) - Integer.parseInt(cbMinuteEnd.getText())));
                     }else {
-                        cbMinuteDuration.setText(String.valueOf(Integer.parseInt(cbMinuteEnd.getText()) - Integer.parseInt(cbMinuteStart.getText())));
+                        cbMinuteDuration.setText(String.valueOf(60-Integer.parseInt(cbMinuteEnd.getText()) - Integer.parseInt(cbMinuteStart.getText())));
                     }
                 }
             }
