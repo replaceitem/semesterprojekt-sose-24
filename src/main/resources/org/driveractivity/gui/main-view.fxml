@@ -14,7 +14,7 @@
     <MenuBar>
         <Menu text="File">
             <MenuItem fx:id="openMenu" text="Open" onAction="#openFile"/>
-            <MenuItem text="Save"/>
+            <MenuItem fx:id="saveMenu" text="Save" onAction="#saveFile"/>
         </Menu>
     </MenuBar>
 </top>
@@ -28,6 +28,8 @@
             <Button fx:id="driveButton" text="Drive" styleClass="activity-button, activity-drive" onAction="#addActivity"/>
             <Button fx:id="workButton" text="Work" styleClass="activity-button, activity-work" onAction="#addActivity"/>
             <Button fx:id="availableButton" text="Available" styleClass="activity-button, activity-available" onAction="#addActivity"/>
+            <Pane/> <!-- Empty space -->
+            <Button fx:id="clearButton" text="Clear" styleClass="activity-button, activity-available" onAction="#clearActivities"/>
         </VBox>
         <Separator orientation="VERTICAL"/> <!-- Divider -->
     </HBox>

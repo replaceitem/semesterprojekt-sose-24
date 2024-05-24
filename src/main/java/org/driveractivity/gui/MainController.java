@@ -66,6 +66,12 @@ public class MainController implements Initializable {
         //dh.startTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(9,59,59));
         openDateHandlerStage(this,type);
     }
+
+    @FXML
+    private void clearActivities(ActionEvent event) {
+        activityPane.clearActivities();
+    }
+
     public static void openDateHandlerStage(MainController mainController, ActivityType currentActivityType) {
         DateHandler.mainController = mainController;
         try {
@@ -102,7 +108,7 @@ public class MainController implements Initializable {
 
     @FXML
     private void saveFile(ActionEvent event) {
-            driverInterface.exportToXML();
+        driverInterface.exportToXML();
     }
 
 }
