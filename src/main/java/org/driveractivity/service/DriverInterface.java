@@ -12,6 +12,7 @@ public interface DriverInterface {
     ArrayList<Activity> addBlock(int index, Activity activity);
     ArrayList<Activity> removeBlock(int index);
     ArrayList<Activity> changeBlock(int index, Activity activity);
+    void clearList();
     void exportToXML();
     ArrayList<Activity> importFrom(File f);
 }

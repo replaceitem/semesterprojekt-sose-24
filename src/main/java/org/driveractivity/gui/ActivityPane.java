@@ -53,8 +53,13 @@ public class ActivityPane extends FlowPane implements ActivityDisplay {
     
     @Override
     public void removeActivity(int index) {
-        
         ArrayList<Activity> newActivities = driverData.removeBlock(index);
+        reload(newActivities);
+    }
+
+    public void clearActivities() {
+        driverData.clearList();
+        ArrayList<Activity> newActivities = new ArrayList<>();
         reload(newActivities);
     }
     

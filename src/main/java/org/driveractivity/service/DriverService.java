@@ -113,6 +113,11 @@ public class DriverService implements DriverInterface {
     }
 
     @Override
+    public void clearList(){
+        activities.clear();
+    }
+
+    @Override
     public void exportToXML() {
         ITFTestFileDTO itfTestFileDTO = ObjectToXmlDtoMapper.mapToXmlDto(activities);
         String filename = itfTestFileDTO.getActivityGroup().getDays().getFirst().getDate() + "-"+ itfTestFileDTO.getActivityGroup().getDays().getLast().getDate();
