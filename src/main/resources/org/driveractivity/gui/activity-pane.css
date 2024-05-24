@@ -1,26 +1,33 @@
 ActivityPane {
-    -fx-padding: 8px;
+    -fx-padding: 16px 8px 8px 8px;
     -fx-hgap: 1px;
     -fx-vgap: 16px;
 }
 
 ActivityBlock {
-    -fx-background-radius: 8px;
     -fx-pref-height: 70px;
     -fx-max-height: 70px;
 }
 
-ActivityBlock.activity-rest {
+.activity-block-inner {
+    -fx-background-radius: 8px;
+}
+
+.activity-dimensions-rest {
     -fx-pref-width: 60px;
+    -fx-max-width: 60px;
 }
-ActivityBlock.activity-drive {
+.activity-dimensions-drive {
     -fx-pref-width: 90px;
+    -fx-max-width: 90px;
 }
-ActivityBlock.activity-work {
+.activity-dimensions-work {
     -fx-pref-width: 80px;
+    -fx-max-width: 80px;
 }
-ActivityBlock.activity-available {
+.activity-dimensions-available {
     -fx-pref-width: 120px;
+    -fx-max-width: 120px;
 }
 
 .day-divider-line {

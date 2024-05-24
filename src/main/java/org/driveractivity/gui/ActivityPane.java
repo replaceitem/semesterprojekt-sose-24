@@ -6,6 +6,8 @@ import javafx.scene.layout.FlowPane;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.service.DriverInterface;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 
 public class ActivityPane extends FlowPane implements ActivityDisplay {
@@ -14,26 +16,27 @@ public class ActivityPane extends FlowPane implements ActivityDisplay {
     @Override
     public void load(DriverInterface driverData) {
         this.driverData = driverData;
-        ObservableList<Node> children = this.getChildren();
-        children.clear();
-        ListIterator<Activity> iterator = driverData.getBlocks().listIterator();
-        while (iterator.hasNext()) {
-            int activityIndex = iterator.nextIndex();
-            Activity activity = iterator.next();
-            children.add(new ActivityBlock(this, activity, activityIndex));
-        }
+        reload(driverData.getBlocks());
     }
     
     @Override
-    public void reload() {
-        ListIterator<Node> iterator = this.getChildren().listIterator();
+    public void reload(List<Activity> newActivities) {
+        ObservableList<Node> children = this.getChildren();
+        // temporary list to only notify the children listener once
+        List<Node> newChildren = new ArrayList<>();
+        ListIterator<Activity> iterator = newActivities.listIterator();
         while (iterator.hasNext()) {
             int index = iterator.nextIndex();
-            Node node = iterator.next();
-            if(node instanceof ActivityBlock activityBlock) {
-                activityBlock.reload();
-                activityBlock.setActivityIndex(index);
-            }
+            Activity activity = iterator.next();
+            newChildren.add(new ActivityBlock(this, activity, index));
+        }
+        // temporarily disable managed to improve performance of mass adding and only do one layout pass
+        this.setManaged(false);
+        try {
+            children.clear();
+            children.addAll(newChildren);
+        } finally {
+            this.setManaged(true);
         }
     }
     
@@ -44,17 +47,19 @@ public class ActivityPane extends FlowPane implements ActivityDisplay {
     
     @Override
     public void addActivity(int index, Activity activity) {
-        driverData.addBlock(index, activity);
-        this.getChildren().add(index, new ActivityBlock(this, activity, index));
-        reload();
+        ArrayList<Activity> newActivities = driverData.addBlock(index, activity);
+        reload(newActivities);
     }
     
     @Override
     public void removeActivity(int index) {
-        driverData.removeBlock(index);
-        this.getChildren().remove(index);
-        reload();
+        
+        ArrayList<Activity> newActivities = driverData.removeBlock(index);
+        reload(newActivities);
     }
-
-
+    
+    @Override
+    public DriverInterface getDriverInterface() {
+        return driverData;
+    }
 }

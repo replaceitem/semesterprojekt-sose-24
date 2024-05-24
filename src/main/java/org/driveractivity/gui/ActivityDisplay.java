@@ -8,11 +8,13 @@ import java.util.List;
 public interface ActivityDisplay {
     void load(DriverInterface driverData);
 
-    void reload();
+    void reload(List<Activity> newActivities);
 
     void addBack(Activity activity);
 
     void addActivity(int index, Activity activity);
 
     void removeActivity(int index);
+
+    DriverInterface getDriverInterface();
 }

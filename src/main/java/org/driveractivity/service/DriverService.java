@@ -4,11 +4,12 @@ import lombok.Getter;
 import org.driveractivity.DTO.ITFTestFileDTO;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityGroup;
+import org.driveractivity.mapper.ObjectToXmlDtoMapper;
 import org.driveractivity.mapper.XmlDtoToObjectMapper;
-
 
 import javax.xml.bind.JAXBContext;
 import javax.xml.bind.JAXBException;
+import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
 import java.io.File;
 import java.util.ArrayList;
@@ -113,7 +114,16 @@ public class DriverService implements DriverInterface {
 
     @Override
     public void exportToXML() {
-
+        ITFTestFileDTO itfTestFileDTO = ObjectToXmlDtoMapper.mapToXmlDto(activities);
+        String filename = itfTestFileDTO.getActivityGroup().getDays().getFirst().getDate() + "-"+ itfTestFileDTO.getActivityGroup().getDays().getLast().getDate();
+        try {
+            JAXBContext jaxbContext = JAXBContext.newInstance(ITFTestFileDTO.class);
+            Marshaller marshaller = jaxbContext.createMarshaller();
+            marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
+            marshaller.marshal(itfTestFileDTO, new File(filename + ".xml"));
+        } catch (JAXBException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     @Override

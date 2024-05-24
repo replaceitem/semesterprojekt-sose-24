@@ -76,6 +76,16 @@ public class DriverServiceTest {
     }
 
     @Test
+    public void outputTo() {
+        ClassLoader classLoader = getClass().getClassLoader();
+        File file = new File(Objects.requireNonNull(classLoader.getResource("Beispiel2.xml")).getFile());
+        DriverService driverService = DriverService.getInstance();
+        driverService.importFrom(file);
+        assertThat(driverService.getActivities()).isNotNull();
+        driverService.exportToXML();
+    }
+
+    @Test
     public void testRemoveBlock() {
         DriverService driverService = DriverService.getInstance();
         Activity activity = Activity.builder()
