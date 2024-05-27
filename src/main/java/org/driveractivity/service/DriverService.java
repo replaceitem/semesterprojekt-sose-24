@@ -102,10 +102,6 @@ public class DriverService implements DriverInterface {
     }
 
     private void mergeActivityIfPossible(int index, Activity activity) {
-        //The name, if thought in another direction, could be: "mergeActivityWithNeighbours" or if the name would be conditional "mergeActivityIfPossible"
-        //The method is not only merging the activity with the neighbours, but also checking if it is possible to merge them
-        //So the name should be more descriptive
-        //So in that case the name should be:
         if(index != 0) {
             Activity activityBefore = activities.get(index -1);
             if(activityBefore.getType() == activity.getType()) {
