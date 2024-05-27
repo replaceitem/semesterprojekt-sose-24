@@ -6,12 +6,12 @@ module org.driveractivity {
     requires org.kordamp.ikonli.core;
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.feather;
-    requires java.xml.bind;
+    requires jakarta.xml.bind;
+    requires org.glassfish.jaxb.runtime;
 
 
     opens org.driveractivity.gui to javafx.fxml;
-    opens org.driveractivity.DTO to java.xml.bind;
-    exports org.driveractivity;
+    opens org.driveractivity.DTO to jakarta.xml.bind;
     exports org.driveractivity.gui;
     exports org.driveractivity.entity;
     exports org.driveractivity.service;
