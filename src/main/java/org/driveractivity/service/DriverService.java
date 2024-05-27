@@ -4,6 +4,7 @@ import lombok.Getter;
 import org.driveractivity.DTO.ITFTestFileDTO;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityGroup;
+import org.driveractivity.exception.FileImportException;
 import org.driveractivity.mapper.ObjectToXmlDtoMapper;
 import org.driveractivity.mapper.XmlDtoToObjectMapper;
 
@@ -141,7 +142,7 @@ public class DriverService implements DriverInterface {
     }
 
     @Override
-    public ArrayList<Activity> importFrom(File f) {
+    public ArrayList<Activity> importFrom(File f) throws FileImportException {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(ITFTestFileDTO.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -152,7 +153,7 @@ public class DriverService implements DriverInterface {
             this.activities.addAll(activities);
             return activities;
         } catch (JAXBException e) {
-            throw new RuntimeException(e);
+            throw new FileImportException("Error while importing file, please check if the file is valid.");
         }
     }
 }

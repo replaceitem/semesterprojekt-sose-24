@@ -117,7 +117,7 @@ public class DriverServiceTest {
         }
     }
     @Test
-    public void importFrom() {
+    public void importFrom() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource("Beispiel2.xml")).getFile());
         DriverService driverService = DriverService.getInstance();
@@ -127,7 +127,7 @@ public class DriverServiceTest {
     }
 
     @Test
-    public void outputTo() {
+    public void outputTo() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource("Beispiel2.xml")).getFile());
         DriverService driverService = DriverService.getInstance();

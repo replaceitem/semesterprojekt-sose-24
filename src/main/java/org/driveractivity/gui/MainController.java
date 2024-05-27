@@ -1,21 +1,20 @@
 package org.driveractivity.gui;
 
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-
-import javafx.event.ActionEvent;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
 import javafx.scene.control.MenuItem;
 import javafx.stage.FileChooser;
-import javafx.stage.Stage;
-import lombok.Setter;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import lombok.Setter;
 import org.driveractivity.entity.ActivityType;
+import org.driveractivity.exception.FileImportException;
 import org.driveractivity.service.DriverInterface;
 import org.driveractivity.service.DriverService;
 
@@ -102,7 +101,14 @@ public class MainController implements Initializable {
 
         File file = fileChooser.showOpenDialog(stage);
 
-        driverInterface.importFrom(file);
+        try {
+            driverInterface.importFrom(file);
+        } catch (FileImportException e) {
+            //TODO show error message on screen
+            //get title of dialog via: e.getTitle()
+            //get message via e.getMessage()
+            throw new RuntimeException(e);
+        }
         activityPane.load(driverInterface);
     }
 
