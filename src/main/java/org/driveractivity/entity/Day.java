@@ -12,5 +12,6 @@ public class Day {
     private LocalDate date;
     private long presenceCounter;
     private long distance;
-    private ArrayList<Activity> activities;
+    @Builder.Default
+    private ArrayList<Activity> activities = new ArrayList<>();
 }
