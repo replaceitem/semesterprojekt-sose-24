@@ -34,6 +34,10 @@ public class DriverService implements DriverInterface {
         if(!activities.isEmpty()) {
             Activity last = activities.getLast();
             activity.setStartTime(last.getEndTime());
+            if(last.getType() == activity.getType()) {
+                last.setDuration(last.getDuration().plus(activity.getDuration()));
+                return activities;
+            }
         }
         activities.add(activity);
         return activities;
@@ -51,6 +55,7 @@ public class DriverService implements DriverInterface {
             activity.setStartTime(activities.get(index-1).getEndTime());
         }
         activities.add(index, activity);
+        mergeActivityIfPossible(index, activity);
         for(int i = index+1; i < activities.size(); i++) {
             activities.get(i).setStartTime(activities.get(i-1).getEndTime());
         }
@@ -88,28 +93,36 @@ public class DriverService implements DriverInterface {
         activities.get(index).setDuration(activity.getDuration());
         activities.get(index).setType(activity.getType());
 
+        mergeActivityIfPossible(index, activity);
+
+        for(int i = index+1; i < activities.size(); i++) {
+            activities.get(i).setStartTime(activities.get(i-1).getEndTime());
+        }
+        return activities;
+    }
+
+    private void mergeActivityIfPossible(int index, Activity activity) {
+        //The name, if thought in another direction, could be: "mergeActivityWithNeighbours" or if the name would be conditional "mergeActivityIfPossible"
+        //The method is not only merging the activity with the neighbours, but also checking if it is possible to merge them
+        //So the name should be more descriptive
+        //So in that case the name should be:
         if(index != 0) {
-            Activity activityBefore = activities.get(index-1);
+            Activity activityBefore = activities.get(index -1);
             if(activityBefore.getType() == activity.getType()) {
                 activityBefore.setDuration(activityBefore.getDuration().plus(activity.getDuration()));
                 removeBlock(index);
-                index = index-1;
+                index = index -1;
             }
         }
 
-        if(index+1 != activities.size()) {
-            Activity activityAfter = activities.get(index+1);
+        if(index +1 != activities.size()) {
+            Activity activityAfter = activities.get(index +1);
             if(activityAfter.getType() == activity.getType()) {
                 activityAfter.setStartTime(activity.getEndTime());
                 activityAfter.setDuration(activityAfter.getDuration().plus(activity.getDuration()));
                 removeBlock(index);
             }
         }
-
-        for(int i = index+1; i < activities.size(); i++) {
-            activities.get(i).setStartTime(activities.get(i-1).getEndTime());
-        }
-        return activities;
     }
 
     @Override
