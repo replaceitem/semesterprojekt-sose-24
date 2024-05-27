@@ -87,7 +87,7 @@ public class DriverServiceTest {
                 .build();
         driverService.addBlock(activity);
         Activity activity2 = Activity.builder()
-                .type(WORK)
+                .type(REST)
                 .startTime(LocalDateTime.now())
                 .duration(Duration.of(5, ChronoUnit.MINUTES))
                 .build();
