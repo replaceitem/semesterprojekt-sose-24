@@ -14,7 +14,6 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
-import lombok.Getter;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -43,16 +42,16 @@ public class ActivityBlock extends StackPane {
     private static final DateTimeFormatter DATE_MARKER_FORMATTER_MONTH = DateTimeFormatter.ofPattern("dd.MM.");
     private static final DateTimeFormatter DATE_MARKER_FORMATTER_DAY = DateTimeFormatter.ofPattern("dd.");
 
-    private final ActivityDisplay display;
+    private final ActivityPane activityPane;
     private final Activity activity;
     private final int activityIndex;
 
     private final Pane overlays = new Pane();
     private final StackPane block = new StackPane();
     
-    public ActivityBlock(ActivityDisplay display, Activity activity, int activityIndex) {
+    public ActivityBlock(ActivityPane activityPane, Activity activity, int activityIndex) {
         this.activity = activity;
-        this.display = display;
+        this.activityPane = activityPane;
         this.activityIndex = activityIndex;
 
         AnchorPane startTimeAnchorPane = new AnchorPane();
@@ -97,7 +96,7 @@ public class ActivityBlock extends StackPane {
         MenuItem deleteItem = new MenuItem("Delete", createIcon("fth-trash"));
         deleteItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
         deleteItem.setOnAction(actionEvent -> {
-            display.removeActivity(activityIndex);
+            activityPane.removeActivity(activityIndex);
         });
 
         Menu insertBeforeItem = new Menu("Insert before", createIcon("fth-chevron-left"));
@@ -115,8 +114,8 @@ public class ActivityBlock extends StackPane {
             MenuItem menuItem = new MenuItem(formatTypeName(type));
             menuItem.getStyleClass().add(CSS_STYLE_CLASS.get(type));
             menuItem.setOnAction(actionEvent -> {
-                // TODO: test data, open dialog instead
-                display.addActivity(this.activityIndex + shift, new Activity(type, Duration.ofHours(3), LocalDateTime.now()));
+                int insertionIndex = this.activityIndex + shift;
+                activityPane.getMainController().openDateHandlerStage(type, insertionIndex);
             });
             menu.getItems().add(menuItem);
         }
@@ -132,7 +131,7 @@ public class ActivityBlock extends StackPane {
         dividerChildren.clear();
         
         boolean isFirstBlock = activityIndex == 0;
-        boolean isLastBlock = activityIndex == display.getDriverInterface().getBlocks().size()-1;
+        boolean isLastBlock = activityIndex == activityPane.getDriverInterface().getBlocks().size()-1;
         // Find all timestamps between start and end where a new day begins
         List<LocalDateTime> newDayTimes = startDate.datesUntil(endDate.plusDays(1))
                 .map(LocalDate::atStartOfDay)

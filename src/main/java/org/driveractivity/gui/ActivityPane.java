@@ -3,6 +3,8 @@ package org.driveractivity.gui;
 import javafx.collections.ObservableList;
 import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
+import lombok.Getter;
+import lombok.Setter;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.service.DriverInterface;
 
@@ -12,13 +14,15 @@ import java.util.ListIterator;
 
 public class ActivityPane extends FlowPane implements ActivityDisplay {
     private DriverInterface driverData;
-    
+    @Setter @Getter
+    private MainController mainController;
+
     @Override
     public void load(DriverInterface driverData) {
         this.driverData = driverData;
         reload(driverData.getBlocks());
     }
-    
+
     @Override
     public void reload(List<Activity> newActivities) {
         ObservableList<Node> children = this.getChildren();
@@ -39,18 +43,18 @@ public class ActivityPane extends FlowPane implements ActivityDisplay {
             this.setManaged(true);
         }
     }
-    
+
     @Override
     public void addBack(Activity activity) {
         this.addActivity(this.getChildren().size(), activity);
     }
-    
+
     @Override
     public void addActivity(int index, Activity activity) {
         ArrayList<Activity> newActivities = driverData.addBlock(index, activity);
         reload(newActivities);
     }
-    
+
     @Override
     public void removeActivity(int index) {
         ArrayList<Activity> newActivities = driverData.removeBlock(index);
@@ -62,7 +66,7 @@ public class ActivityPane extends FlowPane implements ActivityDisplay {
         ArrayList<Activity> newActivities = new ArrayList<>();
         reload(newActivities);
     }
-    
+
     @Override
     public DriverInterface getDriverInterface() {
         return driverData;

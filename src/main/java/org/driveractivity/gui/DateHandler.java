@@ -1,22 +1,22 @@
 package org.driveractivity.gui;
 import javafx.fxml.FXML;
-import javafx.fxml.Initializable;
 
 import javafx.scene.control.*;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
+import org.driveractivity.service.DriverInterface;
 
-import java.net.URL;
 import java.time.Duration;
+import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
-import java.util.ResourceBundle;
+import java.util.List;
 
-public class DateHandler implements Initializable {
-    static MainController mainController;
-    public Text DayText;
-    ActivityType currentActivityType;
+public class DateHandler {
+    private MainController mainController;
+    private ActivityType currentActivityType;
+    private int insertionIndex;
     
     @FXML
     private Label errorLabel;
@@ -34,17 +34,25 @@ public class DateHandler implements Initializable {
     private TextField cbMinuteDuration;
     @FXML
     private Button processButton;
+    @FXML
+    public Text DayText;
 
+    public void initialize(MainController mainController, ActivityType activityType, int insertionIndex) {
+        this.mainController = mainController;
+        this.currentActivityType = activityType;
+        this.insertionIndex = insertionIndex;
 
-    @Override
-    public void initialize(URL url, ResourceBundle resourceBundle) {
         errorLabel.setVisible(false);
-        if(mainController.activityPane.getChildren().isEmpty()){
+        DriverInterface driverInterface = mainController.driverInterface;
+        List<Activity> blocks = driverInterface.getBlocks();
+        if(blocks.isEmpty() || insertionIndex == 0){
             cbHourStart.setText(String.valueOf(0));
             cbMinuteStart.setText(String.valueOf(0));
-        }else {
-            cbHourStart.setText(String.valueOf(mainController.driverInterface.getBlocks().getLast().getEndTime().getHour()));
-            cbMinuteStart.setText(String.valueOf(mainController.driverInterface.getBlocks().getLast().getEndTime().getHour()));
+        } else {
+            Activity previousActivity = blocks.get(insertionIndex - 1);
+            LocalDateTime endTime = previousActivity.getEndTime();
+            cbHourStart.setText(String.valueOf(endTime.getHour()));
+            cbMinuteStart.setText(String.valueOf(endTime.getHour()));
         }
 
         cbHourEnd.focusedProperty().addListener((observable, oldValue, newValue) -> {
@@ -155,7 +163,7 @@ public class DateHandler implements Initializable {
 
 
         Activity activity = new Activity(currentActivityType, Duration.of(duration, ChronoUnit.MINUTES), mainController.driverInterface.getBlocks().getLast().getEndTime());
-        mainController.activityPane.addBack(activity);
+        mainController.activityPane.addActivity(insertionIndex, activity);
 
         Stage stage = (Stage) processButton.getScene().getWindow();
         stage.close();

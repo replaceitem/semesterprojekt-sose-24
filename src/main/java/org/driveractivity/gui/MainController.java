@@ -48,6 +48,7 @@ public class MainController implements Initializable {
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        activityPane.setMainController(this);
         driverInterface = DriverService.getInstance();
         SampleData.populate(driverInterface, 40);
         activityPane.load(driverInterface);
@@ -63,7 +64,7 @@ public class MainController implements Initializable {
         else if (button == availableButton) type = AVAILABLE;
         else System.out.println("unknown button");
         //dh.startTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(9,59,59));
-        openDateHandlerStage(this,type);
+        this.openDateHandlerStage(type, driverInterface.getBlocks().size());
     }
 
     @FXML
@@ -71,14 +72,12 @@ public class MainController implements Initializable {
         activityPane.clearActivities();
     }
 
-    public static void openDateHandlerStage(MainController mainController, ActivityType currentActivityType) {
-        DateHandler.mainController = mainController;
+    public void openDateHandlerStage(ActivityType currentActivityType, int insertionIndex) {
         try {
             FXMLLoader loader = new FXMLLoader(DateHandler.class.getResource("DataHandler.fxml"));
             Parent root = loader.load();
             DateHandler controller = loader.getController();
-            controller.currentActivityType = currentActivityType;
-            DateHandler.mainController = mainController;
+            controller.initialize(this, currentActivityType, insertionIndex);
             Stage dialogStage = new Stage();
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initStyle(StageStyle.UTILITY);
