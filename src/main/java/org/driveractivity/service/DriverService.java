@@ -35,12 +35,9 @@ public class DriverService implements DriverInterface {
         if(!activities.isEmpty()) {
             Activity last = activities.getLast();
             activity.setStartTime(last.getEndTime());
-            if(last.getType() == activity.getType()) {
-                last.setDuration(last.getDuration().plus(activity.getDuration()));
-                return activities;
-            }
         }
         activities.add(activity);
+        mergeAtIndex(activities.size()-1);
         return activities;
     }
 
@@ -56,7 +53,9 @@ public class DriverService implements DriverInterface {
             activity.setStartTime(activities.get(index-1).getEndTime());
         }
         activities.add(index, activity);
-        mergeActivityIfPossible(index, activity);
+
+        index = mergeAtIndex(index);
+
         for(int i = index+1; i < activities.size(); i++) {
             activities.get(i).setStartTime(activities.get(i-1).getEndTime());
         }
@@ -68,15 +67,8 @@ public class DriverService implements DriverInterface {
         if(index < 0 || index >= activities.size()) {
             throw new IndexOutOfBoundsException();
         }
-        if(index != 0 && index+1 != activities.size()) {
-            Activity activityBefore = activities.get(index-1);
-            Activity activityAfter = activities.get(index+1);
-            if(activityBefore.getType() == activityAfter.getType()) {
-                activityBefore.setDuration(activityBefore.getDuration().plus(activityAfter.getDuration()));
-                activities.remove(activityAfter);
-            }
-        }
         activities.remove(index);
+        index = mergeAtIndex(index);
         if (index != 0) {
             for(int i = index; i < activities.size(); i++) {
                 activities.get(i).setStartTime(activities.get(i-1).getEndTime());
@@ -94,7 +86,7 @@ public class DriverService implements DriverInterface {
         activities.get(index).setDuration(activity.getDuration());
         activities.get(index).setType(activity.getType());
 
-        mergeActivityIfPossible(index, activity);
+        index = mergeAtIndex(index);
 
         for(int i = index+1; i < activities.size(); i++) {
             activities.get(i).setStartTime(activities.get(i-1).getEndTime());
@@ -102,25 +94,6 @@ public class DriverService implements DriverInterface {
         return activities;
     }
 
-    private void mergeActivityIfPossible(int index, Activity activity) {
-        if(index != 0) {
-            Activity activityBefore = activities.get(index -1);
-            if(activityBefore.getType() == activity.getType()) {
-                activityBefore.setDuration(activityBefore.getDuration().plus(activity.getDuration()));
-                removeBlock(index);
-                index = index -1;
-            }
-        }
-
-        if(index +1 != activities.size()) {
-            Activity activityAfter = activities.get(index +1);
-            if(activityAfter.getType() == activity.getType()) {
-                activityAfter.setStartTime(activity.getEndTime());
-                activityAfter.setDuration(activityAfter.getDuration().plus(activity.getDuration()));
-                removeBlock(index);
-            }
-        }
-    }
 
     @Override
     public void clearList(){
@@ -155,5 +128,28 @@ public class DriverService implements DriverInterface {
         } catch (JAXBException e) {
             throw new FileImportException("Error while importing file, please check if the file is valid.");
         }
+    }
+
+    private int mergeAtIndex(int index) {
+        ArrayList<Activity> toMerge = new ArrayList<>();
+        if(activities.size() < 2) {
+            return index;
+        }
+        toMerge.add(activities.get(index));
+        if(index+1 < activities.size()) {
+            if(activities.get(index).getType() == activities.get(index+1).getType()) {
+                toMerge.add(activities.get(index+1));
+            }
+        }
+        if(index-1 >= 0) {
+            if(activities.get(index).getType() == activities.get(index-1).getType()) {
+                toMerge.addFirst(activities.get(index-1));
+            }
+        }
+        for(int i = toMerge.size()-1; i > 0; i--) {
+            toMerge.get(i-1).setDuration(toMerge.get(i-1).getDuration().plus(toMerge.get(i).getDuration()));
+            activities.remove(toMerge.get(i));
+        }
+        return toMerge.indexOf(toMerge.getFirst());
     }
 }
