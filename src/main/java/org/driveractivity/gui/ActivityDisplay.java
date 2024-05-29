@@ -10,8 +10,6 @@ public interface ActivityDisplay {
 
     void reload(List<Activity> newActivities);
 
-    void addBack(Activity activity);
-
     void addActivity(int index, Activity activity);
 
     void removeActivity(int index);

@@ -45,11 +45,6 @@ public class ActivityPane extends FlowPane implements ActivityDisplay {
     }
 
     @Override
-    public void addBack(Activity activity) {
-        this.addActivity(this.getChildren().size(), activity);
-    }
-
-    @Override
     public void addActivity(int index, Activity activity) {
         ArrayList<Activity> newActivities = driverData.addBlock(index, activity);
         reload(newActivities);
