@@ -24,8 +24,6 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeFormatterBuilder;
-import java.time.temporal.ChronoField;
 import java.time.temporal.ChronoUnit;
 import java.util.EnumMap;
 import java.util.List;
@@ -33,15 +31,10 @@ import java.util.Map;
 
 public class ActivityBlock extends StackPane {
     
-    private static final DateTimeFormatter START_TIME_FORMATTER = new DateTimeFormatterBuilder()
-            .appendValue(ChronoField.HOUR_OF_DAY, 2)
-            .appendLiteral(':')
-            .appendValue(ChronoField.MINUTE_OF_HOUR, 2)
-            .toFormatter();
+    private static final DateTimeFormatter START_TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm");
     
     private static final DateTimeFormatter DATE_MARKER_FORMATTER_YEAR = DateTimeFormatter.ofPattern("dd.MM.yy");
     private static final DateTimeFormatter DATE_MARKER_FORMATTER_MONTH = DateTimeFormatter.ofPattern("dd.MM.");
-    private static final DateTimeFormatter DATE_MARKER_FORMATTER_DAY = DateTimeFormatter.ofPattern("dd.");
 
     private final ActivityPane activityPane;
     private final Activity activity;
