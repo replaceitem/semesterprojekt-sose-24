@@ -74,6 +74,10 @@ public class ActivityBlock extends StackPane {
         this.getChildren().addAll(block, overlays);
         
         this.getStyleClass().add(CSS_DIMENSIONS_CLASS.get(activity.getType()));
+        long hoursDuration = activity.getDuration().toHours();
+        if(activity.getType() == ActivityType.REST && hoursDuration >= 24) {
+            this.getStyleClass().add("activity-dimensions-" + (hoursDuration >= 45 ? "very-tall" : "tall"));
+        }
         block.getStyleClass().add(CSS_STYLE_CLASS.get(activity.getType()));
         createDivisorLines();
         block.setOnContextMenuRequested(event -> createContextMenu().show(this, event.getScreenX(), event.getScreenY()));

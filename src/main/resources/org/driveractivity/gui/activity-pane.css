@@ -9,6 +9,16 @@ ActivityBlock {
     -fx-max-height: 70px;
 }
 
+.activity-dimensions-tall {
+    -fx-pref-height: 85px;
+    -fx-max-height: 85px;
+}
+
+.activity-dimensions-very-tall {
+    -fx-pref-height: 100px;
+    -fx-max-height: 100px;
+}
+
 .activity-block-inner {
     -fx-background-radius: 8px;
 }
@@ -32,7 +42,6 @@ ActivityBlock {
 
 .divider-line {
     -fx-stroke-width: 1px;
-    
 }
 
 .start-divider-line {

@@ -1,6 +1,7 @@
 package org.driveractivity.gui;
 
 import javafx.collections.ObservableList;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
 import lombok.Getter;
@@ -16,6 +17,10 @@ public class ActivityPane extends FlowPane implements ActivityDisplay {
     private DriverInterface driverData;
     @Setter @Getter
     private MainController mainController;
+
+    public ActivityPane() {
+        this.setRowValignment(VPos.BOTTOM);
+    }
 
     @Override
     public void load(DriverInterface driverData) {
