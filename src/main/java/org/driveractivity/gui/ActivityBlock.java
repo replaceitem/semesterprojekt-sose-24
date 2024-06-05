@@ -14,6 +14,7 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.shape.Line;
+import lombok.Setter;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -39,7 +40,8 @@ public class ActivityBlock extends StackPane {
 
     private final ActivityPane activityPane;
     private final Activity activity;
-    private final int activityIndex;
+    @Setter
+    private int activityIndex;
 
     private final Pane overlays = new Pane();
     private final StackPane block = new StackPane();
@@ -147,11 +149,8 @@ public class ActivityBlock extends StackPane {
                 .filter(startOfDay -> (isFirstBlock ? startOfDay.isAfter(start) : !startOfDay.isBefore(start)) && startOfDay.isBefore(end))
                 .toList();
         
-        if(isFirstBlock) {
-            addMarker(0, dividerChildren, startDate.format(DATE_MARKER_FORMATTER_YEAR), "start-divider-line");
-        } else if(isLastBlock) {
-            addMarker(1, dividerChildren, endDate.format(DATE_MARKER_FORMATTER_YEAR), "end-divider-line");
-        }
+        if(isFirstBlock) addMarker(0, dividerChildren, startDate.format(DATE_MARKER_FORMATTER_YEAR), "start-divider-line");
+        if(isLastBlock) addMarker(1, dividerChildren, endDate.format(DATE_MARKER_FORMATTER_YEAR), "end-divider-line");
 
         for (LocalDateTime newDayTime : newDayTimes) {
             LocalDate date = newDayTime.toLocalDate();

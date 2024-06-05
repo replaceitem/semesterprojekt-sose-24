@@ -8,12 +8,13 @@ import lombok.Getter;
 import lombok.Setter;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.service.DriverInterface;
+import org.driveractivity.service.DriverServiceListener;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-public class ActivityPane extends FlowPane implements ActivityDisplay {
+public class ActivityPane extends FlowPane implements ActivityDisplay, DriverServiceListener {
     private DriverInterface driverData;
     @Setter @Getter
     private MainController mainController;
@@ -70,5 +71,43 @@ public class ActivityPane extends FlowPane implements ActivityDisplay {
     @Override
     public DriverInterface getDriverInterface() {
         return driverData;
+    }
+
+    private void updateIndices() {
+        int index = 0;
+        for (Node child : getChildren()) {
+            if(child instanceof ActivityBlock activityBlock) {
+                activityBlock.setActivityIndex(index++);
+            }
+        }
+    }
+
+    @Override
+    public void onActivitiesUpdated(List<Activity> activities) {
+        reload(activities);
+    }
+
+    @Override
+    public void onActivityRemoved(int index) {
+        getChildren().remove(index);
+        updateIndices();
+    }
+
+    @Override
+    public void onActivityAdded(int index, Activity activity) {
+        getChildren().add(index, new ActivityBlock(this, activity, index));
+        updateIndices();
+    }
+
+    @Override
+    public void onActivityUpdated(int index) {
+        if(getChildren().get(index) instanceof ActivityBlock activityBlock) {
+            activityBlock.update();
+        }
+    }
+
+    @Override
+    public void onActivitiesMerged(int index) {
+        // TODO highlight
     }
 }
