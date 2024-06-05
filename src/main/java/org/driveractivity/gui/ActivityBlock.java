@@ -43,6 +43,10 @@ public class ActivityBlock extends StackPane {
 
     private final Pane overlays = new Pane();
     private final StackPane block = new StackPane();
+    private final Label typeLabel = new Label();
+    private final Label durationLabel = new Label();
+    private final Label startTimeLabel = new Label();
+    
     private ContextMenu contextMenu;
     
     public ActivityBlock(ActivityPane activityPane, Activity activity, int activityIndex) {
@@ -50,32 +54,37 @@ public class ActivityBlock extends StackPane {
         this.activityPane = activityPane;
         this.activityIndex = activityIndex;
 
-        AnchorPane startTimeAnchorPane = new AnchorPane();
-        Label startTime = new Label(activity.getStartTime().format(START_TIME_FORMATTER));
-        AnchorPane.setBottomAnchor(startTime, 2.0);
-        AnchorPane.setLeftAnchor(startTime, 2.0);
-        startTimeAnchorPane.getChildren().add(startTime);
+        AnchorPane startTimeAnchorPane = new AnchorPane(startTimeLabel);
+        AnchorPane.setBottomAnchor(startTimeLabel, 2.0);
+        AnchorPane.setLeftAnchor(startTimeLabel, 2.0);
 
-        Label name = new Label(formatTypeName(activity.getType()));
-        Label duration = new Label(formatDuration(activity.getDuration()));
-        VBox centerVBox = new VBox(duration, name);
+        VBox centerVBox = new VBox(durationLabel, typeLabel);
         centerVBox.setAlignment(Pos.CENTER);
         
         overlays.setMouseTransparent(true);
         
-        block.getStyleClass().add("activity-block-inner");
         block.getChildren().addAll(startTimeAnchorPane, centerVBox);
-        
         this.getChildren().addAll(block, overlays);
         
-        this.getStyleClass().add(CSS_DIMENSIONS_CLASS.get(activity.getType()));
+        block.setOnContextMenuRequested(event -> getContextMenu().show(this, event.getScreenX(), event.getScreenY()));
+        
+        update();
+    }
+    
+    public void update() {
+        this.startTimeLabel.setText(activity.getStartTime().format(START_TIME_FORMATTER));
+        this.durationLabel.setText(formatDuration(activity.getDuration()));
+        this.typeLabel.setText(formatTypeName(activity.getType()));
+        
+        this.getStyleClass().setAll(CSS_DIMENSIONS_CLASS.get(activity.getType()));
         long hoursDuration = activity.getDuration().toHours();
         if(activity.getType() == ActivityType.REST && hoursDuration >= 24) {
             this.getStyleClass().add("activity-dimensions-" + (hoursDuration >= 45 ? "very-tall" : "tall"));
         }
-        block.getStyleClass().add(CSS_STYLE_CLASS.get(activity.getType()));
-        createDivisorLines();
-        block.setOnContextMenuRequested(event -> getContextMenu().show(this, event.getScreenX(), event.getScreenY()));
+        
+        block.getStyleClass().setAll("activity-block-inner", CSS_STYLE_CLASS.get(activity.getType()));
+
+        updateDivisorLines();
     }
     
     public static FontIcon createIcon(String name) {
@@ -121,7 +130,7 @@ public class ActivityBlock extends StackPane {
         }
     }
     
-    private void createDivisorLines() {
+    private void updateDivisorLines() {
         LocalDateTime start = activity.getStartTime();
         LocalDateTime end = activity.getEndTime();
         long durationMillis = activity.getDuration().toMillis();
