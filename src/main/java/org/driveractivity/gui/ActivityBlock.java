@@ -18,6 +18,7 @@ import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.text.DecimalFormat;
 import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
@@ -173,13 +174,15 @@ public class ActivityBlock extends StackPane {
         String lowerCase = type.name().toLowerCase();
         return lowerCase.substring(0, 1).toUpperCase() + lowerCase.substring(1);
     }
+    
+    private final static DecimalFormat DURATION_HOURS_DECIMAL_FORMAT = new DecimalFormat("0.#h");
 
     private static String formatDuration(Duration duration) {
         if(duration.toHours() == 0) {
             return duration.toMinutes() + "m";
         } else {
             float decimalHours = ((float) duration.getSeconds()) / ChronoUnit.HOURS.getDuration().getSeconds();
-            return String.format("%.01fh", decimalHours);
+            return DURATION_HOURS_DECIMAL_FORMAT.format(decimalHours);
         }
     }
     
