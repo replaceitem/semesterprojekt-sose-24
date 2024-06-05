@@ -18,6 +18,7 @@ import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
 import org.kordamp.ikonli.javafx.FontIcon;
 
+import java.time.DayOfWeek;
 import java.time.Duration;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -139,9 +140,9 @@ public class ActivityBlock extends StackPane {
                 .toList();
         
         if(isFirstBlock) {
-            addMarker(0, dividerChildren, startDate.format(DATE_MARKER_FORMATTER_YEAR));
+            addMarker(0, dividerChildren, startDate.format(DATE_MARKER_FORMATTER_YEAR), "start-divider-line");
         } else if(isLastBlock) {
-            addMarker(1, dividerChildren, endDate.format(DATE_MARKER_FORMATTER_YEAR));
+            addMarker(1, dividerChildren, endDate.format(DATE_MARKER_FORMATTER_YEAR), "end-divider-line");
         }
 
         for (LocalDateTime newDayTime : newDayTimes) {
@@ -150,13 +151,14 @@ public class ActivityBlock extends StackPane {
             double blockPercentage = ((double) millisAfterStart) / durationMillis;
             String dateLabel = null;
             if(date.getDayOfMonth() == 1) dateLabel = date.format(date.getMonth() == Month.JANUARY ? DATE_MARKER_FORMATTER_YEAR : DATE_MARKER_FORMATTER_MONTH);
-            addMarker(blockPercentage, dividerChildren, dateLabel);
+            String styleClass = (date.getDayOfWeek() == DayOfWeek.MONDAY ? "week" : "day") + "-divider-line";
+            addMarker(blockPercentage, dividerChildren, dateLabel, styleClass);
         }
     }
     
-    private void addMarker(double percentage, List<Node> nodes, String labelText) {
+    private void addMarker(double percentage, List<Node> nodes, String labelText, String styleClass) {
         Line line = new Line();
-        line.getStyleClass().add("day-divider-line");
+        line.getStyleClass().addAll(styleClass, "divider-line");
         line.endYProperty().bind(block.heightProperty());
         line.layoutXProperty().bind(block.widthProperty().multiply(percentage));
         nodes.add(line);
