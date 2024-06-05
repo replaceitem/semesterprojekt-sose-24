@@ -42,6 +42,7 @@ public class ActivityBlock extends StackPane {
 
     private final Pane overlays = new Pane();
     private final StackPane block = new StackPane();
+    private ContextMenu contextMenu;
     
     public ActivityBlock(ActivityPane activityPane, Activity activity, int activityIndex) {
         this.activity = activity;
@@ -73,7 +74,7 @@ public class ActivityBlock extends StackPane {
         }
         block.getStyleClass().add(CSS_STYLE_CLASS.get(activity.getType()));
         createDivisorLines();
-        block.setOnContextMenuRequested(event -> createContextMenu().show(this, event.getScreenX(), event.getScreenY()));
+        block.setOnContextMenuRequested(event -> getContextMenu().show(this, event.getScreenX(), event.getScreenY()));
     }
     
     public static FontIcon createIcon(String name) {
@@ -82,29 +83,29 @@ public class ActivityBlock extends StackPane {
         return icon;
     }
     
-    public ContextMenu createContextMenu() {
-        ContextMenu menu = new ContextMenu();
+    public ContextMenu getContextMenu() {
+        if(contextMenu == null) {
+            MenuItem editItem = new MenuItem("Edit", createIcon("fth-edit"));
+            editItem.setOnAction(actionEvent -> {
+                System.out.println("Edit");
+                // TODO
+            });
 
-        MenuItem editItem = new MenuItem("Edit", createIcon("fth-edit"));
-        editItem.setOnAction(actionEvent -> {
-            System.out.println("Edit");
-            // TODO
-        });
+            MenuItem deleteItem = new MenuItem("Delete", createIcon("fth-trash"));
+            deleteItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
+            deleteItem.setOnAction(actionEvent -> {
+                activityPane.removeActivity(activityIndex);
+            });
 
-        MenuItem deleteItem = new MenuItem("Delete", createIcon("fth-trash"));
-        deleteItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
-        deleteItem.setOnAction(actionEvent -> {
-            activityPane.removeActivity(activityIndex);
-        });
+            Menu insertBeforeItem = new Menu("Insert before", createIcon("fth-chevron-left"));
+            createInsertItems(insertBeforeItem, 0);
 
-        Menu insertBeforeItem = new Menu("Insert before", createIcon("fth-chevron-left"));
-        createInsertItems(insertBeforeItem, 0);
+            Menu insertAfterItem = new Menu("Insert after", createIcon("fth-chevron-right"));
+            createInsertItems(insertAfterItem, 1);
 
-        Menu insertAfterItem = new Menu("Insert after", createIcon("fth-chevron-right"));
-        createInsertItems(insertAfterItem, 1);
-
-        menu.getItems().addAll(editItem, deleteItem, insertBeforeItem, insertAfterItem);
-        return menu;
+            contextMenu = new ContextMenu(editItem, deleteItem, insertBeforeItem, insertAfterItem);
+        }
+        return contextMenu;
     }
 
     private void createInsertItems(Menu menu, int shift) {
