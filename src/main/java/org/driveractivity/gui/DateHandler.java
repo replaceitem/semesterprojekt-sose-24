@@ -2,6 +2,7 @@ package org.driveractivity.gui;
 import javafx.fxml.FXML;
 
 import javafx.scene.control.*;
+import javafx.scene.layout.GridPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import org.driveractivity.entity.Activity;
@@ -9,11 +10,12 @@ import org.driveractivity.entity.ActivityType;
 import org.driveractivity.service.DriverInterface;
 
 import java.time.Duration;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
-import java.util.Locale;
+import java.util.Optional;
 
 public class DateHandler {
     private MainController mainController;
@@ -38,7 +40,7 @@ public class DateHandler {
     private Button processButton;
     @FXML
     public Text DayText;
-
+    private LocalDate myDate;
     public void initialize(MainController mainController, ActivityType activityType, int insertionIndex) {
         this.mainController = mainController;
         this.currentActivityType = activityType;
@@ -48,6 +50,8 @@ public class DateHandler {
         DriverInterface driverInterface = mainController.driverInterface;
         List<Activity> blocks = driverInterface.getBlocks();
         if(blocks.isEmpty() || insertionIndex == 0){
+
+            openDateTimePickerDialog();
             cbHourStart.setText(String.valueOf(0));
             cbMinuteStart.setText(String.valueOf(0));
             cbHourStart.setDisable(false);
@@ -162,16 +166,15 @@ public class DateHandler {
         Activity activity;
 
         if(mainController.driverInterface.getBlocks().isEmpty()){
-            LocalDateTime startTime = LocalDateTime.of(mainController.myDate,LocalTime.of( Integer.parseInt(cbHourStart.getText()),Integer.parseInt(cbHourEnd.getText())));
+            LocalDateTime startTime = LocalDateTime.of(myDate,LocalTime.of( Integer.parseInt(cbHourStart.getText()),Integer.parseInt(cbHourEnd.getText())));
             activity = new Activity(currentActivityType, Duration.of(duration, ChronoUnit.MINUTES), startTime);
+            mainController.driverInterface.addBlock(activity);
         }
         else {
             activity = new Activity(currentActivityType, Duration.of(duration, ChronoUnit.MINUTES), mainController.driverInterface.getBlocks().getLast().getEndTime());
+            mainController.driverInterface.addBlock(insertionIndex, activity);
         }
-
-
-        mainController.activityPane.addActivity(insertionIndex, activity);
-
+        mainController.activityPane.reload(mainController.activityPane.getDriverInterface().getBlocks());
         Stage stage = (Stage) processButton.getScene().getWindow();
         stage.close();
     }
@@ -210,5 +213,44 @@ public class DateHandler {
                 cbMinuteEnd.setText(String.valueOf(Integer.parseInt(cbMinuteDuration.getText()) + Integer.parseInt(cbMinuteStart.getText())));
             }
 
+    }
+    private void openDateTimePickerDialog() {
+        Dialog<LocalDateTime> dialog = new Dialog<>();
+        dialog.setTitle("DateTime Picker");
+        dialog.setHeaderText("Select Date and Time");
+
+        ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
+        dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
+
+        GridPane grid = new GridPane();
+        grid.setHgap(10);
+        grid.setVgap(10);
+
+        DatePicker datePicker = new DatePicker(LocalDate.now());
+
+        Spinner<Integer> hourSpinner = new Spinner<>();
+        hourSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 0));
+
+        Spinner<Integer> minuteSpinner = new Spinner<>();
+        minuteSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0));
+
+        grid.add(new Label("Date:"), 0, 0);
+        grid.add(datePicker, 1, 0);
+
+        dialog.getDialogPane().setContent(grid);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == okButtonType) {
+                LocalDate date = datePicker.getValue();
+                LocalTime time = LocalTime.of(hourSpinner.getValue(), minuteSpinner.getValue());
+                return LocalDateTime.of(date, time);
+            }
+            return null;
+        });
+
+        Optional<LocalDateTime> result = dialog.showAndWait();
+        result.ifPresent(dateTime -> {
+            myDate= LocalDate.from(dateTime);
+        });
     }
 }
