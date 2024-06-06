@@ -249,8 +249,6 @@ public class DateHandler {
         });
 
         Optional<LocalDateTime> result = dialog.showAndWait();
-        result.ifPresent(dateTime -> {
-            myDate= LocalDate.from(dateTime);
-        });
+        result.ifPresent(dateTime -> myDate= LocalDate.from(dateTime));
     }
 }

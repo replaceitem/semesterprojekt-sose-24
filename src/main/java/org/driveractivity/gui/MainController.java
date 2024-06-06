@@ -21,7 +21,6 @@ import org.driveractivity.service.DriverService;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
-import java.time.LocalDate;
 import java.util.ResourceBundle;
 
 import static org.driveractivity.entity.ActivityType.*;
