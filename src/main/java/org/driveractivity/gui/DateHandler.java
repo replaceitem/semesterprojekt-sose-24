@@ -52,6 +52,10 @@ public class DateHandler {
         if(blocks.isEmpty() || insertionIndex == 0){
 
             openDateTimePickerDialog();
+            if(myDate.equals(null)){
+                Stage stage = (Stage) processButton.getScene().getWindow();
+                stage.close();
+            }
             cbHourStart.setText(String.valueOf(0));
             cbMinuteStart.setText(String.valueOf(0));
             cbHourStart.setDisable(false);
@@ -62,6 +66,17 @@ public class DateHandler {
             cbHourStart.setText(String.valueOf(endTime.getHour()));
             cbMinuteStart.setText(String.valueOf(endTime.getMinute()));
         }
+
+        cbHourStart.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(checkforValidTime()&&!newValue){
+                processStartEnd();
+            }
+        });
+        cbMinuteStart.focusedProperty().addListener((observable, oldValue, newValue) -> {
+            if(checkforValidTime()&&!newValue){
+                processStartEnd();
+            }
+        });
 
         cbHourEnd.focusedProperty().addListener((observable, oldValue, newValue) -> {
             if(checkforValidTime()&&!newValue){
@@ -93,9 +108,11 @@ public class DateHandler {
             int ValueofMituesDuration = Integer.parseInt(cbMinuteDuration.getText());
             int ValueofHoursEnd = Integer.parseInt(cbHourEnd.getText());
             int ValueofHoursDuration = Integer.parseInt(cbHourDuration.getText());
+            int ValueofHoursStart = Integer.parseInt(cbHourStart.getText());
+            int ValueofMinutesStart = Integer.parseInt(cbMinuteStart.getText());
 
-            if(ValueofMituesEnd<60&&ValueofMituesEnd>=0&&ValueofMituesDuration<60&&ValueofMituesDuration>=0){
-                if(ValueofHoursEnd>=0&&ValueofHoursDuration>=0){
+            if(ValueofMituesEnd<60&&ValueofMituesEnd>=0&&ValueofMituesDuration<60&&ValueofMituesDuration>=0&&ValueofMinutesStart<60&&ValueofMinutesStart>=0){
+                if((ValueofHoursEnd >= 0) && (ValueofHoursDuration >= 0) && (ValueofHoursStart >= 0)) {
                     processButton.setDisable(false);
                     errorLabel.setVisible(false);
                     return true;
