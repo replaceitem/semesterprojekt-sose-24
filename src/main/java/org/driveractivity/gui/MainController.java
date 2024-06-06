@@ -29,6 +29,8 @@ import static org.driveractivity.entity.ActivityType.*;
 public class MainController implements Initializable {
     @FXML
     public ActivityPane activityPane;
+    @FXML
+    public Button clearButton;
 
     @FXML
     private Button restButton;
