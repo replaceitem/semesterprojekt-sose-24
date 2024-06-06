@@ -10,8 +10,10 @@ import org.driveractivity.service.DriverInterface;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
+import java.util.Locale;
 
 public class DateHandler {
     private MainController mainController;
@@ -48,6 +50,8 @@ public class DateHandler {
         if(blocks.isEmpty() || insertionIndex == 0){
             cbHourStart.setText(String.valueOf(0));
             cbMinuteStart.setText(String.valueOf(0));
+            cbHourStart.setDisable(false);
+            cbMinuteStart.setDisable(false);
         } else {
             Activity previousActivity = blocks.get(insertionIndex - 1);
             LocalDateTime endTime = previousActivity.getEndTime();
@@ -105,13 +109,7 @@ public class DateHandler {
         }
         return false;
     }
-
-
-
-    private boolean checkForValidDuration() {
-        return true;
-    }
-        private void processStartEnd(){
+            private void processStartEnd(){
             if (cbHourEnd.getText() != null && cbMinuteEnd.getText() != null ) {
                 if (Integer.parseInt(cbHourStart.getText()) == Integer.parseInt(cbHourEnd.getText())) {
                     if (Integer.parseInt(cbMinuteStart.getText()) <= Integer.parseInt(cbMinuteEnd.getText())) {
@@ -161,8 +159,17 @@ public class DateHandler {
 
         int duration = hour*60 + minute;
 
+        Activity activity;
 
-        Activity activity = new Activity(currentActivityType, Duration.of(duration, ChronoUnit.MINUTES), mainController.driverInterface.getBlocks().getLast().getEndTime());
+        if(mainController.driverInterface.getBlocks().isEmpty()){
+            LocalDateTime startTime = LocalDateTime.of(mainController.myDate,LocalTime.of( Integer.parseInt(cbHourStart.getText()),Integer.parseInt(cbHourEnd.getText())));
+            activity = new Activity(currentActivityType, Duration.of(duration, ChronoUnit.MINUTES), startTime);
+        }
+        else {
+            activity = new Activity(currentActivityType, Duration.of(duration, ChronoUnit.MINUTES), mainController.driverInterface.getBlocks().getLast().getEndTime());
+        }
+
+
         mainController.activityPane.addActivity(insertionIndex, activity);
 
         Stage stage = (Stage) processButton.getScene().getWindow();
@@ -182,19 +189,26 @@ public class DateHandler {
     }
 
     private void durationWithStart(){
-        if(checkForValidDuration()) {
-            int newDruationMin = Integer.parseInt(cbMinuteDuration.getText());
-            int newStartMin = Integer.parseInt(cbMinuteStart.getText());
+        int newDruationMin = Integer.parseInt(cbMinuteDuration.getText());
+        int newStartMin = Integer.parseInt(cbMinuteStart.getText());
+
+        int newDruationHour = Integer.parseInt(cbHourDuration.getText());
+        int newStartHour = Integer.parseInt(cbHourStart.getText());
+
+            if(newDruationHour+newStartHour>24){
+                int t  = (newDruationHour+newStartHour)%24;
+                System.out.println(t);
+                cbHourEnd.setText(String.valueOf((t)));
+                DayText.setText("Über eine Nacht");
+            }
+
             if(newDruationMin+newStartMin>=60){
-                cbHourEnd.setText(String.valueOf(1+Integer.parseInt(cbHourDuration.getText()) + Integer.parseInt(cbHourStart.getText())));
+                cbHourEnd.setText(String.valueOf(Integer.parseInt(cbHourEnd.getText())+1));
                 cbMinuteEnd.setText(String.valueOf(Integer.parseInt(cbMinuteDuration.getText()) + Integer.parseInt(cbMinuteStart.getText())-60));
             }
             else {
-                cbHourEnd.setText(String.valueOf(Integer.parseInt(cbHourDuration.getText()) + Integer.parseInt(cbHourStart.getText())));
                 cbMinuteEnd.setText(String.valueOf(Integer.parseInt(cbMinuteDuration.getText()) + Integer.parseInt(cbMinuteStart.getText())));
             }
 
-
-        }
     }
 }
