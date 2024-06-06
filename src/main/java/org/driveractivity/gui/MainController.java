@@ -21,6 +21,8 @@ import org.driveractivity.service.DriverService;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.time.LocalDate;
+import java.util.Date;
 import java.util.ResourceBundle;
 
 import static org.driveractivity.entity.ActivityType.*;
@@ -42,6 +44,7 @@ public class MainController implements Initializable {
     private MenuItem openMenu;
 
     public DriverInterface driverInterface;
+    public LocalDate myDate = LocalDate.now();
 
     @Setter
     private Stage stage;
