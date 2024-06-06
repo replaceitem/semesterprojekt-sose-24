@@ -33,7 +33,7 @@ import java.util.Map;
 
 public class ActivityBlock extends StackPane {
     
-    private static final DateTimeFormatter START_TIME_FORMATTER = DateTimeFormatter.ofPattern("hh:mm");
+    private static final DateTimeFormatter START_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
     
     private static final DateTimeFormatter DATE_MARKER_FORMATTER_YEAR = DateTimeFormatter.ofPattern("dd.MM.yy");
     private static final DateTimeFormatter DATE_MARKER_FORMATTER_MONTH = DateTimeFormatter.ofPattern("dd.MM.");
