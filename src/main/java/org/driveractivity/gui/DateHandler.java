@@ -52,7 +52,7 @@ public class DateHandler {
             Activity previousActivity = blocks.get(insertionIndex - 1);
             LocalDateTime endTime = previousActivity.getEndTime();
             cbHourStart.setText(String.valueOf(endTime.getHour()));
-            cbMinuteStart.setText(String.valueOf(endTime.getHour()));
+            cbMinuteStart.setText(String.valueOf(endTime.getMinute()));
         }
 
         cbHourEnd.focusedProperty().addListener((observable, oldValue, newValue) -> {
