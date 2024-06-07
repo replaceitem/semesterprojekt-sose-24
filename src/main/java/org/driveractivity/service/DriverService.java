@@ -135,10 +135,6 @@ public class DriverService implements DriverInterface {
 
     @Override
     public void importFrom(File f) throws FileImportException {
-        //TODO 2 types can be near one another - DONE
-        //TODO presenceCounter is a counter of days day 1 - presenceCounter 0, day 1 - presenceCounter 1, etc. - DONE
-        //TODO cardStatus can either be "notInserted" or "inserted" - DONE
-        //TODO make specificConditions: two most important ones: outOfScope and FT (Ferry Train), FT does not necessarily have an end
         try {
             //Read the file
             JAXBContext jaxbContext = JAXBContext.newInstance(ITFTestFileDTO.class);
@@ -199,12 +195,12 @@ public class DriverService implements DriverInterface {
         }
         toMerge.add(activities.get(index));
         if(index+1 < activities.size()) {
-            if(activities.get(index).getType() == activities.get(index+1).getType()) {
+            if(activities.get(index).canMergeWith(activities.get(index+1))) {
                 toMerge.add(activities.get(index+1));
             }
         }
         if(index-1 >= 0) {
-            if(activities.get(index).getType() == activities.get(index-1).getType()) {
+            if(activities.get(index).canMergeWith(activities.get(index-1))) {
                 toMerge.addFirst(activities.get(index-1));
             }
         }

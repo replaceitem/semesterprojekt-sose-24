@@ -18,4 +18,7 @@ public class Activity {
     public LocalDateTime getEndTime() {
         return startTime.plusMinutes(duration.toMinutes());
     }
+    public boolean canMergeWith(Activity activity) {
+        return this.type == activity.type && this.cardStatus.equals(activity.cardStatus);
+    }
 }
