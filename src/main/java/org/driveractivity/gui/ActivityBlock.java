@@ -18,6 +18,7 @@ import lombok.Setter;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
 import org.kordamp.ikonli.javafx.FontIcon;
+import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 
 import java.text.DecimalFormat;
 import java.time.DayOfWeek;
@@ -89,30 +90,24 @@ public class ActivityBlock extends StackPane {
         updateDivisorLines();
     }
     
-    public static FontIcon createIcon(String name) {
-        FontIcon icon = new FontIcon(name);
-        icon.setIconSize(16);
-        return icon;
-    }
-    
     public ContextMenu getContextMenu() {
         if(contextMenu == null) {
-            MenuItem editItem = new MenuItem("Edit", createIcon("fth-edit"));
+            MenuItem editItem = new MenuItem("Edit", Icons.create(Icons.EDIT, 16));
             editItem.setOnAction(actionEvent -> {
                 System.out.println("Edit");
                 activityPane.getMainController().openEditStage(this.activity, activityIndex);
             });
 
-            MenuItem deleteItem = new MenuItem("Delete", createIcon("fth-trash"));
+            MenuItem deleteItem = new MenuItem("Delete", Icons.create(Icons.DELETE, 16));
             deleteItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
             deleteItem.setOnAction(actionEvent -> {
                 activityPane.getDriverInterface().removeBlock(activityIndex);
             });
 
-            Menu insertBeforeItem = new Menu("Insert before", createIcon("fth-chevron-left"));
+            Menu insertBeforeItem = new Menu("Insert before", Icons.create(Icons.INSERT_BEFORE, 16));
             createInsertItems(insertBeforeItem, 0);
 
-            Menu insertAfterItem = new Menu("Insert after", createIcon("fth-chevron-right"));
+            Menu insertAfterItem = new Menu("Insert after", Icons.create(Icons.INSERT_AFTER, 16));
             createInsertItems(insertAfterItem, 1);
 
             contextMenu = new ContextMenu(editItem, deleteItem, insertBeforeItem, insertAfterItem);

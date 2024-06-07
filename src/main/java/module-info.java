@@ -5,7 +5,7 @@ module org.driveractivity {
     requires java.desktop;
     requires org.kordamp.ikonli.core;
     requires org.kordamp.ikonli.javafx;
-    requires org.kordamp.ikonli.feather;
+    requires org.kordamp.ikonli.materialdesign2;
     requires jakarta.xml.bind;
     requires org.glassfish.jaxb.runtime;
 
