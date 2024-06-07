@@ -1,12 +1,7 @@
 package org.driveractivity.exception;
 
-import lombok.Getter;
-
-public class FileImportException extends Exception {
-    @Getter
-    private final String title = "File Import Error";
+public class FileImportException extends AlertedException {
     public FileImportException(String message) {
-        super(message);
+        super("File Import Error", message);
     }
-
 }

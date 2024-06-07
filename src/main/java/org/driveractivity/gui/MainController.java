@@ -123,10 +123,7 @@ public class MainController implements Initializable {
         try {
             driverInterface.importFrom(file);
         } catch (FileImportException e) {
-            //TODO show error message on screen
-            //get title of dialog via: e.getTitle()
-            //get message via e.getMessage()
-            throw new RuntimeException(e);
+            AlertedExceptionDialog.show(e);
         }
         activityPane.load(driverInterface);
     }
