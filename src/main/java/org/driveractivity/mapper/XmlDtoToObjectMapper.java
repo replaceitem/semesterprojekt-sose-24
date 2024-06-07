@@ -34,7 +34,7 @@ public class XmlDtoToObjectMapper { //name is WIP
                 current.getActivities().getLast().setDuration(Duration.between(current.getActivities().getLast().getStartTime(), next.getActivities().getFirst().getEndTime()));
                 next.getActivities().removeFirst();
             }
-            current = next;
+            if(!next.getActivities().isEmpty()) current = next;
         }
         return days.stream().flatMap(day -> day.getActivities().stream()).collect(Collectors.toCollection(ArrayList::new));
     }
@@ -52,13 +52,13 @@ public class XmlDtoToObjectMapper { //name is WIP
     }
     private static ArrayList<Activity> addDurationToActivities(ArrayList<Activity> activities) {
         var it = activities.iterator();
-        Activity current = it.next();
+        Activity previous = null;
         while(it.hasNext()) {
-            Activity next = it.next();
-            current.setDuration(Duration.between(current.getStartTime(), next.getStartTime()));
-            current = next;
+            Activity current = it.next();
+            if(previous != null) previous.setDuration(Duration.between(previous.getStartTime(), current.getStartTime()));
+            previous = current;
             if(!it.hasNext()) {
-                current.setDuration(Duration.between(current.getStartTime(), LocalDateTime.of(current.getStartTime().toLocalDate(), LocalTime.of(23, 59))));
+                previous.setDuration(Duration.between(previous.getStartTime(), LocalDateTime.of(previous.getStartTime().toLocalDate(), LocalTime.of(23, 59))));
             }
         }
         return activities;
