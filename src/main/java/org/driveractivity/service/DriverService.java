@@ -144,12 +144,11 @@ public class DriverService implements DriverInterface {
     }
 
     private void adaptStartTimes(int startIndex) {
-        ArrayList<Activity> changedActivities = new ArrayList<>();
         for(int i = startIndex; i < activities.size(); i++) {
             activities.get(i).setStartTime(activities.get(i-1).getEndTime());
-            changedActivities.add(activities.get(i));
+            final int finalIndex = i;
+            listeners.forEach(l -> l.onActivityUpdated(finalIndex));
         }
-        listeners.forEach(l -> l.onActivitiesUpdated(changedActivities));
     }
 
     private void addActivityInternal(int index, Activity activity) {
