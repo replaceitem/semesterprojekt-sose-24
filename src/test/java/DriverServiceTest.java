@@ -27,6 +27,57 @@ public class DriverServiceTest {
     }
 
     @Test
+    public void testAddBlockSameType() {
+        DriverService driverService = DriverService.getInstance();
+        Activity activity = Activity.builder()
+                .type(WORK)
+                .startTime(LocalDateTime.now())
+                .duration(Duration.of(5, ChronoUnit.MINUTES))
+                .build();
+        Activity activity2 = Activity.builder()
+                .type(WORK)
+                .startTime(LocalDateTime.now())
+                .duration(Duration.of(5, ChronoUnit.MINUTES))
+                .build();
+        driverService.addBlock(activity);
+        driverService.addBlock(activity2);
+        assertThat(driverService.getActivities().size()).isEqualTo(1);
+        assertThat(driverService.getActivities().getFirst().getDuration()).isEqualTo(Duration.of(10, ChronoUnit.MINUTES));
+    }
+
+    @Test
+    public void addActivitySameType() {
+        DriverService driverService = DriverService.getInstance();
+        Activity activity = Activity.builder()
+                .type(WORK)
+                .startTime(LocalDateTime.now())
+                .duration(Duration.of(5, ChronoUnit.MINUTES))
+                .build();
+        Activity activity2 = Activity.builder()
+                .type(REST)
+                .startTime(LocalDateTime.now())
+                .duration(Duration.of(5, ChronoUnit.MINUTES))
+                .build();
+        Activity activity3 = Activity.builder()
+                .type(WORK)
+                .startTime(LocalDateTime.now())
+                .duration(Duration.of(5, ChronoUnit.MINUTES))
+                .build();
+        Activity activity4 = Activity.builder()
+                .type(WORK)
+                .startTime(LocalDateTime.now())
+                .duration(Duration.of(5, ChronoUnit.MINUTES))
+                .build();
+        driverService.addBlock(activity);
+        driverService.addBlock(activity2);
+        driverService.addBlock(activity3);
+        driverService.addBlock(1, activity4);
+        assertThat(driverService.getActivities().size()).isEqualTo(3);
+        assertThat(driverService.getActivities().getFirst().getDuration()).isEqualTo(Duration.of(10, ChronoUnit.MINUTES));
+        assertThat(driverService.getActivities().get(1).getType()).isEqualTo(REST);
+    }
+
+    @Test
     public void testAddBlockWithIndex() {
         DriverService driverService = DriverService.getInstance();
         Activity activity = Activity.builder()
@@ -36,7 +87,7 @@ public class DriverServiceTest {
                 .build();
         driverService.addBlock(activity);
         Activity activity2 = Activity.builder()
-                .type(WORK)
+                .type(REST)
                 .startTime(LocalDateTime.now())
                 .duration(Duration.of(5, ChronoUnit.MINUTES))
                 .build();
@@ -66,7 +117,7 @@ public class DriverServiceTest {
         }
     }
     @Test
-    public void importFrom() {
+    public void importFrom() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource("Beispiel2.xml")).getFile());
         DriverService driverService = DriverService.getInstance();
@@ -76,7 +127,7 @@ public class DriverServiceTest {
     }
 
     @Test
-    public void outputTo() {
+    public void outputTo() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource("Beispiel2.xml")).getFile());
         DriverService driverService = DriverService.getInstance();

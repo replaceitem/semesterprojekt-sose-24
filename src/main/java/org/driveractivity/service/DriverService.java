@@ -4,13 +4,14 @@ import lombok.Getter;
 import org.driveractivity.DTO.ITFTestFileDTO;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityGroup;
+import org.driveractivity.exception.FileImportException;
 import org.driveractivity.mapper.ObjectToXmlDtoMapper;
 import org.driveractivity.mapper.XmlDtoToObjectMapper;
 
-import javax.xml.bind.JAXBContext;
-import javax.xml.bind.JAXBException;
-import javax.xml.bind.Marshaller;
-import javax.xml.bind.Unmarshaller;
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -34,6 +35,10 @@ public class DriverService implements DriverInterface {
         if(!activities.isEmpty()) {
             Activity last = activities.getLast();
             activity.setStartTime(last.getEndTime());
+            if(last.getType() == activity.getType()) {
+                last.setDuration(last.getDuration().plus(activity.getDuration()));
+                return activities;
+            }
         }
         activities.add(activity);
         return activities;
@@ -51,6 +56,7 @@ public class DriverService implements DriverInterface {
             activity.setStartTime(activities.get(index-1).getEndTime());
         }
         activities.add(index, activity);
+        mergeActivityIfPossible(index, activity);
         for(int i = index+1; i < activities.size(); i++) {
             activities.get(i).setStartTime(activities.get(i-1).getEndTime());
         }
@@ -88,28 +94,32 @@ public class DriverService implements DriverInterface {
         activities.get(index).setDuration(activity.getDuration());
         activities.get(index).setType(activity.getType());
 
+        mergeActivityIfPossible(index, activity);
+
+        for(int i = index+1; i < activities.size(); i++) {
+            activities.get(i).setStartTime(activities.get(i-1).getEndTime());
+        }
+        return activities;
+    }
+
+    private void mergeActivityIfPossible(int index, Activity activity) {
         if(index != 0) {
-            Activity activityBefore = activities.get(index-1);
+            Activity activityBefore = activities.get(index -1);
             if(activityBefore.getType() == activity.getType()) {
                 activityBefore.setDuration(activityBefore.getDuration().plus(activity.getDuration()));
                 removeBlock(index);
-                index = index-1;
+                index = index -1;
             }
         }
 
-        if(index+1 != activities.size()) {
-            Activity activityAfter = activities.get(index+1);
+        if(index +1 != activities.size()) {
+            Activity activityAfter = activities.get(index +1);
             if(activityAfter.getType() == activity.getType()) {
                 activityAfter.setStartTime(activity.getEndTime());
                 activityAfter.setDuration(activityAfter.getDuration().plus(activity.getDuration()));
                 removeBlock(index);
             }
         }
-
-        for(int i = index+1; i < activities.size(); i++) {
-            activities.get(i).setStartTime(activities.get(i-1).getEndTime());
-        }
-        return activities;
     }
 
     @Override
@@ -132,7 +142,7 @@ public class DriverService implements DriverInterface {
     }
 
     @Override
-    public ArrayList<Activity> importFrom(File f) {
+    public ArrayList<Activity> importFrom(File f) throws FileImportException {
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(ITFTestFileDTO.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -143,7 +153,7 @@ public class DriverService implements DriverInterface {
             this.activities.addAll(activities);
             return activities;
         } catch (JAXBException e) {
-            throw new RuntimeException(e);
+            throw new FileImportException("Error while importing file, please check if the file is valid.");
         }
     }
 }

@@ -1,28 +1,9 @@
 package org.driveractivity;
 
-import javafx.fxml.FXMLLoader;
-import javafx.scene.Scene;
-import javafx.stage.Stage;
-import org.driveractivity.gui.MainController;
+import org.driveractivity.gui.MainApplication;
 
-import java.io.IOException;
-
-public class Main extends javafx.application.Application {
-    @Override
-    public void start(Stage stage) throws IOException {
-        FXMLLoader fxmlLoader = new FXMLLoader(Main.class.getResource("/org/driveractivity/gui/main-view.fxml"));
-        Scene scene = new Scene(fxmlLoader.load(), 800, 600);
-
-        MainController controller = fxmlLoader.getController();
-
-        controller.setStage(stage);
-
-        stage.setTitle("Test");
-        stage.setScene(scene);
-        stage.show();
-    }
-
+public class Main {
     public static void main(String[] args) {
-        launch();
+        MainApplication.main(args);
     }
 }

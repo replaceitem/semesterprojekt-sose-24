@@ -40,10 +40,11 @@ public class ObjectToXmlDtoMapper {
     }
 
     private static ArrayList<ActivityDTO> mapToActivityDTO(ArrayList<Activity> activities) {
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm");
         return activities.stream().map(activity ->
                 ActivityDTO.builder()
                         .activity(activity.getType().toString().toLowerCase())
-                        .time(activity.getStartTime().toLocalTime().toString())
+                        .time(formatter.format(activity.getStartTime().toLocalTime()))
                         .slot("driver")
                         .status("single")
                         .cardStatus("inserted")
@@ -61,7 +62,7 @@ public class ObjectToXmlDtoMapper {
         ArrayList<Day> days = new ArrayList<>();
         ArrayList<Activity> collectedActivities = new ArrayList<>();
         LocalDate date = activities.getFirst().getStartTime().toLocalDate();
-        Day currentDay = Day.builder().date(date).activities(new ArrayList<>()).build();
+        Day currentDay = Day.builder().date(date).build();
 
         for(Activity activity : activities) {
             if(!currentDay.getDate().equals(activity.getStartTime().toLocalDate())) {
