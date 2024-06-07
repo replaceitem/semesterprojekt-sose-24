@@ -11,6 +11,7 @@ import org.driveractivity.entity.Day;
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class ObjectToXmlDtoMapper {
@@ -30,10 +31,11 @@ public class ObjectToXmlDtoMapper {
 
     private static ArrayList<DayDTO> mapToDayDTO(ArrayList<Day> days) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-
+        AtomicInteger atomicInteger = new AtomicInteger();
         return days.stream().map(day ->
                 DayDTO.builder()
                         .activities(mapToActivityDTO(day.getActivities()))
+                        .presenceCounter(atomicInteger.getAndIncrement())
                         .date(formatter.format(day.getDate()))
                         .build()
         ).collect(Collectors.toCollection(ArrayList::new));
@@ -47,7 +49,7 @@ public class ObjectToXmlDtoMapper {
                         .time(formatter.format(activity.getStartTime().toLocalTime()))
                         .slot("driver")
                         .status("single")
-                        .cardStatus("inserted")
+                        .cardStatus(activity.getCardStatus())
                         .build()
         ).collect(Collectors.toCollection(ArrayList::new));
 

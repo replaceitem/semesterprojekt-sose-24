@@ -167,11 +167,19 @@ public class DateHandler {
 
         if(mainController.driverInterface.getBlocks().isEmpty()){
             LocalDateTime startTime = LocalDateTime.of(myDate,LocalTime.of( Integer.parseInt(cbHourStart.getText()),Integer.parseInt(cbHourEnd.getText())));
-            activity = new Activity(currentActivityType, Duration.of(duration, ChronoUnit.MINUTES), startTime);
+            activity = Activity.builder()
+                    .type(currentActivityType)
+                    .duration(Duration.of(duration, ChronoUnit.MINUTES))
+                    .startTime(startTime)
+                    .build();
             mainController.driverInterface.addBlock(activity);
         }
         else {
-            activity = new Activity(currentActivityType, Duration.of(duration, ChronoUnit.MINUTES), mainController.driverInterface.getBlocks().getLast().getEndTime());
+            activity = Activity.builder()
+                    .type(currentActivityType)
+                    .duration(Duration.of(duration, ChronoUnit.MINUTES))
+                    .startTime(mainController.driverInterface.getBlocks().getLast().getEndTime())
+                    .build();
             mainController.driverInterface.addBlock(insertionIndex, activity);
         }
         mainController.activityPane.reload(mainController.activityPane.getDriverInterface().getBlocks());

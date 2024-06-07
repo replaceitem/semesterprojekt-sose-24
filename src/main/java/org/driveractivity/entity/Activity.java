@@ -1,9 +1,6 @@
 package org.driveractivity.entity;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NonNull;
+import lombok.*;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -16,7 +13,7 @@ public class Activity {
     private ActivityType type;
     private Duration duration;
     private LocalDateTime startTime;
-
+    private String cardStatus;
     public LocalDateTime getEndTime() {
         return startTime.plusMinutes(duration.toMinutes());
     }

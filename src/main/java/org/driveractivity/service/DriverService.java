@@ -14,7 +14,6 @@ import org.driveractivity.mapper.XmlDtoToObjectMapper;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.List;
 
 @Getter
 public class DriverService implements DriverInterface {
@@ -89,7 +88,7 @@ public class DriverService implements DriverInterface {
         activities.get(index).setType(activity.getType());
 
         int finalIndex = index;
-        listeners.forEach(l -> l.onActivitiesUpdated(List.of(activities.get(finalIndex))));
+        listeners.forEach(l -> l.onActivityUpdated(finalIndex));
 
         index = mergeAtIndex(index);
 
@@ -124,8 +123,8 @@ public class DriverService implements DriverInterface {
 
     @Override
     public ArrayList<Activity> importFrom(File f) throws FileImportException {
-        //TODO 2 types can be near one another
-        //TODO presenceCounter is a counter of days day 0 - presenceCounter 0, day 1 - presenceCounter 1, etc.
+        //TODO 2 types can be near one another - DONE
+        //TODO presenceCounter is a counter of days day 0 - presenceCounter 0, day 1 - presenceCounter 1, etc. - DONE
         //TODO cardStatus can either be "notInserted" or "inserted"
         //TODO make specificConditions: two most important ones: outOfScope and FT (Ferry Train), FT does not necessarily have an end
         try {

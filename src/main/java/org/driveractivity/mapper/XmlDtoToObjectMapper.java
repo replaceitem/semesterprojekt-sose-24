@@ -70,6 +70,7 @@ public class XmlDtoToObjectMapper { //name is WIP
         return Activity.builder()
                 .type(ActivityType.valueOf(activityDTO.getActivity().toUpperCase()))
                 .startTime(LocalDateTime.of(date, LocalTime.parse(activityDTO.getTime())))
+                .cardStatus(activityDTO.getCardStatus())
                 .build();
     }
 
