@@ -5,6 +5,7 @@
 <?import javafx.scene.control.*?>
 <?import javafx.scene.layout.*?>
 
+<?import org.kordamp.ikonli.javafx.FontIcon?>
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.driveractivity.gui.MainController">
 <stylesheets>
     <URL value="@main-view.css" />
@@ -13,8 +14,12 @@
 <top>
     <MenuBar>
         <Menu text="File">
-            <MenuItem fx:id="openMenu" text="Open" onAction="#openFile"/>
-            <MenuItem fx:id="saveMenu" text="Save" onAction="#saveFile"/>
+            <MenuItem fx:id="openMenu" text="Open" onAction="#openFile">
+                <graphic><FontIcon iconLiteral="mdi2f-folder-open" iconSize="16"/></graphic>
+            </MenuItem>
+            <MenuItem fx:id="saveMenu" text="Save" onAction="#saveFile">
+                <graphic><FontIcon iconLiteral="mdi2c-content-save" iconSize="16"/></graphic>
+            </MenuItem>
         </Menu>
     </MenuBar>
 </top>
