@@ -71,7 +71,7 @@ public class MainController implements Initializable {
 
     @FXML
     private void clearActivities(ActionEvent event) {
-        driverInterface.clearList();
+        driverInterface.clear();
     }
 
     public void openDateHandlerStage(ActivityType currentActivityType, int insertionIndex) {

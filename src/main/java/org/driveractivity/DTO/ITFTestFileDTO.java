@@ -18,4 +18,6 @@ import jakarta.xml.bind.annotation.XmlRootElement;
 public class ITFTestFileDTO {
     @XmlElement(name = "Activities")
     private ActivityGroupDTO activityGroup;
+    @XmlElement(name = "SpecificConditions")
+    SpecificConditionsDTO specificConditionsDTO;
 }

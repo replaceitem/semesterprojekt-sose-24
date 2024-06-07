@@ -1,12 +1,10 @@
 package org.driveractivity.mapper;
 
-import org.driveractivity.DTO.ActivityDTO;
-import org.driveractivity.DTO.ActivityGroupDTO;
-import org.driveractivity.DTO.DayDTO;
-import org.driveractivity.DTO.ITFTestFileDTO;
+import org.driveractivity.DTO.*;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityGroup;
 import org.driveractivity.entity.Day;
+import org.driveractivity.entity.SpecificCondition;
 
 import java.time.LocalDate;
 import java.time.format.DateTimeFormatter;
@@ -15,12 +13,25 @@ import java.util.concurrent.atomic.AtomicInteger;
 import java.util.stream.Collectors;
 
 public class ObjectToXmlDtoMapper {
-    public static ITFTestFileDTO mapToXmlDto(ArrayList<Activity> activities) {
+    public static ITFTestFileDTO mapToXmlDto(ArrayList<Activity> activities, ArrayList<SpecificCondition> specificConditions) {
         ArrayList<Activity> splitActivities = splitActivities(activities);
         ArrayList<Day> days = mapToDays(splitActivities);
         ActivityGroup activityGroup = mapToActivityGroup(days);
         ActivityGroupDTO activityGroupDTO = mapToActivityGroupDTO(activityGroup);
-        return ITFTestFileDTO.builder().activityGroup(activityGroupDTO).build();
+        SpecificConditionsDTO specificConditionsDTO = SpecificConditionsDTO.builder().specificConditions(mapToSpecificConditionDTO(specificConditions)).build();
+        return ITFTestFileDTO.builder()
+                .activityGroup(activityGroupDTO)
+                .specificConditionsDTO(specificConditionsDTO)
+                .build();
+    }
+
+    private static ArrayList<SpecificConditionDTO> mapToSpecificConditionDTO(ArrayList<SpecificCondition> specificConditions) {
+        return specificConditions.stream().map(specificCondition ->
+                SpecificConditionDTO.builder()
+                        .timestamp(specificCondition.getTimestamp().format(DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")))
+                        .specificConditionType(specificCondition.getSpecificConditionType().mapNameToString())
+                        .build()
+        ).collect(Collectors.toCollection(ArrayList::new));
     }
 
     private static ActivityGroupDTO mapToActivityGroupDTO(ActivityGroup activityGroup) {

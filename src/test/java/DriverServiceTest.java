@@ -122,9 +122,11 @@ public class DriverServiceTest {
         ClassLoader classLoader = getClass().getClassLoader();
         File file = new File(Objects.requireNonNull(classLoader.getResource("Beispiel2.xml")).getFile());
         DriverService driverService = DriverService.getInstance();
-        ArrayList<Activity> activities = new ArrayList<>(driverService.importFrom(file));
+        driverService.importFrom(file);
+        ArrayList<Activity> activities = driverService.getBlocks();
         assertThat(activities.size()).isEqualTo(4); //xml contains 5 activities, but 1 spans over 2 days, so it is merged
         assertThat(activities.getFirst().getDuration()).isEqualTo(Duration.of(1, ChronoUnit.HOURS));
+        assertThat(driverService.getSpecificConditions()).isNotEmpty();
     }
 
     @Test
@@ -134,7 +136,7 @@ public class DriverServiceTest {
         DriverService driverService = DriverService.getInstance();
         driverService.importFrom(file);
         assertThat(driverService.getActivities()).isNotNull();
-        driverService.exportToXML(new File(System.getProperty("user.home")+"/file.xml"));
+        driverService.exportToXML(new File("output.xml"));
     }
 
     @Test

@@ -6,7 +6,6 @@ import java.util.List;
 
 public interface DriverServiceListener {
     void onAllActivitiesUpdated(List<Activity> activities);
-
     /**
      * Triggered whenever an activity was removed
      * @param index Index of the removed activity

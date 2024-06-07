@@ -8,6 +8,7 @@ import lombok.Getter;
 import org.driveractivity.DTO.ITFTestFileDTO;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityGroup;
+import org.driveractivity.entity.SpecificCondition;
 import org.driveractivity.exception.FileImportException;
 import org.driveractivity.mapper.ObjectToXmlDtoMapper;
 import org.driveractivity.mapper.XmlDtoToObjectMapper;
@@ -18,11 +19,13 @@ import java.util.ArrayList;
 @Getter
 public class DriverService implements DriverInterface {
     private final ArrayList<Activity> activities;
+    private final ArrayList<SpecificCondition> specificConditions;
     @Getter
     private static final DriverService instance = new DriverService();
     private final ArrayList<DriverServiceListener> listeners;
 
     private DriverService() {
+        specificConditions = new ArrayList<>();
         activities = new ArrayList<>();
         listeners = new ArrayList<>();
     }
@@ -33,18 +36,17 @@ public class DriverService implements DriverInterface {
     }
 
     @Override
-    public ArrayList<Activity> addBlock(Activity activity) {
+    public void addBlock(Activity activity) {
         if(!activities.isEmpty()) {
             Activity last = activities.getLast();
             activity.setStartTime(last.getEndTime());
         }
         addActivityInternal(activity);
         mergeAtIndex(activities.size()-1);
-        return activities;
     }
 
     @Override
-    public ArrayList<Activity> addBlock(int index, Activity activity) {
+    public void addBlock(int index, Activity activity) {
         if(index < 0 || index > activities.size()) {
             throw new IndexOutOfBoundsException();
         }
@@ -62,11 +64,10 @@ public class DriverService implements DriverInterface {
         index = mergeAtIndex(index);
 
         adaptStartTimes(index+1);
-        return activities;
     }
 
     @Override
-    public ArrayList<Activity> removeBlock(int index) {
+    public void removeBlock(int index) {
         if(index < 0 || index >= activities.size()) {
             throw new IndexOutOfBoundsException();
         }
@@ -77,11 +78,10 @@ public class DriverService implements DriverInterface {
         if (index != 0) {
             adaptStartTimes(index);
         }
-        return activities;
     }
 
     @Override
-    public ArrayList<Activity> changeBlock(int index, Activity activity) {
+    public void changeBlock(int index, Activity activity) {
         if(index < 0 || index >= activities.size()) {
             throw new IndexOutOfBoundsException();
         }
@@ -95,7 +95,16 @@ public class DriverService implements DriverInterface {
         index = mergeAtIndex(index);
 
         adaptStartTimes(index+1);
-        return activities;
+    }
+
+    @Override
+    public void addSpecificCondition(SpecificCondition specificCondition) {
+        specificConditions.add(specificCondition);
+    }
+
+    @Override
+    public void removeSpecificCondition(SpecificCondition specificCondition) {
+        specificConditions.remove(specificCondition);
     }
 
     @Override
@@ -105,18 +114,15 @@ public class DriverService implements DriverInterface {
 
 
     @Override
-    public void clearList(){
-        int size = activities.size();
-        activities.clear();
-        for (int i = 0; i < size; i++) {
-            int finalI = i;
-            listeners.forEach(driverServiceListener -> driverServiceListener.onActivityRemoved(finalI));
-        }
+    public void clear(){
+        this.specificConditions.clear();
+        this.activities.clear();
+        listeners.forEach(l -> l.onAllActivitiesUpdated(activities));
     }
 
     @Override
     public void exportToXML(File file) {
-        ITFTestFileDTO itfTestFileDTO = ObjectToXmlDtoMapper.mapToXmlDto(activities);
+        ITFTestFileDTO itfTestFileDTO = ObjectToXmlDtoMapper.mapToXmlDto(activities, specificConditions);
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(ITFTestFileDTO.class);
             Marshaller marshaller = jaxbContext.createMarshaller();
@@ -128,23 +134,30 @@ public class DriverService implements DriverInterface {
     }
 
     @Override
-    public ArrayList<Activity> importFrom(File f) throws FileImportException {
+    public void importFrom(File f) throws FileImportException {
         //TODO 2 types can be near one another - DONE
         //TODO presenceCounter is a counter of days day 1 - presenceCounter 0, day 1 - presenceCounter 1, etc. - DONE
         //TODO cardStatus can either be "notInserted" or "inserted" - DONE
         //TODO make specificConditions: two most important ones: outOfScope and FT (Ferry Train), FT does not necessarily have an end
         try {
+            //Read the file
             JAXBContext jaxbContext = JAXBContext.newInstance(ITFTestFileDTO.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
             ITFTestFileDTO itfTestFileDTO = (ITFTestFileDTO) unmarshaller.unmarshal(f);
-            ActivityGroup group = XmlDtoToObjectMapper.map(itfTestFileDTO.getActivityGroup());
-            ArrayList<Activity> activities = new ArrayList<>(XmlDtoToObjectMapper.mapDayToActivity(group.getDays()));
-            this.activities.clear();
+
+            clear();
+
+            //Read the activities
+            ActivityGroup group = XmlDtoToObjectMapper.mapActivityGroup(itfTestFileDTO.getActivityGroup());
+            ArrayList<Activity> activities = XmlDtoToObjectMapper.mapDayToActivity(group.getDays());
             addActivityInternal(activities);
             for(int i = 1; i+2 < activities.size(); i = i + 2) {
                 mergeAtIndex(i);
             }
-            return activities;
+
+            //Read the specific conditions
+            specificConditions.addAll(XmlDtoToObjectMapper.mapSpecificConditions(itfTestFileDTO.getSpecificConditionsDTO()));
+
         } catch (JAXBException e) {
             throw new FileImportException("Error while importing file, please check if the file is valid.");
         }
@@ -175,7 +188,7 @@ public class DriverService implements DriverInterface {
     private void addActivityInternal(ArrayList<Activity> activities) {
         //This method is only used in case activities get loaded from xml
         this.activities.addAll(activities);
-        activities.forEach(a -> listeners.forEach(l -> l.onActivityAdded(activities.indexOf(a), a)));
+        listeners.forEach(l -> l.onAllActivitiesUpdated(this.activities));
     }
 
 

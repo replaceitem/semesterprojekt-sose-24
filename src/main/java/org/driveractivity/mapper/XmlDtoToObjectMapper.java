@@ -1,12 +1,7 @@
 package org.driveractivity.mapper;
 
-import org.driveractivity.DTO.ActivityDTO;
-import org.driveractivity.DTO.ActivityGroupDTO;
-import org.driveractivity.DTO.DayDTO;
-import org.driveractivity.entity.Activity;
-import org.driveractivity.entity.ActivityGroup;
-import org.driveractivity.entity.ActivityType;
-import org.driveractivity.entity.Day;
+import org.driveractivity.DTO.*;
+import org.driveractivity.entity.*;
 
 import java.time.Duration;
 import java.time.LocalDate;
@@ -19,9 +14,20 @@ import java.util.stream.Collectors;
 
 public class XmlDtoToObjectMapper { //name is WIP
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-    public static ActivityGroup map(ActivityGroupDTO dto) {
+    public static ActivityGroup mapActivityGroup(ActivityGroupDTO dto) {
         return ActivityGroup.builder()
                 .days(mapDays(dto.getDays())).build();
+    }
+    
+    public static ArrayList<SpecificCondition> mapSpecificConditions(SpecificConditionsDTO dto) {
+        return dto.getSpecificConditions().stream().map(XmlDtoToObjectMapper::mapSpecificCondition).collect(Collectors.toCollection(ArrayList::new));
+    }
+
+    private static SpecificCondition mapSpecificCondition(SpecificConditionDTO specificConditionDTO) {
+        return SpecificCondition.builder()
+                .timestamp(LocalDateTime.parse(specificConditionDTO.getTimestamp(), DateTimeFormatter.ofPattern("dd.MM.yyyy HH:mm")))
+                .specificConditionType(SpecificConditionType.mapType(specificConditionDTO.getSpecificConditionType()))
+                .build();
     }
 
     public static ArrayList<Activity> mapDayToActivity(ArrayList<Day> days) {
