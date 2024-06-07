@@ -21,7 +21,7 @@
 		<SpecificCondition timestamp="03.01.2005 03:00" type="beginFT" />
 		<SpecificCondition timestamp="03.01.2005 03:01" type="endFT" />
 	</SpecificConditions>
-    
+
      <Places>
 		<Place timestamp="03.05.2005 03:30" type="endManual" country="13" region="0" odometer="100" />
 		<Place timestamp="03.05.2005 18:30" type="beginManual" country="13" region="0" odometer="100" />
