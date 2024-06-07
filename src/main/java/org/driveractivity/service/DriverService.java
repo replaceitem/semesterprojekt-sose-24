@@ -191,9 +191,9 @@ public class DriverService implements DriverInterface {
         }
         for(int i = toMerge.size()-1; i > 0; i--) {
             toMerge.get(i-1).setDuration(toMerge.get(i-1).getDuration().plus(toMerge.get(i).getDuration()));
-            activities.remove(toMerge.get(i));
+            removeActivityInternal(activities.indexOf(toMerge.get(i)));
         }
-        int mergedActivityIndex = toMerge.indexOf(toMerge.getFirst());
+        int mergedActivityIndex = activities.indexOf(toMerge.getFirst());
         if(toMerge.size() > 1) {
             notifyListenersOfMerge(mergedActivityIndex);
         }
