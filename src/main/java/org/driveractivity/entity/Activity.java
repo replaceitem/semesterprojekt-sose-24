@@ -13,7 +13,8 @@ public class Activity {
     private ActivityType type;
     private Duration duration;
     private LocalDateTime startTime;
-    private String cardStatus;
+    @Builder.Default
+    private String cardStatus = "inserted";
     public LocalDateTime getEndTime() {
         return startTime.plusMinutes(duration.toMinutes());
     }

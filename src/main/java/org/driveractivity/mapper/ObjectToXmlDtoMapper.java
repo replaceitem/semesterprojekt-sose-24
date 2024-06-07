@@ -31,7 +31,7 @@ public class ObjectToXmlDtoMapper {
 
     private static ArrayList<DayDTO> mapToDayDTO(ArrayList<Day> days) {
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
-        AtomicInteger atomicInteger = new AtomicInteger();
+        AtomicInteger atomicInteger = new AtomicInteger(1);
         return days.stream().map(day ->
                 DayDTO.builder()
                         .activities(mapToActivityDTO(day.getActivities()))

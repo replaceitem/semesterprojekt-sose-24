@@ -24,6 +24,7 @@ public class DriverServiceTest {
                 .build();
         driverService.addBlock(activity);
         assertThat(driverService.getActivities().size()).isEqualTo(1);
+        assertThat(activity.getCardStatus()).isEqualTo("inserted");
     }
 
     @Test

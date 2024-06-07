@@ -71,7 +71,9 @@ public class DriverService implements DriverInterface {
             throw new IndexOutOfBoundsException();
         }
         removeActivityInternal(index);
-        index = mergeAtIndex(index);
+        if(index != activities.size()) {
+            index = mergeAtIndex(index);
+        }
         if (index != 0) {
             adaptStartTimes(index);
         }
@@ -123,7 +125,7 @@ public class DriverService implements DriverInterface {
     @Override
     public ArrayList<Activity> importFrom(File f) throws FileImportException {
         //TODO 2 types can be near one another - DONE
-        //TODO presenceCounter is a counter of days day 0 - presenceCounter 0, day 1 - presenceCounter 1, etc. - DONE
+        //TODO presenceCounter is a counter of days day 1 - presenceCounter 0, day 1 - presenceCounter 1, etc. - DONE
         //TODO cardStatus can either be "notInserted" or "inserted" - DONE
         //TODO make specificConditions: two most important ones: outOfScope and FT (Ferry Train), FT does not necessarily have an end
         try {
@@ -190,9 +192,9 @@ public class DriverService implements DriverInterface {
         }
         for(int i = toMerge.size()-1; i > 0; i--) {
             toMerge.get(i-1).setDuration(toMerge.get(i-1).getDuration().plus(toMerge.get(i).getDuration()));
-            activities.remove(toMerge.get(i));
+            removeActivityInternal(activities.indexOf(toMerge.get(i)));
         }
-        int mergedActivityIndex = toMerge.indexOf(toMerge.getFirst());
+        int mergedActivityIndex = activities.indexOf(toMerge.getFirst());
         if(toMerge.size() > 1) {
             notifyListenersOfMerge(mergedActivityIndex);
         }
