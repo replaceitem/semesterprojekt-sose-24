@@ -14,6 +14,7 @@ import org.driveractivity.mapper.XmlDtoToObjectMapper;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class DriverService implements DriverInterface {
@@ -38,7 +39,7 @@ public class DriverService implements DriverInterface {
             Activity last = activities.getLast();
             activity.setStartTime(last.getEndTime());
         }
-        activities.add(activity);
+        addActivityInternal(activity);
         mergeAtIndex(activities.size()-1);
         return activities;
     }
@@ -48,19 +49,20 @@ public class DriverService implements DriverInterface {
         if(index < 0 || index > activities.size()) {
             throw new IndexOutOfBoundsException();
         }
-        // X X X X X X
+        if(activities.isEmpty()) {
+            throw new UnsupportedOperationException("This method is to be used only to add blocks between some other blocks, this cannot happen if the list is empty");
+        }
+
         if(index == 0) {
             activity.setStartTime(activities.getFirst().getStartTime());
         } else {
             activity.setStartTime(activities.get(index-1).getEndTime());
         }
-        activities.add(index, activity);
+        addActivityInternal(index, activity);
 
         index = mergeAtIndex(index);
 
-        for(int i = index+1; i < activities.size(); i++) {
-            activities.get(i).setStartTime(activities.get(i-1).getEndTime());
-        }
+        adaptStartTimes(index+1);
         return activities;
     }
 
@@ -69,12 +71,10 @@ public class DriverService implements DriverInterface {
         if(index < 0 || index >= activities.size()) {
             throw new IndexOutOfBoundsException();
         }
-        activities.remove(index);
+        removeActivityInternal(index);
         index = mergeAtIndex(index);
         if (index != 0) {
-            for(int i = index; i < activities.size(); i++) {
-                activities.get(i).setStartTime(activities.get(i-1).getEndTime());
-            }
+            adaptStartTimes(index);
         }
         return activities;
     }
@@ -88,11 +88,12 @@ public class DriverService implements DriverInterface {
         activities.get(index).setDuration(activity.getDuration());
         activities.get(index).setType(activity.getType());
 
+        int finalIndex = index;
+        listeners.forEach(l -> l.onActivitiesUpdated(List.of(activities.get(finalIndex))));
+
         index = mergeAtIndex(index);
 
-        for(int i = index+1; i < activities.size(); i++) {
-            activities.get(i).setStartTime(activities.get(i-1).getEndTime());
-        }
+        adaptStartTimes(index+1);
         return activities;
     }
 
@@ -134,12 +135,42 @@ public class DriverService implements DriverInterface {
             ActivityGroup group = XmlDtoToObjectMapper.map(itfTestFileDTO.getActivityGroup());
             ArrayList<Activity> activities = new ArrayList<>(XmlDtoToObjectMapper.mapDayToActivity(group.getDays()));
             this.activities.clear();
-            this.activities.addAll(activities);
+            addActivityInternal(activities);
             return activities;
         } catch (JAXBException e) {
             throw new FileImportException("Error while importing file, please check if the file is valid.");
         }
     }
+
+    private void adaptStartTimes(int startIndex) {
+        ArrayList<Activity> changedActivities = new ArrayList<>();
+        for(int i = startIndex; i < activities.size(); i++) {
+            activities.get(i).setStartTime(activities.get(i-1).getEndTime());
+            changedActivities.add(activities.get(i));
+        }
+        listeners.forEach(l -> l.onActivitiesUpdated(changedActivities));
+    }
+
+    private void addActivityInternal(int index, Activity activity) {
+        activities.add(index, activity);
+        listeners.forEach(l -> l.onActivityAdded(index, activity));
+    }
+    private void addActivityInternal(Activity activity) {
+        activities.add(activity);
+        listeners.forEach(l -> l.onActivityAdded(activities.indexOf(activity), activity));
+    }
+
+    private void removeActivityInternal(int index) {
+        activities.remove(index);
+        listeners.forEach(l -> l.onActivityRemoved(index));
+    }
+
+    private void addActivityInternal(ArrayList<Activity> activities) {
+        //This method is only used in case activities get loaded from xml
+        this.activities.addAll(activities);
+        activities.forEach(a -> listeners.forEach(l -> l.onActivityAdded(activities.indexOf(a), a)));
+    }
+
 
     private int mergeAtIndex(int index) {
         ArrayList<Activity> toMerge = new ArrayList<>();
