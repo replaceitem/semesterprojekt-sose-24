@@ -9,6 +9,16 @@ ActivityBlock {
     -fx-max-height: 70px;
 }
 
+.activity-dimensions-tall {
+    -fx-pref-height: 85px;
+    -fx-max-height: 85px;
+}
+
+.activity-dimensions-very-tall {
+    -fx-pref-height: 100px;
+    -fx-max-height: 100px;
+}
+
 .activity-block-inner {
     -fx-background-radius: 8px;
 }
@@ -30,8 +40,25 @@ ActivityBlock {
     -fx-max-width: 120px;
 }
 
-.day-divider-line {
+.divider-line {
     -fx-stroke-width: 1px;
+}
+
+.start-divider-line {
+    -fx-stroke: #22DD22;
+}
+
+.end-divider-line {
+    -fx-stroke: #FF2222;
+}
+
+.day-divider-line {
     -fx-stroke: #CC5555;
     -fx-stroke-dash-array: 4 4;
+}
+
+.week-divider-line {
+    -fx-stroke-width: 2px;
+    -fx-stroke: #2222FF;
+    -fx-stroke-dash-array: 6 6;
 }

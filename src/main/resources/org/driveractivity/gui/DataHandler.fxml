@@ -30,14 +30,14 @@
          <font>
             <Font size="14.0" />
          </font></Label>
-      <TextField fx:id="cbHourStart" disable="true" editable="false" prefHeight="0.0" prefWidth="98.0" text="0" GridPane.columnIndex="1">
+      <TextField fx:id="cbHourStart" disable="true" prefHeight="0.0" prefWidth="98.0" text="0" GridPane.columnIndex="1">
          <font>
             <Font size="14.0" />
          </font>
          <GridPane.margin>
             <Insets bottom="10.0" />
          </GridPane.margin></TextField>
-      <TextField fx:id="cbMinuteStart" disable="true" editable="false" prefHeight="30.0" prefWidth="100.0" text="0" GridPane.columnIndex="3">
+      <TextField fx:id="cbMinuteStart" disable="true" prefHeight="30.0" prefWidth="100.0" text="0" GridPane.columnIndex="3">
          <font>
             <Font size="14.0" />
          </font>

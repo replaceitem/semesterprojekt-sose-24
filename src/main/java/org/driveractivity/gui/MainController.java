@@ -13,6 +13,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.Setter;
+import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
 import org.driveractivity.exception.FileImportException;
 import org.driveractivity.service.DriverInterface;
@@ -28,6 +29,8 @@ import static org.driveractivity.entity.ActivityType.*;
 public class MainController implements Initializable {
     @FXML
     public ActivityPane activityPane;
+    @FXML
+    public Button clearButton;
 
     @FXML
     private Button restButton;
@@ -42,12 +45,12 @@ public class MainController implements Initializable {
     private MenuItem openMenu;
 
     public DriverInterface driverInterface;
-
     @Setter
     private Stage stage;
 
     @Override
     public void initialize(URL location, ResourceBundle resources) {
+        activityPane.setMainController(this);
         driverInterface = DriverService.getInstance();
         SampleData.populate(driverInterface, 40);
         activityPane.load(driverInterface);
@@ -63,7 +66,7 @@ public class MainController implements Initializable {
         else if (button == availableButton) type = AVAILABLE;
         else System.out.println("unknown button");
         //dh.startTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(9,59,59));
-        openDateHandlerStage(this,type);
+        this.openDateHandlerStage(type, driverInterface.getBlocks().size());
     }
 
     @FXML
@@ -71,14 +74,12 @@ public class MainController implements Initializable {
         activityPane.clearActivities();
     }
 
-    public static void openDateHandlerStage(MainController mainController, ActivityType currentActivityType) {
-        DateHandler.mainController = mainController;
+    public void openDateHandlerStage(ActivityType currentActivityType, int insertionIndex) {
         try {
             FXMLLoader loader = new FXMLLoader(DateHandler.class.getResource("DataHandler.fxml"));
             Parent root = loader.load();
             DateHandler controller = loader.getController();
-            controller.currentActivityType = currentActivityType;
-            DateHandler.mainController = mainController;
+            controller.initialize(this, currentActivityType, insertionIndex);
             Stage dialogStage = new Stage();
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initStyle(StageStyle.UTILITY);
@@ -86,6 +87,24 @@ public class MainController implements Initializable {
             dialogStage.setTitle("Setting up " + currentActivityType + "...");
             dialogStage.toFront();
             dialogStage.showAndWait();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void openEditStage(Activity activity) {
+        try{
+            FXMLLoader loader = new FXMLLoader(DateHandler.class.getResource("edit-view.fxml"));
+            Parent root = loader.load();
+            EditView controller = loader.getController();
+            controller.initialize(this, activity);
+            Stage editStage = new Stage();
+            editStage.initModality(Modality.WINDOW_MODAL);
+            editStage.initStyle(StageStyle.UTILITY);
+            editStage.setScene(new Scene(root, 500, 250));
+            editStage.setTitle("Setting up " + activity.getType() + "...");
+            editStage.toFront();
+            editStage.showAndWait();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

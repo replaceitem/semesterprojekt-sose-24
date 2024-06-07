@@ -1,24 +1,34 @@
 package org.driveractivity.gui;
 
 import javafx.collections.ObservableList;
+import javafx.geometry.VPos;
 import javafx.scene.Node;
 import javafx.scene.layout.FlowPane;
+import lombok.Getter;
+import lombok.Setter;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.service.DriverInterface;
+import org.driveractivity.service.DriverServiceListener;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-public class ActivityPane extends FlowPane implements ActivityDisplay {
+public class ActivityPane extends FlowPane implements ActivityDisplay, DriverServiceListener {
     private DriverInterface driverData;
-    
+    @Setter @Getter
+    private MainController mainController;
+
+    public ActivityPane() {
+        this.setRowValignment(VPos.BOTTOM);
+    }
+
     @Override
     public void load(DriverInterface driverData) {
         this.driverData = driverData;
         reload(driverData.getBlocks());
     }
-    
+
     @Override
     public void reload(List<Activity> newActivities) {
         ObservableList<Node> children = this.getChildren();
@@ -39,18 +49,13 @@ public class ActivityPane extends FlowPane implements ActivityDisplay {
             this.setManaged(true);
         }
     }
-    
-    @Override
-    public void addBack(Activity activity) {
-        this.addActivity(this.getChildren().size(), activity);
-    }
-    
+
     @Override
     public void addActivity(int index, Activity activity) {
         ArrayList<Activity> newActivities = driverData.addBlock(index, activity);
         reload(newActivities);
     }
-    
+
     @Override
     public void removeActivity(int index) {
         ArrayList<Activity> newActivities = driverData.removeBlock(index);
@@ -62,9 +67,47 @@ public class ActivityPane extends FlowPane implements ActivityDisplay {
         ArrayList<Activity> newActivities = new ArrayList<>();
         reload(newActivities);
     }
-    
+
     @Override
     public DriverInterface getDriverInterface() {
         return driverData;
+    }
+
+    private void updateIndices() {
+        int index = 0;
+        for (Node child : getChildren()) {
+            if(child instanceof ActivityBlock activityBlock) {
+                activityBlock.setActivityIndex(index++);
+            }
+        }
+    }
+
+    @Override
+    public void onActivitiesUpdated(List<Activity> activities) {
+        reload(activities);
+    }
+
+    @Override
+    public void onActivityRemoved(int index) {
+        getChildren().remove(index);
+        updateIndices();
+    }
+
+    @Override
+    public void onActivityAdded(int index, Activity activity) {
+        getChildren().add(index, new ActivityBlock(this, activity, index));
+        updateIndices();
+    }
+
+    @Override
+    public void onActivityUpdated(int index) {
+        if(getChildren().get(index) instanceof ActivityBlock activityBlock) {
+            activityBlock.update();
+        }
+    }
+
+    @Override
+    public void onActivitiesMerged(int index) {
+        // TODO highlight
     }
 }
