@@ -92,12 +92,12 @@ public class MainController implements Initializable {
         }
     }
 
-    public void openEditStage(Activity activity) {
+    public void openEditStage(Activity activity, int activityIndex) {
         try{
             FXMLLoader loader = new FXMLLoader(DateHandler.class.getResource("edit-view.fxml"));
             Parent root = loader.load();
             EditView controller = loader.getController();
-            controller.initialize(this, activity);
+            controller.initialize(this, activity, activityIndex);
             Stage editStage = new Stage();
             editStage.initModality(Modality.WINDOW_MODAL);
             editStage.initStyle(StageStyle.UTILITY);

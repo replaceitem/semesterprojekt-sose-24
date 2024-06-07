@@ -100,7 +100,7 @@ public class ActivityBlock extends StackPane {
             MenuItem editItem = new MenuItem("Edit", createIcon("fth-edit"));
             editItem.setOnAction(actionEvent -> {
                 System.out.println("Edit");
-                activityPane.getMainController().openEditStage(this.activity);
+                activityPane.getMainController().openEditStage(this.activity, activityIndex);
             });
 
             MenuItem deleteItem = new MenuItem("Delete", createIcon("fth-trash"));

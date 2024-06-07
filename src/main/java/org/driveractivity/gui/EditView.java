@@ -1,9 +1,5 @@
 package org.driveractivity.gui;
 
-import javafx.beans.binding.Bindings;
-import javafx.beans.binding.StringBinding;
-import javafx.beans.property.SimpleStringProperty;
-import javafx.beans.property.StringProperty;
 import javafx.scene.control.Button;
 import javafx.scene.control.ChoiceBox;
 import javafx.scene.control.Label;
@@ -13,7 +9,6 @@ import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
 
 import java.time.Duration;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.temporal.ChronoUnit;
 
@@ -32,10 +27,12 @@ public class EditView {
 
     MainController mainController;
     Activity activity;
+    private int activityIndex;
 
-    public void initialize(MainController mainController, Activity activity){
+    public void initialize(MainController mainController, Activity activity, int activityIndex){
         this.mainController = mainController;
         this.activity = activity;
+        this.activityIndex = activityIndex;
 
         activityType.getItems().addAll(ActivityType.values());
         activityType.setValue(activity.getType());
@@ -92,12 +89,15 @@ public class EditView {
     public void onSubmit(){
 
         int duration = Integer.parseInt(durationHour.getText()) *60 + Integer.parseInt(durationMinute.getText());
-
-        activity.setDuration(Duration.of(duration, ChronoUnit.MINUTES));
-        activity.setType(activityType.getValue());
-
         
-        mainController.activityPane.reload(mainController.activityPane.getDriverInterface().getBlocks());
+        Activity newActivity = Activity.builder()
+                .startTime(activity.getStartTime())
+                .duration(Duration.of(duration, ChronoUnit.MINUTES))
+                .type(activityType.getValue())
+                .build();
+        
+        mainController.driverInterface.changeBlock(activityIndex, newActivity);
+        
         Stage stage = (Stage) buttonSubmit.getScene().getWindow();
         stage.close();
     }
