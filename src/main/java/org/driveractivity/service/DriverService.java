@@ -1,5 +1,9 @@
 package org.driveractivity.service;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
 import lombok.Getter;
 import org.driveractivity.DTO.ITFTestFileDTO;
 import org.driveractivity.entity.Activity;
@@ -8,10 +12,6 @@ import org.driveractivity.exception.FileImportException;
 import org.driveractivity.mapper.ObjectToXmlDtoMapper;
 import org.driveractivity.mapper.XmlDtoToObjectMapper;
 
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
-import jakarta.xml.bind.Unmarshaller;
 import java.io.File;
 import java.util.ArrayList;
 
@@ -20,9 +20,11 @@ public class DriverService implements DriverInterface {
     private final ArrayList<Activity> activities;
     @Getter
     private static final DriverService instance = new DriverService();
+    private final ArrayList<DriverServiceListener> listeners;
 
     private DriverService() {
         activities = new ArrayList<>();
+        listeners = new ArrayList<>();
     }
 
     @Override
@@ -94,6 +96,11 @@ public class DriverService implements DriverInterface {
         return activities;
     }
 
+    @Override
+    public void addDriverServiceListener(DriverServiceListener listener) {
+        listeners.add(listener);
+    }
+
 
     @Override
     public void clearList(){
@@ -116,6 +123,10 @@ public class DriverService implements DriverInterface {
 
     @Override
     public ArrayList<Activity> importFrom(File f) throws FileImportException {
+        //TODO 2 types can be near one another
+        //TODO presenceCounter is a counter of days day 0 - presenceCounter 0, day 1 - presenceCounter 1, etc.
+        //TODO cardStatus can either be "notInserted" or "inserted"
+        //TODO make specificConditions: two most important ones: outOfScope and FT (Ferry Train), FT does not necessarily have an end
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(ITFTestFileDTO.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -150,6 +161,16 @@ public class DriverService implements DriverInterface {
             toMerge.get(i-1).setDuration(toMerge.get(i-1).getDuration().plus(toMerge.get(i).getDuration()));
             activities.remove(toMerge.get(i));
         }
-        return toMerge.indexOf(toMerge.getFirst());
+        int mergedActivityIndex = toMerge.indexOf(toMerge.getFirst());
+        if(toMerge.size() > 1) {
+            notifyListenersOfMerge(mergedActivityIndex);
+        }
+        return mergedActivityIndex;
+    }
+
+    private void notifyListenersOfMerge(int index) {
+        for(DriverServiceListener listener : listeners) {
+            listener.onActivitiesMerged(index);
+        }
     }
 }
