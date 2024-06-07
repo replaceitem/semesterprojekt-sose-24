@@ -5,7 +5,7 @@ import org.driveractivity.entity.Activity;
 import java.util.List;
 
 public interface DriverServiceListener {
-    void onActivitiesUpdated(List<Activity> activities);
+    void onAllActivitiesUpdated(List<Activity> activities);
 
     /**
      * Triggered whenever an activity was removed

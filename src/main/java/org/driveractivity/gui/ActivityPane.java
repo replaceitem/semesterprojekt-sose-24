@@ -26,6 +26,7 @@ public class ActivityPane extends FlowPane implements ActivityDisplay, DriverSer
     @Override
     public void load(DriverInterface driverData) {
         this.driverData = driverData;
+        driverData.addDriverServiceListener(this);
         reload(driverData.getBlocks());
     }
 
@@ -51,24 +52,6 @@ public class ActivityPane extends FlowPane implements ActivityDisplay, DriverSer
     }
 
     @Override
-    public void addActivity(int index, Activity activity) {
-        ArrayList<Activity> newActivities = driverData.addBlock(index, activity);
-        reload(newActivities);
-    }
-
-    @Override
-    public void removeActivity(int index) {
-        ArrayList<Activity> newActivities = driverData.removeBlock(index);
-        reload(newActivities);
-    }
-
-    public void clearActivities() {
-        driverData.clearList();
-        ArrayList<Activity> newActivities = new ArrayList<>();
-        reload(newActivities);
-    }
-
-    @Override
     public DriverInterface getDriverInterface() {
         return driverData;
     }
@@ -83,7 +66,7 @@ public class ActivityPane extends FlowPane implements ActivityDisplay, DriverSer
     }
 
     @Override
-    public void onActivitiesUpdated(List<Activity> activities) {
+    public void onAllActivitiesUpdated(List<Activity> activities) {
         reload(activities);
     }
 

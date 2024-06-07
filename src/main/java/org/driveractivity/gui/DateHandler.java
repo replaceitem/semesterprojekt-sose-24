@@ -163,26 +163,19 @@ public class DateHandler {
 
         int duration = hour*60 + minute;
 
-        Activity activity;
+        Activity.ActivityBuilder activityBuilder = Activity.builder()
+                .type(currentActivityType)
+                .duration(Duration.of(duration, ChronoUnit.MINUTES));
 
         if(mainController.driverInterface.getBlocks().isEmpty()){
             LocalDateTime startTime = LocalDateTime.of(myDate,LocalTime.of( Integer.parseInt(cbHourStart.getText()),Integer.parseInt(cbHourEnd.getText())));
-            activity = Activity.builder()
-                    .type(currentActivityType)
-                    .duration(Duration.of(duration, ChronoUnit.MINUTES))
-                    .startTime(startTime)
-                    .build();
-            mainController.driverInterface.addBlock(activity);
+            activityBuilder = activityBuilder.startTime(startTime);
+            mainController.driverInterface.addBlock(activityBuilder.build());
+        } else {
+            activityBuilder = activityBuilder.startTime(mainController.driverInterface.getBlocks().getLast().getEndTime());
+            mainController.driverInterface.addBlock(insertionIndex, activityBuilder.build());
         }
-        else {
-            activity = Activity.builder()
-                    .type(currentActivityType)
-                    .duration(Duration.of(duration, ChronoUnit.MINUTES))
-                    .startTime(mainController.driverInterface.getBlocks().getLast().getEndTime())
-                    .build();
-            mainController.driverInterface.addBlock(insertionIndex, activity);
-        }
-        mainController.activityPane.reload(mainController.activityPane.getDriverInterface().getBlocks());
+        
         Stage stage = (Stage) processButton.getScene().getWindow();
         stage.close();
     }

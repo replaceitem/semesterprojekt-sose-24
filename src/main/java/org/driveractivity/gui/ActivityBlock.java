@@ -106,7 +106,7 @@ public class ActivityBlock extends StackPane {
             MenuItem deleteItem = new MenuItem("Delete", createIcon("fth-trash"));
             deleteItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
             deleteItem.setOnAction(actionEvent -> {
-                activityPane.removeActivity(activityIndex);
+                activityPane.getDriverInterface().removeBlock(activityIndex);
             });
 
             Menu insertBeforeItem = new Menu("Insert before", createIcon("fth-chevron-left"));

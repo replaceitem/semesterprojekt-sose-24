@@ -10,9 +10,5 @@ public interface ActivityDisplay {
 
     void reload(List<Activity> newActivities);
 
-    void addActivity(int index, Activity activity);
-
-    void removeActivity(int index);
-
     DriverInterface getDriverInterface();
 }

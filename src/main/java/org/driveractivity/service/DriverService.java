@@ -106,7 +106,12 @@ public class DriverService implements DriverInterface {
 
     @Override
     public void clearList(){
+        int size = activities.size();
         activities.clear();
+        for (int i = 0; i < size; i++) {
+            int finalI = i;
+            listeners.forEach(driverServiceListener -> driverServiceListener.onActivityRemoved(finalI));
+        }
     }
 
     @Override
