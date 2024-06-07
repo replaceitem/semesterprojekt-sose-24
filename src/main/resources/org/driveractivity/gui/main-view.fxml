@@ -24,12 +24,15 @@
         <Pane/> <!-- Empty space -->
         <VBox spacing="10">
             <Pane/> <!-- Empty space -->
-            <Button fx:id="restButton" text="Rest" styleClass="activity-button, activity-rest" onAction="#addActivity"/>
-            <Button fx:id="driveButton" text="Drive" styleClass="activity-button, activity-drive" onAction="#addActivity"/>
-            <Button fx:id="workButton" text="Work" styleClass="activity-button, activity-work" onAction="#addActivity"/>
-            <Button fx:id="availableButton" text="Available" styleClass="activity-button, activity-available" onAction="#addActivity"/>
+            <VBox spacing="10">
+                <Button fx:id="restButton" text="Rest" styleClass="activity-button, activity-rest" onAction="#addActivity"/>
+                <Button fx:id="driveButton" text="Drive" styleClass="activity-button, activity-drive" onAction="#addActivity"/>
+                <Button fx:id="workButton" text="Work" styleClass="activity-button, activity-work" onAction="#addActivity"/>
+                <Button fx:id="availableButton" text="Available" styleClass="activity-button, activity-available" onAction="#addActivity"/>
+            </VBox>
+            <Pane VBox.vgrow="ALWAYS"/> <!-- Empty space -->
+            <Button fx:id="clearButton" text="Clear" styleClass="activity-button, activity-clear" onAction="#clearActivities"/>
             <Pane/> <!-- Empty space -->
-            <Button fx:id="clearButton" text="Clear" styleClass="activity-button, activity-available" onAction="#clearActivities"/>
         </VBox>
         <Separator orientation="VERTICAL"/> <!-- Divider -->
     </HBox>

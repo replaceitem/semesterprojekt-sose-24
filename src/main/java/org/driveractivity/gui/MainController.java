@@ -13,6 +13,7 @@ import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.Setter;
+import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
 import org.driveractivity.exception.FileImportException;
 import org.driveractivity.service.DriverInterface;
@@ -28,6 +29,8 @@ import static org.driveractivity.entity.ActivityType.*;
 public class MainController implements Initializable {
     @FXML
     public ActivityPane activityPane;
+    @FXML
+    public Button clearButton;
 
     @FXML
     private Button restButton;
@@ -84,6 +87,24 @@ public class MainController implements Initializable {
             dialogStage.setTitle("Setting up " + currentActivityType + "...");
             dialogStage.toFront();
             dialogStage.showAndWait();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    public void openEditStage(Activity activity) {
+        try{
+            FXMLLoader loader = new FXMLLoader(DateHandler.class.getResource("edit-view.fxml"));
+            Parent root = loader.load();
+            EditView controller = loader.getController();
+            controller.initialize(this, activity);
+            Stage editStage = new Stage();
+            editStage.initModality(Modality.WINDOW_MODAL);
+            editStage.initStyle(StageStyle.UTILITY);
+            editStage.setScene(new Scene(root, 500, 250));
+            editStage.setTitle("Setting up " + activity.getType() + "...");
+            editStage.toFront();
+            editStage.showAndWait();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

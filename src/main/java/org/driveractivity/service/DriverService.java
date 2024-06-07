@@ -1,5 +1,9 @@
 package org.driveractivity.service;
 
+import jakarta.xml.bind.JAXBContext;
+import jakarta.xml.bind.JAXBException;
+import jakarta.xml.bind.Marshaller;
+import jakarta.xml.bind.Unmarshaller;
 import lombok.Getter;
 import org.driveractivity.DTO.ITFTestFileDTO;
 import org.driveractivity.entity.Activity;
@@ -8,21 +12,20 @@ import org.driveractivity.exception.FileImportException;
 import org.driveractivity.mapper.ObjectToXmlDtoMapper;
 import org.driveractivity.mapper.XmlDtoToObjectMapper;
 
-import jakarta.xml.bind.JAXBContext;
-import jakarta.xml.bind.JAXBException;
-import jakarta.xml.bind.Marshaller;
-import jakarta.xml.bind.Unmarshaller;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 @Getter
 public class DriverService implements DriverInterface {
     private final ArrayList<Activity> activities;
     @Getter
     private static final DriverService instance = new DriverService();
+    private final ArrayList<DriverServiceListener> listeners;
 
     private DriverService() {
         activities = new ArrayList<>();
+        listeners = new ArrayList<>();
     }
 
     @Override
@@ -35,12 +38,9 @@ public class DriverService implements DriverInterface {
         if(!activities.isEmpty()) {
             Activity last = activities.getLast();
             activity.setStartTime(last.getEndTime());
-            if(last.getType() == activity.getType()) {
-                last.setDuration(last.getDuration().plus(activity.getDuration()));
-                return activities;
-            }
         }
-        activities.add(activity);
+        addActivityInternal(activity);
+        mergeAtIndex(activities.size()-1);
         return activities;
     }
 
@@ -49,17 +49,20 @@ public class DriverService implements DriverInterface {
         if(index < 0 || index > activities.size()) {
             throw new IndexOutOfBoundsException();
         }
-        // X X X X X X
+        if(activities.isEmpty()) {
+            throw new UnsupportedOperationException("This method is to be used only to add blocks between some other blocks, this cannot happen if the list is empty");
+        }
+
         if(index == 0) {
             activity.setStartTime(activities.getFirst().getStartTime());
         } else {
             activity.setStartTime(activities.get(index-1).getEndTime());
         }
-        activities.add(index, activity);
-        mergeActivityIfPossible(index, activity);
-        for(int i = index+1; i < activities.size(); i++) {
-            activities.get(i).setStartTime(activities.get(i-1).getEndTime());
-        }
+        addActivityInternal(index, activity);
+
+        index = mergeAtIndex(index);
+
+        adaptStartTimes(index+1);
         return activities;
     }
 
@@ -68,19 +71,10 @@ public class DriverService implements DriverInterface {
         if(index < 0 || index >= activities.size()) {
             throw new IndexOutOfBoundsException();
         }
-        if(index != 0 && index+1 != activities.size()) {
-            Activity activityBefore = activities.get(index-1);
-            Activity activityAfter = activities.get(index+1);
-            if(activityBefore.getType() == activityAfter.getType()) {
-                activityBefore.setDuration(activityBefore.getDuration().plus(activityAfter.getDuration()));
-                activities.remove(activityAfter);
-            }
-        }
-        activities.remove(index);
+        removeActivityInternal(index);
+        index = mergeAtIndex(index);
         if (index != 0) {
-            for(int i = index; i < activities.size(); i++) {
-                activities.get(i).setStartTime(activities.get(i-1).getEndTime());
-            }
+            adaptStartTimes(index);
         }
         return activities;
     }
@@ -94,33 +88,20 @@ public class DriverService implements DriverInterface {
         activities.get(index).setDuration(activity.getDuration());
         activities.get(index).setType(activity.getType());
 
-        mergeActivityIfPossible(index, activity);
+        int finalIndex = index;
+        listeners.forEach(l -> l.onActivitiesUpdated(List.of(activities.get(finalIndex))));
 
-        for(int i = index+1; i < activities.size(); i++) {
-            activities.get(i).setStartTime(activities.get(i-1).getEndTime());
-        }
+        index = mergeAtIndex(index);
+
+        adaptStartTimes(index+1);
         return activities;
     }
 
-    private void mergeActivityIfPossible(int index, Activity activity) {
-        if(index != 0) {
-            Activity activityBefore = activities.get(index -1);
-            if(activityBefore.getType() == activity.getType()) {
-                activityBefore.setDuration(activityBefore.getDuration().plus(activity.getDuration()));
-                removeBlock(index);
-                index = index -1;
-            }
-        }
-
-        if(index +1 != activities.size()) {
-            Activity activityAfter = activities.get(index +1);
-            if(activityAfter.getType() == activity.getType()) {
-                activityAfter.setStartTime(activity.getEndTime());
-                activityAfter.setDuration(activityAfter.getDuration().plus(activity.getDuration()));
-                removeBlock(index);
-            }
-        }
+    @Override
+    public void addDriverServiceListener(DriverServiceListener listener) {
+        listeners.add(listener);
     }
+
 
     @Override
     public void clearList(){
@@ -143,6 +124,10 @@ public class DriverService implements DriverInterface {
 
     @Override
     public ArrayList<Activity> importFrom(File f) throws FileImportException {
+        //TODO 2 types can be near one another
+        //TODO presenceCounter is a counter of days day 0 - presenceCounter 0, day 1 - presenceCounter 1, etc.
+        //TODO cardStatus can either be "notInserted" or "inserted"
+        //TODO make specificConditions: two most important ones: outOfScope and FT (Ferry Train), FT does not necessarily have an end
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(ITFTestFileDTO.class);
             Unmarshaller unmarshaller = jaxbContext.createUnmarshaller();
@@ -150,10 +135,73 @@ public class DriverService implements DriverInterface {
             ActivityGroup group = XmlDtoToObjectMapper.map(itfTestFileDTO.getActivityGroup());
             ArrayList<Activity> activities = new ArrayList<>(XmlDtoToObjectMapper.mapDayToActivity(group.getDays()));
             this.activities.clear();
-            this.activities.addAll(activities);
+            addActivityInternal(activities);
             return activities;
         } catch (JAXBException e) {
             throw new FileImportException("Error while importing file, please check if the file is valid.");
+        }
+    }
+
+    private void adaptStartTimes(int startIndex) {
+        ArrayList<Activity> changedActivities = new ArrayList<>();
+        for(int i = startIndex; i < activities.size(); i++) {
+            activities.get(i).setStartTime(activities.get(i-1).getEndTime());
+            changedActivities.add(activities.get(i));
+        }
+        listeners.forEach(l -> l.onActivitiesUpdated(changedActivities));
+    }
+
+    private void addActivityInternal(int index, Activity activity) {
+        activities.add(index, activity);
+        listeners.forEach(l -> l.onActivityAdded(index, activity));
+    }
+    private void addActivityInternal(Activity activity) {
+        activities.add(activity);
+        listeners.forEach(l -> l.onActivityAdded(activities.indexOf(activity), activity));
+    }
+
+    private void removeActivityInternal(int index) {
+        activities.remove(index);
+        listeners.forEach(l -> l.onActivityRemoved(index));
+    }
+
+    private void addActivityInternal(ArrayList<Activity> activities) {
+        //This method is only used in case activities get loaded from xml
+        this.activities.addAll(activities);
+        activities.forEach(a -> listeners.forEach(l -> l.onActivityAdded(activities.indexOf(a), a)));
+    }
+
+
+    private int mergeAtIndex(int index) {
+        ArrayList<Activity> toMerge = new ArrayList<>();
+        if(activities.size() < 2) {
+            return index;
+        }
+        toMerge.add(activities.get(index));
+        if(index+1 < activities.size()) {
+            if(activities.get(index).getType() == activities.get(index+1).getType()) {
+                toMerge.add(activities.get(index+1));
+            }
+        }
+        if(index-1 >= 0) {
+            if(activities.get(index).getType() == activities.get(index-1).getType()) {
+                toMerge.addFirst(activities.get(index-1));
+            }
+        }
+        for(int i = toMerge.size()-1; i > 0; i--) {
+            toMerge.get(i-1).setDuration(toMerge.get(i-1).getDuration().plus(toMerge.get(i).getDuration()));
+            activities.remove(toMerge.get(i));
+        }
+        int mergedActivityIndex = toMerge.indexOf(toMerge.getFirst());
+        if(toMerge.size() > 1) {
+            notifyListenersOfMerge(mergedActivityIndex);
+        }
+        return mergedActivityIndex;
+    }
+
+    private void notifyListenersOfMerge(int index) {
+        for(DriverServiceListener listener : listeners) {
+            listener.onActivitiesMerged(index);
         }
     }
 }
