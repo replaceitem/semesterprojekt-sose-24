@@ -71,7 +71,9 @@ public class DriverService implements DriverInterface {
             throw new IndexOutOfBoundsException();
         }
         removeActivityInternal(index);
-        index = mergeAtIndex(index);
+        if(index != activities.size()) {
+            index = mergeAtIndex(index);
+        }
         if (index != 0) {
             adaptStartTimes(index);
         }
