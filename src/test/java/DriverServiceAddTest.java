@@ -114,6 +114,7 @@ public class DriverServiceAddTest {
         assertThat(driverService.getActivities().getFirst().getDuration()).isEqualTo(Duration.of(10, ChronoUnit.MINUTES));
         assertThat(driverService.getActivities().get(1).getType()).isEqualTo(REST);
     }
+
     @AfterEach
     public void cleanUp() {
         DriverService.getInstance().clear();

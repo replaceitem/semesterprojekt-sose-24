@@ -158,8 +158,6 @@ public class DriverServiceRemoveTest {
 
     }
 
-
-
     @AfterEach
     public void cleanUp() {
         DriverService.getInstance().clear();

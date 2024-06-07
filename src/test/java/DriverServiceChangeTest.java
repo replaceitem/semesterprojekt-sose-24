@@ -223,8 +223,46 @@ public class DriverServiceChangeTest {
         assertThat(driverService.getActivities().getFirst().getDuration()).isEqualTo(Duration.of(15, ChronoUnit.MINUTES));
     }
 
+    @Test
+    public void changeActivityCardStatusNoMerge() {
+        Activity activity = Activity.builder()
+                .type(WORK)
+                .startTime(LocalDateTime.now())
+                .duration(Duration.of(5, ChronoUnit.MINUTES))
+                .build();
+        Activity activity2 = Activity.builder()
+                .type(REST)
+                .startTime(LocalDateTime.now())
+                .duration(Duration.of(5, ChronoUnit.MINUTES))
+                .build();
+        Activity activity3 = Activity.builder()
+                .type(WORK)
+                .startTime(LocalDateTime.now())
+                .duration(Duration.of(5, ChronoUnit.MINUTES))
+                .build();
 
+        DriverService driverService = DriverService.getInstance();
+        driverService.addBlock(activity);
+        driverService.addBlock(activity2);
+        driverService.addBlock(activity3);
 
+        LocalDateTime activity3EndTime = activity3.getEndTime(); // save activity3 end time - should change after activity2 is changed
+
+        Activity changedActivity = Activity.builder()
+                .type(WORK)
+                .startTime(LocalDateTime.now())
+                .cardStatus("notInserted")
+                .duration(Duration.of(15, ChronoUnit.MINUTES))
+                .build();
+
+        driverService.changeBlock(1, changedActivity);
+
+        assertThat(driverService.getActivities().size()).isEqualTo(3); // size 3 because cardStatus is different
+        assertThat(driverService.getActivities().get(1).getDuration()).isEqualTo(Duration.of(15, ChronoUnit.MINUTES));
+        assertThat(driverService.getActivities().getFirst().getDuration()).isEqualTo(Duration.of(5, ChronoUnit.MINUTES));
+        assertThat(driverService.getActivities().getLast().getDuration()).isEqualTo(Duration.of(5, ChronoUnit.MINUTES));
+        assertThat(driverService.getActivities().getLast().getEndTime()).isAfter(activity3EndTime); // end time of activity3 should change, because activity2 is extended
+    }
 
     @AfterEach
     public void cleanUp() {

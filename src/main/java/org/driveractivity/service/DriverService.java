@@ -86,8 +86,7 @@ public class DriverService implements DriverInterface {
             throw new IndexOutOfBoundsException();
         }
 
-        activities.get(index).setDuration(activity.getDuration());
-        activities.get(index).setType(activity.getType());
+        activities.set(index, activity);
 
         int finalIndex = index;
         listeners.forEach(l -> l.onActivityUpdated(finalIndex));
