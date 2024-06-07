@@ -133,7 +133,7 @@ public class MainController implements Initializable {
 
     @FXML
     private void saveFile(ActionEvent event) {
-        driverInterface.exportToXML();
+        driverInterface.exportToXML(new File(System.getProperty("user.home")));
     }
 
 }

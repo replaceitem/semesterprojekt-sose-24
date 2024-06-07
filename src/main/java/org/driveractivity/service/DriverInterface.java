@@ -15,6 +15,6 @@ public interface DriverInterface {
     ArrayList<Activity> changeBlock(int index, Activity activity);
     void addDriverServiceListener(DriverServiceListener listener);
     void clearList();
-    void exportToXML();
+    void exportToXML(File file);
     ArrayList<Activity> importFrom(File f) throws FileImportException;
 }

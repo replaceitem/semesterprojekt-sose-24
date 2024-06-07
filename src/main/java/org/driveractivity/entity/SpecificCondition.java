@@ -1,4 +1,4 @@
 package org.driveractivity.entity;
 
-public class SpecificConditions {
+public class SpecificCondition {
 }

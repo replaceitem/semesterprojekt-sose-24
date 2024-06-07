@@ -108,14 +108,13 @@ public class DriverService implements DriverInterface {
     }
 
     @Override
-    public void exportToXML() {
+    public void exportToXML(File file) {
         ITFTestFileDTO itfTestFileDTO = ObjectToXmlDtoMapper.mapToXmlDto(activities);
-        String filename = itfTestFileDTO.getActivityGroup().getDays().getFirst().getDate() + "-"+ itfTestFileDTO.getActivityGroup().getDays().getLast().getDate();
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(ITFTestFileDTO.class);
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
-            marshaller.marshal(itfTestFileDTO, new File(filename + ".xml"));
+            marshaller.marshal(itfTestFileDTO,file);
         } catch (JAXBException e) {
             throw new RuntimeException(e);
         }
@@ -125,7 +124,7 @@ public class DriverService implements DriverInterface {
     public ArrayList<Activity> importFrom(File f) throws FileImportException {
         //TODO 2 types can be near one another - DONE
         //TODO presenceCounter is a counter of days day 0 - presenceCounter 0, day 1 - presenceCounter 1, etc. - DONE
-        //TODO cardStatus can either be "notInserted" or "inserted"
+        //TODO cardStatus can either be "notInserted" or "inserted" - DONE
         //TODO make specificConditions: two most important ones: outOfScope and FT (Ferry Train), FT does not necessarily have an end
         try {
             JAXBContext jaxbContext = JAXBContext.newInstance(ITFTestFileDTO.class);

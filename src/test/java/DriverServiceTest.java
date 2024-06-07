@@ -133,7 +133,7 @@ public class DriverServiceTest {
         DriverService driverService = DriverService.getInstance();
         driverService.importFrom(file);
         assertThat(driverService.getActivities()).isNotNull();
-        driverService.exportToXML();
+        driverService.exportToXML(new File(System.getProperty("user.home")+"/file.xml"));
     }
 
     @Test

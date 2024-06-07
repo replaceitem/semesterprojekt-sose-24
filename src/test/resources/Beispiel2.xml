@@ -5,10 +5,10 @@
 		<Day date="03.01.2005" presenceCounter = "1" distance="100">
             <Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
 			<Activity time="01:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
-			<Activity time="03:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+			<Activity time="03:00" activity="rest" slot="driver" status="single" cardStatus="notInserted"/>
 		</Day>
 		<Day date="04.01.2005" presenceCounter = "2" distance="100">
-            <Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="inserted"/>
+            <Activity time="00:00" activity="rest" slot="driver" status="single" cardStatus="notInserted"/>
 			<Activity time="01:00" activity="work" slot="driver" status="single" cardStatus="inserted"/>
 		</Day>
 		
