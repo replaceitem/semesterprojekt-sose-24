@@ -133,7 +133,15 @@ public class MainController implements Initializable {
 
     @FXML
     private void saveFile(ActionEvent event) {
-        driverInterface.exportToXML(new File(System.getProperty("user.home")));
+
+        FileChooser fileChooser = new FileChooser();
+        fileChooser.setTitle("Save XML-File");
+        fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
+        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+
+        File file = fileChooser.showSaveDialog(stage);
+
+        driverInterface.exportToXML(file);
     }
 
 }
