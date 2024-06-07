@@ -136,6 +136,9 @@ public class DriverService implements DriverInterface {
             ArrayList<Activity> activities = new ArrayList<>(XmlDtoToObjectMapper.mapDayToActivity(group.getDays()));
             this.activities.clear();
             addActivityInternal(activities);
+            for(int i = 1; i+2 < activities.size(); i = i + 2) {
+                mergeAtIndex(i);
+            }
             return activities;
         } catch (JAXBException e) {
             throw new FileImportException("Error while importing file, please check if the file is valid.");
