@@ -20,7 +20,12 @@ public class SampleData {
         List<Duration> durations = Stream.generate(SampleData::getRandomDuration).limit(count).toList();
         Activity last = null;
         for (Duration duration : durations) {
-            last = Activity.builder().type(getRandomType(last == null ? null : last.getType())).startTime(LocalDateTime.now()).duration(duration).build();
+            last = Activity.builder()
+                    .type(getRandomType(last == null ? null : last.getType()))
+                    .startTime(LocalDateTime.now())
+                    .duration(duration)
+                    .cardStatus(RANDOM.nextInt(100) < 70 ? "inserted" : "notInserted")
+                    .build();
             driverInterface.addBlock(last);
         }
     }
