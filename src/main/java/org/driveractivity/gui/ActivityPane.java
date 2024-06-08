@@ -18,6 +18,11 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
     private DriverInterface driverData;
     @Setter @Getter
     private MainController mainController;
+    
+    @Setter @Getter private boolean renderDayDividers = true;
+    @Setter @Getter private boolean renderWeekDividers = true;
+    @Setter @Getter private boolean renderCardStatus = true;
+    @Setter @Getter private boolean renderSpecificConditions = true;
 
     public ActivityPane() {
         this.setRowValignment(VPos.BOTTOM);
