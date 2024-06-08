@@ -14,7 +14,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
 
-public class ActivityPane extends FlowPane implements ActivityDisplay, DriverServiceListener {
+public class ActivityPane extends FlowPane implements DriverServiceListener {
     private DriverInterface driverData;
     @Setter @Getter
     private MainController mainController;
@@ -23,14 +23,12 @@ public class ActivityPane extends FlowPane implements ActivityDisplay, DriverSer
         this.setRowValignment(VPos.BOTTOM);
     }
 
-    @Override
     public void load(DriverInterface driverData) {
         this.driverData = driverData;
         driverData.addDriverServiceListener(this);
         reload(driverData.getBlocks());
     }
 
-    @Override
     public void reload(List<Activity> newActivities) {
         ObservableList<Node> children = this.getChildren();
         // temporary list to only notify the children listener once
@@ -51,7 +49,6 @@ public class ActivityPane extends FlowPane implements ActivityDisplay, DriverSer
         }
     }
 
-    @Override
     public DriverInterface getDriverInterface() {
         return driverData;
     }
