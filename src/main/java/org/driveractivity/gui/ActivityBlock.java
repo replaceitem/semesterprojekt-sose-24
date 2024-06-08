@@ -13,12 +13,12 @@ import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.shape.Line;
 import lombok.Setter;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
 import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
 
 import java.text.DecimalFormat;
 import java.time.DayOfWeek;
@@ -49,6 +49,7 @@ public class ActivityBlock extends StackPane {
     private final Label typeLabel = new Label();
     private final Label durationLabel = new Label();
     private final Label startTimeLabel = new Label();
+    private final FontIcon cardInsertedIcon = new FontIcon();
     
     private ContextMenu contextMenu;
     
@@ -56,10 +57,16 @@ public class ActivityBlock extends StackPane {
         this.activity = activity;
         this.activityPane = activityPane;
         this.activityIndex = activityIndex;
+        
+        this.cardInsertedIcon.setIconSize(16);
+        this.cardInsertedIcon.setIconCode(Icons.CARD_NOT_INSERTED);
+        this.cardInsertedIcon.setIconColor(Color.color(0.5, 0.2, 0.2));
 
-        AnchorPane startTimeAnchorPane = new AnchorPane(startTimeLabel);
+        AnchorPane startTimeAnchorPane = new AnchorPane(startTimeLabel, cardInsertedIcon);
         AnchorPane.setBottomAnchor(startTimeLabel, 2.0);
         AnchorPane.setLeftAnchor(startTimeLabel, 2.0);
+        AnchorPane.setTopAnchor(cardInsertedIcon, 2.0);
+        AnchorPane.setLeftAnchor(cardInsertedIcon, 2.0);
 
         VBox centerVBox = new VBox(durationLabel, typeLabel);
         centerVBox.setAlignment(Pos.CENTER);
@@ -78,6 +85,8 @@ public class ActivityBlock extends StackPane {
         this.startTimeLabel.setText(activity.getStartTime().format(START_TIME_FORMATTER));
         this.durationLabel.setText(formatDuration(activity.getDuration()));
         this.typeLabel.setText(formatTypeName(activity.getType()));
+        boolean cardInserted = activity.getCardStatus().equals("inserted");
+        this.cardInsertedIcon.setVisible(!cardInserted);
         
         this.getStyleClass().setAll(CSS_DIMENSIONS_CLASS.get(activity.getType()));
         long hoursDuration = activity.getDuration().toHours();
