@@ -2,6 +2,8 @@ package org.driveractivity.gui;
 
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
+import org.driveractivity.entity.SpecificCondition;
+import org.driveractivity.entity.SpecificConditionType;
 import org.driveractivity.service.DriverInterface;
 
 import java.time.Duration;
@@ -9,6 +11,7 @@ import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 public class SampleData {
@@ -27,6 +30,29 @@ public class SampleData {
                     .build();
             driverInterface.addBlock(last);
         }
+
+        LocalDateTime start = driverInterface.getBlocks().getFirst().getStartTime();
+        LocalDateTime end = driverInterface.getBlocks().getLast().getEndTime();
+        
+        LocalDateTime lastCondition = start;
+        while(lastCondition.isBefore(end)) {
+            SpecificConditionType.Condition condition = RANDOM.nextBoolean() ? SpecificConditionType.Condition.FT : SpecificConditionType.Condition.OUT_OF_SCOPE;
+            SpecificConditionType beginCondition = Arrays.stream(SpecificConditionType.values()).filter(SpecificConditionType::isBegin).filter(t -> t.getCondition() == condition).findAny().orElseThrow();
+            SpecificConditionType endCondition = Arrays.stream(SpecificConditionType.values()).filter(Predicate.not(SpecificConditionType::isBegin)).filter(t -> t.getCondition() == condition).findAny().orElseThrow();
+            driverInterface.addSpecificCondition(SpecificCondition.builder()
+                    .timestamp(lastCondition)
+                    .specificConditionType(beginCondition)
+                    .build()
+            );
+            lastCondition = lastCondition.plusHours(RANDOM.nextInt(20, 60)).plusMinutes(RANDOM.nextInt(60));
+            driverInterface.addSpecificCondition(SpecificCondition.builder()
+                    .timestamp(lastCondition)
+                    .specificConditionType(endCondition)
+                    .build()
+            );
+            lastCondition = lastCondition.plusHours(RANDOM.nextInt(20, 60)).plusMinutes(RANDOM.nextInt(60));
+        }
+        
     }
 
     public static Duration getRandomDuration() {
@@ -41,5 +67,9 @@ public class SampleData {
     public static ActivityType getRandomType(ActivityType except) {
         List<ActivityType> list = Arrays.stream(ActivityType.values()).filter(activityType -> activityType != except).toList();
         return list.get(RANDOM.nextInt(list.size()));
+    }
+    
+    public static SpecificConditionType getRandomSpecificConditionType() {
+        return SpecificConditionType.values()[RANDOM.nextInt(SpecificConditionType.values().length-1)];
     }
 }
