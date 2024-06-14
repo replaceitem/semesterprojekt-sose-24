@@ -68,8 +68,4 @@ public class SampleData {
         List<ActivityType> list = Arrays.stream(ActivityType.values()).filter(activityType -> activityType != except).toList();
         return list.get(RANDOM.nextInt(list.size()));
     }
-    
-    public static SpecificConditionType getRandomSpecificConditionType() {
-        return SpecificConditionType.values()[RANDOM.nextInt(SpecificConditionType.values().length-1)];
-    }
 }

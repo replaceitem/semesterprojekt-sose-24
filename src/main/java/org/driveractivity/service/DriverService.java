@@ -141,7 +141,10 @@ public class DriverService implements DriverInterface {
             ITFTestFileDTO itfTestFileDTO = (ITFTestFileDTO) unmarshaller.unmarshal(f);
 
             clear();
-
+            
+            //Read the specific conditions
+            specificConditions.addAll(XmlDtoToObjectMapper.mapSpecificConditions(itfTestFileDTO.getSpecificConditionsDTO()));
+            
             //Read the activities
             ActivityGroup group = XmlDtoToObjectMapper.mapActivityGroup(itfTestFileDTO.getActivityGroup());
             ArrayList<Activity> activities = XmlDtoToObjectMapper.mapDayToActivity(group.getDays());
@@ -149,10 +152,6 @@ public class DriverService implements DriverInterface {
             for(int i = 1; i+2 < activities.size(); i = i + 2) {
                 mergeAtIndex(i);
             }
-
-            //Read the specific conditions
-            specificConditions.addAll(XmlDtoToObjectMapper.mapSpecificConditions(itfTestFileDTO.getSpecificConditionsDTO()));
-
         } catch (JAXBException e) {
             throw new FileImportException("Error while importing file, please check if the file is valid.");
         }

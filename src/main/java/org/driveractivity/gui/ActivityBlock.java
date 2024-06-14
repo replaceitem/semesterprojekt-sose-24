@@ -1,5 +1,7 @@
 package org.driveractivity.gui;
 
+import javafx.beans.binding.DoubleBinding;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
@@ -14,10 +16,17 @@ import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.paint.CycleMethod;
+import javafx.scene.paint.LinearGradient;
+import javafx.scene.paint.Stop;
 import javafx.scene.shape.Line;
+import javafx.scene.shape.Rectangle;
 import lombok.Setter;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
+import org.driveractivity.entity.SpecificCondition;
+import org.driveractivity.entity.SpecificConditionType;
+import org.driveractivity.util.TimeUtil;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.text.DecimalFormat;
@@ -28,9 +37,13 @@ import java.time.LocalDateTime;
 import java.time.Month;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
+import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.EnumMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class ActivityBlock extends StackPane {
     
@@ -50,6 +63,9 @@ public class ActivityBlock extends StackPane {
     private final Label durationLabel = new Label();
     private final Label startTimeLabel = new Label();
     private final FontIcon cardInsertedIcon = new FontIcon();
+
+
+    private final ObservableList<Node> overlayChildren = this.overlays.getChildren();
     
     private ContextMenu contextMenu;
     
@@ -86,7 +102,7 @@ public class ActivityBlock extends StackPane {
         this.durationLabel.setText(formatDuration(activity.getDuration()));
         this.typeLabel.setText(formatTypeName(activity.getType()));
         boolean cardInserted = activity.getCardStatus().equals("inserted");
-        this.cardInsertedIcon.setVisible(!cardInserted);
+        this.cardInsertedIcon.setVisible(activityPane.isRenderCardStatus() && !cardInserted);
         
         this.getStyleClass().setAll(CSS_DIMENSIONS_CLASS.get(activity.getType()));
         long hoursDuration = activity.getDuration().toHours();
@@ -96,7 +112,7 @@ public class ActivityBlock extends StackPane {
         
         block.getStyleClass().setAll("activity-block-inner", CSS_STYLE_CLASS.get(activity.getType()));
 
-        updateDivisorLines();
+        updateOverlays();
     }
     
     public ContextMenu getContextMenu() {
@@ -136,34 +152,136 @@ public class ActivityBlock extends StackPane {
         }
     }
     
-    private void updateDivisorLines() {
+    private void updateOverlays() {
         LocalDateTime start = activity.getStartTime();
         LocalDateTime end = activity.getEndTime();
-        long durationMillis = activity.getDuration().toMillis();
         LocalDate startDate = start.toLocalDate();
         LocalDate endDate = end.toLocalDate();
-        ObservableList<Node> dividerChildren = this.overlays.getChildren();
-        dividerChildren.clear();
+        overlayChildren.clear();
         
         boolean isFirstBlock = activityIndex == 0;
         boolean isLastBlock = activityIndex == activityPane.getDriverInterface().getBlocks().size()-1;
+        
+        if(isFirstBlock) addMarker(0, overlayChildren, startDate.format(DATE_MARKER_FORMATTER_YEAR), "start-divider-line");
+        if(isLastBlock) addMarker(1, overlayChildren, endDate.format(DATE_MARKER_FORMATTER_YEAR), "end-divider-line");
+
+        if(activityPane.isRenderDayDividers() || activityPane.isRenderWeekDividers()) {
+            createDayWeekMarkers(start, end, startDate, endDate, isFirstBlock);
+        }
+        
+        if(activityPane.isRenderSpecificConditions()) {
+            createSpecificConditionMarkers(start, end);
+        }
+    }
+
+    private void createSpecificConditionMarkers(LocalDateTime start, LocalDateTime end) {
+        Map<SpecificConditionType.Condition, List<SpecificCondition>> byType = activityPane.getDriverInterface().getSpecificConditions().stream()
+                .sorted(Comparator.comparing(SpecificCondition::getTimestamp))
+                .collect(Collectors.groupingBy(specificCondition1 -> specificCondition1.getSpecificConditionType().getCondition()));
+        
+        record Entry(SpecificConditionType.Condition condition, LocalDateTime start, LocalDateTime end, boolean starts, boolean ends) {}
+        List<Entry> entries = new ArrayList<>();
+        
+        for (Map.Entry<SpecificConditionType.Condition, List<SpecificCondition>> entry : byType.entrySet()) {
+            SpecificConditionType.Condition condition = entry.getKey();
+            // whether this section of specific condition is the actual start of that specific condition, instead of being cut off at the start of this block
+            boolean starts = false;
+            LocalDateTime conditionStart = start;
+            for (SpecificCondition specificCondition : entry.getValue()) {
+                SpecificConditionType specificConditionType = specificCondition.getSpecificConditionType();
+                LocalDateTime conditionTimestamp = specificCondition.getTimestamp();
+                if(!conditionTimestamp.isBefore(end)) {
+                    if(!specificConditionType.isBegin()) entries.add(new Entry(condition, conditionStart, end, starts, false));
+                    break;
+                }
+                if(conditionTimestamp.isBefore(start)) continue;
+                if(specificConditionType.isBegin()) {
+                    conditionStart = conditionTimestamp;
+                    starts = true;
+                } else {
+                    entries.add(new Entry(condition, conditionStart, conditionTimestamp, starts, true));
+                }
+            }
+        }
+
+        for (Entry entry : entries) {
+            double percentage = TimeUtil.mapInRange(entry.start(), start, end);
+            double endPercentage = TimeUtil.mapInRange(entry.end(), start, end);
+            double widthPercentage = endPercentage-percentage;
+            Rectangle rect = new Rectangle();
+            rect.heightProperty().bind(block.heightProperty());
+            rect.layoutXProperty().bind(block.widthProperty().multiply(percentage));
+            DoubleBinding widthBinding = block.widthProperty().multiply(widthPercentage);
+            if(!entry.ends()) {
+                widthBinding = widthBinding.add(1);
+            }
+            ObservableValue<Number> cappedWidthObservableValue = widthBinding.map(number -> Math.max(number.doubleValue(), 1.0));
+            rect.widthProperty().bind(cappedWidthObservableValue);
+            
+            Color baseColor = switch (entry.condition) {
+                case FT -> Color.DARKBLUE;
+                case OUT_OF_SCOPE -> Color.color(0.7, 0.2, 0.8);
+            };
+            Color color = new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 0.7);
+            Color transparentColor = new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 0.2);
+
+            rect.fillProperty().bind(rect.widthProperty().map(width -> {
+                boolean starts = entry.starts();
+                boolean ends = entry.ends();
+                // to make very small specific conditions render properly
+                boolean hasSufficientWidth = width.doubleValue() > 3;
+                if(!hasSufficientWidth) return color;
+                if(!starts && !ends) return transparentColor;
+                
+                double maxGradientPercentage = 10.0 / width.doubleValue();
+                if(starts && ends) maxGradientPercentage = Math.min(maxGradientPercentage, 0.499);
+                
+                List<Stop> stops = new ArrayList<>(4);
+                
+                if(starts) {
+                    stops.add(new Stop(0, color));
+                    stops.add(new Stop(maxGradientPercentage, transparentColor));
+                }
+                if(ends) {
+                    stops.add(new Stop(1.0 - maxGradientPercentage, transparentColor));
+                    stops.add(new Stop(1, color));
+                }
+                return new LinearGradient(0,0,1,0,true, CycleMethod.NO_CYCLE, stops);
+            }));
+
+            overlayChildren.add(rect);
+
+            Stream.of(rect.layoutYProperty(), rect.layoutYProperty().add(rect.heightProperty()).subtract(1)).forEach(yProperty -> {
+                Line line = new Line();
+                line.setStroke(color);
+                line.layoutXProperty().bind(rect.layoutXProperty());
+                line.layoutYProperty().bind(yProperty);
+                line.endXProperty().bind(rect.widthProperty().subtract(1));
+                overlayChildren.add(line);
+            });
+        }
+    }
+
+    private void createDayWeekMarkers(LocalDateTime start, LocalDateTime end, LocalDate startDate, LocalDate endDate, boolean isFirstBlock) {
         // Find all timestamps between start and end where a new day begins
         List<LocalDateTime> newDayTimes = startDate.datesUntil(endDate.plusDays(1))
                 .map(LocalDate::atStartOfDay)
-                .filter(startOfDay -> (isFirstBlock ? startOfDay.isAfter(start) : !startOfDay.isBefore(start)) && startOfDay.isBefore(end))
+                .filter(startOfDay -> TimeUtil.isBetween(startOfDay, start, end))
+                .filter(startOfDay -> !isFirstBlock || startOfDay.isAfter(start))
                 .toList();
-        
-        if(isFirstBlock) addMarker(0, dividerChildren, startDate.format(DATE_MARKER_FORMATTER_YEAR), "start-divider-line");
-        if(isLastBlock) addMarker(1, dividerChildren, endDate.format(DATE_MARKER_FORMATTER_YEAR), "end-divider-line");
+
+        boolean renderWeekDividers = activityPane.isRenderWeekDividers();
+        boolean renderDayDividers = activityPane.isRenderDayDividers();
 
         for (LocalDateTime newDayTime : newDayTimes) {
+            double percentage = TimeUtil.mapInRange(newDayTime, start, end);
             LocalDate date = newDayTime.toLocalDate();
-            long millisAfterStart = start.until(newDayTime, ChronoUnit.MILLIS);
-            double blockPercentage = ((double) millisAfterStart) / durationMillis;
+            boolean isStartOfWeek = date.getDayOfWeek() == DayOfWeek.MONDAY;
+            if(!isStartOfWeek && !renderDayDividers) continue;
             String dateLabel = null;
             if(date.getDayOfMonth() == 1) dateLabel = date.format(date.getMonth() == Month.JANUARY ? DATE_MARKER_FORMATTER_YEAR : DATE_MARKER_FORMATTER_MONTH);
-            String styleClass = (date.getDayOfWeek() == DayOfWeek.MONDAY ? "week" : "day") + "-divider-line";
-            addMarker(blockPercentage, dividerChildren, dateLabel, styleClass);
+            String styleClass = (renderWeekDividers && isStartOfWeek ? "week" : "day") + "-divider-line";
+            addMarker(percentage, overlayChildren, dateLabel, styleClass);
         }
     }
     
