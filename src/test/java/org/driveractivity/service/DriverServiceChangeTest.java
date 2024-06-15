@@ -1,5 +1,6 @@
+package org.driveractivity.service;
+
 import org.driveractivity.entity.Activity;
-import org.driveractivity.service.DriverService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 

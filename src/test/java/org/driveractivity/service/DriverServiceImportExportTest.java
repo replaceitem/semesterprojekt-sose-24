@@ -1,8 +1,9 @@
+package org.driveractivity.service;
+
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.SpecificCondition;
 import org.driveractivity.entity.SpecificConditionType;
 import org.driveractivity.exception.FileImportException;
-import org.driveractivity.service.DriverService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
