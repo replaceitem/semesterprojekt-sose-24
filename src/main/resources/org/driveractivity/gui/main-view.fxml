@@ -35,6 +35,27 @@
                 <Button fx:id="workButton" text="Work" styleClass="activity-button, activity-work" onAction="#addActivity"/>
                 <Button fx:id="availableButton" text="Available" styleClass="activity-button, activity-available" onAction="#addActivity"/>
             </VBox>
+            <HBox style="-fx-alignment: center">
+                <Label styleClass="toggle-labels">DayDividers</Label>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <ToggleButton text="ON" onAction="#toggleDayDivider" selected="true" style="-fx-background-color: green;-fx-text-fill:white;"/>
+            </HBox>
+            <HBox style="-fx-alignment: center">
+                <Label styleClass="toggle-labels">Week Dividers</Label>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <ToggleButton text="ON" onAction="#toggleWeekDivider" selected="true" style="-fx-background-color: green;-fx-text-fill:white;"/>
+            </HBox>
+            <HBox style="-fx-alignment: center">
+                <Label styleClass="toggle-labels">Card Status</Label>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <ToggleButton text="ON" onAction="#toggleCardStatus" selected="true" style="-fx-background-color: green;-fx-text-fill:white;"/>
+            </HBox>
+            <HBox style="-fx-alignment: center">
+                <Label styleClass="toggle-labels">Specific Conditions</Label>
+                <Pane HBox.hgrow="ALWAYS"/>
+                <ToggleButton text="ON" onAction="#toggleSpecificConditions" selected="true" style="-fx-background-color: green;-fx-text-fill:white;"/>
+            </HBox>
+
             <Pane VBox.vgrow="ALWAYS"/> <!-- Empty space -->
             <Button fx:id="clearButton" text="Clear" styleClass="activity-button, activity-clear" onAction="#clearActivities"/>
             <Pane/> <!-- Empty space -->

@@ -7,7 +7,9 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
+import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.MenuItem;
+import javafx.scene.control.ToggleButton;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -141,4 +143,47 @@ public class MainController implements Initializable {
         driverInterface.exportToXML(file);
     }
 
+    @FXML
+    private void toggleDayDivider(ActionEvent event){
+        ToggleButton toggleButton = (ToggleButton) event.getSource();
+        activityPane.setRenderDayDividers(toggleButton.isSelected());
+        activityPane.reload(driverInterface.getBlocks());
+        updateToggleButton(toggleButton);
+    }
+
+    @FXML
+    public void toggleWeekDivider(ActionEvent event) {
+        ToggleButton toggleButton = (ToggleButton) event.getSource();
+        activityPane.setRenderWeekDividers(toggleButton.isSelected());
+        activityPane.reload(driverInterface.getBlocks());
+        updateToggleButton(toggleButton);
+    }
+
+    @FXML
+    public void toggleCardStatus(ActionEvent event) {
+        ToggleButton toggleButton = (ToggleButton) event.getSource();
+        activityPane.setRenderCardStatus(toggleButton.isSelected());
+        activityPane.reload(driverInterface.getBlocks());
+        updateToggleButton(toggleButton);
+    }
+
+    @FXML
+    public void toggleSpecificConditions(ActionEvent event) {
+        ToggleButton toggleButton = (ToggleButton) event.getSource();
+        activityPane.setRenderSpecificConditions(toggleButton.isSelected());
+        activityPane.reload(driverInterface.getBlocks());
+        updateToggleButton(toggleButton);
+    }
+
+    private void updateToggleButton(ToggleButton toggleButton) {
+        if(toggleButton.isSelected()){
+            toggleButton.setStyle("-fx-background-color: green;-fx-text-fill:white;");
+            toggleButton.setText("ON");
+            toggleButton.setContentDisplay(ContentDisplay.RIGHT);
+        }else{
+            toggleButton.setStyle("-fx-background-color: grey;-fx-text-fill:black;");
+            toggleButton.setText("OFF");
+            toggleButton.setContentDisplay(ContentDisplay.LEFT);
+        }
+    }
 }

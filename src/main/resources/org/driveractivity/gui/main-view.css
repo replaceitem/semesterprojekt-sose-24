@@ -1,6 +1,6 @@
 .activity-button {
     -fx-background-radius: 8px;
-    -fx-pref-width: 120px;
+    -fx-pref-width: 150px;
     -fx-padding: 10px;
 }
 
@@ -55,4 +55,9 @@
 }
 .activity-clear:pressed {
     -fx-background-color: #770000;
+}
+
+.toggle-labels{
+
+
 }
