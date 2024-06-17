@@ -132,6 +132,8 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
 
     @Override
     public void onActivitiesMerged(int index) {
-        // TODO highlight
+        if(getChildren().get(index) instanceof ActivityBlock activityBlock) {
+            activityBlock.showMergeEffect();
+        }
     }
 }

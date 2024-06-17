@@ -1,5 +1,9 @@
 package org.driveractivity.gui;
 
+import javafx.animation.Interpolator;
+import javafx.animation.KeyFrame;
+import javafx.animation.KeyValue;
+import javafx.animation.Timeline;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -26,6 +30,7 @@ import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
 import org.driveractivity.entity.SpecificCondition;
 import org.driveractivity.entity.SpecificConditionType;
+import org.driveractivity.util.ColorUtil;
 import org.driveractivity.util.TimeUtil;
 import org.kordamp.ikonli.javafx.FontIcon;
 
@@ -73,6 +78,8 @@ public class ActivityBlock extends StackPane {
         this.activity = activity;
         this.activityPane = activityPane;
         this.activityIndex = activityIndex;
+        
+        this.maxWidthProperty().bind(this.prefWidthProperty());
         
         this.cardInsertedIcon.setIconSize(16);
         this.cardInsertedIcon.setIconCode(Icons.CARD_NOT_INSERTED);
@@ -222,8 +229,8 @@ public class ActivityBlock extends StackPane {
                 case FT -> Color.DARKBLUE;
                 case OUT_OF_SCOPE -> Color.color(0.7, 0.2, 0.8);
             };
-            Color color = new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 0.7);
-            Color transparentColor = new Color(baseColor.getRed(), baseColor.getGreen(), baseColor.getBlue(), 0.2);
+            Color color = ColorUtil.withOpacity(baseColor, 0.7);
+            Color transparentColor = ColorUtil.withOpacity(baseColor, 0.2);
 
             rect.fillProperty().bind(rect.widthProperty().map(width -> {
                 boolean starts = entry.starts();
@@ -328,4 +335,19 @@ public class ActivityBlock extends StackPane {
             ActivityType.WORK, "activity-dimensions-work",
             ActivityType.AVAILABLE, "activity-dimensions-available"
     ));
+
+    public void showMergeEffect() {
+        Timeline timeline = new Timeline();
+
+        KeyValue opacityStart = new KeyValue(block.opacityProperty(), 0.8, Interpolator.EASE_OUT);
+        KeyValue opacityEnd = new KeyValue(block.opacityProperty(), 1, Interpolator.EASE_IN);
+        KeyValue widthStart = new KeyValue(this.prefWidthProperty(), this.getPrefWidth()*2, Interpolator.EASE_OUT);
+        KeyValue widthEnd = new KeyValue(this.prefWidthProperty(), this.getPrefWidth(), Interpolator.SPLINE(0.5, 1, 0.5, 1));
+        
+        timeline.getKeyFrames().addAll(
+                new KeyFrame(javafx.util.Duration.millis(0), opacityStart, widthStart),
+                new KeyFrame(javafx.util.Duration.millis(1000), opacityEnd, widthEnd)
+        );
+        timeline.play();
+    }
 }
