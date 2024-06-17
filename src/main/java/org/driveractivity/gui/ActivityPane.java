@@ -99,12 +99,28 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
     public void onActivityRemoved(int index) {
         getChildren().remove(index);
         updateIndices();
+        // update block affected by start line change, when first block is removed
+        if(index == 0 && !driverData.getBlocks().isEmpty()) {
+            onActivityUpdated(0);
+        }
+        // update block affected by end line change, when last block is removed
+        if(index == driverData.getBlocks().size() && index > 0) {
+            onActivityUpdated(index-1);
+        }
     }
 
     @Override
     public void onActivityAdded(int index, Activity activity) {
         getChildren().add(index, new ActivityBlock(this, activity, index));
         updateIndices();
+        // update block affected by start line change, when first block is inserted
+        if(index == 0 && driverData.getBlocks().size() > 1) {
+            onActivityUpdated(1);
+        }
+        // update block affected by end line change, when last block is inserted
+        if(index == driverData.getBlocks().size()-1 && index > 0) {
+            onActivityUpdated(index-1);
+        }
     }
 
     @Override
