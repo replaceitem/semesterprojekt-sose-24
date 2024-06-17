@@ -36,22 +36,22 @@
                 <Button fx:id="availableButton" text="Available" styleClass="activity-button, activity-available" onAction="#addActivity"/>
             </VBox>
             <HBox style="-fx-alignment: center">
-                <Label styleClass="toggle-labels">Day Dividers</Label>
+                <Label>Day Dividers</Label>
                 <Pane HBox.hgrow="ALWAYS"/>
                 <ToggleButton text="ON" onAction="#toggleDayDivider" selected="true" styleClass="feature-toggle-label"/>
             </HBox>
             <HBox style="-fx-alignment: center">
-                <Label styleClass="toggle-labels">Week Dividers</Label>
+                <Label>Week Dividers</Label>
                 <Pane HBox.hgrow="ALWAYS"/>
                 <ToggleButton text="ON" onAction="#toggleWeekDivider" selected="true" styleClass="feature-toggle-label"/>
             </HBox>
             <HBox style="-fx-alignment: center">
-                <Label styleClass="toggle-labels">Card Status</Label>
+                <Label>Card Status</Label>
                 <Pane HBox.hgrow="ALWAYS"/>
                 <ToggleButton text="ON" onAction="#toggleCardStatus" selected="true" styleClass="feature-toggle-label"/>
             </HBox>
             <HBox style="-fx-alignment: center">
-                <Label styleClass="toggle-labels">Specific Conditions</Label>
+                <Label>Specific Conditions</Label>
                 <Pane HBox.hgrow="ALWAYS"/>
                 <ToggleButton text="ON" onAction="#toggleSpecificConditions" selected="true" styleClass="feature-toggle-label"/>
             </HBox>
