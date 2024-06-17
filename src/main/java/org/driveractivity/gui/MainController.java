@@ -172,14 +172,7 @@ public class MainController implements Initializable {
     }
 
     private void updateToggleButton(ToggleButton toggleButton) {
-        if(toggleButton.isSelected()){
-            toggleButton.setStyle("-fx-background-color: green;-fx-text-fill:white;");
-            toggleButton.setText("ON");
-            toggleButton.setContentDisplay(ContentDisplay.RIGHT);
-        }else{
-            toggleButton.setStyle("-fx-background-color: grey;-fx-text-fill:black;");
-            toggleButton.setText("OFF");
-            toggleButton.setContentDisplay(ContentDisplay.LEFT);
-        }
+        boolean selected = toggleButton.isSelected();
+        toggleButton.setText(selected ? "ON" : "OFF");
     }
 }

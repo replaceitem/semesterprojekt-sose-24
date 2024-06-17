@@ -57,7 +57,14 @@
     -fx-background-color: #770000;
 }
 
-.toggle-labels{
+.feature-toggle-label {
+    -fx-background-color: grey;
+    -fx-text-fill: black;
+    -fx-content-display: left;
+}
 
-
+.feature-toggle-label:selected {
+    -fx-background-color: green;
+    -fx-text-fill: white;
+    -fx-content-display: right;
 }
