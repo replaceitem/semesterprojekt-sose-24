@@ -19,13 +19,30 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
     @Setter @Getter
     private MainController mainController;
     
-    @Setter @Getter private boolean renderDayDividers = true;
-    @Setter @Getter private boolean renderWeekDividers = true;
-    @Setter @Getter private boolean renderCardStatus = true;
-    @Setter @Getter private boolean renderSpecificConditions = true;
+    @Getter private boolean renderDayDividers = true;
+    @Getter private boolean renderWeekDividers = true;
+    @Getter private boolean renderCardStatus = true;
+    @Getter private boolean renderSpecificConditions = true;
 
     public ActivityPane() {
         this.setRowValignment(VPos.BOTTOM);
+    }
+    
+    public void setRenderDayDividers(boolean value) {
+        renderDayDividers = value;
+        updateAll();
+    }
+    public void setRenderWeekDividers(boolean value) {
+        renderWeekDividers = value;
+        updateAll();
+    }
+    public void setRenderCardStatus(boolean value) {
+        renderCardStatus = value;
+        updateAll();
+    }
+    public void setRenderSpecificConditions(boolean value) {
+        renderSpecificConditions = value;
+        updateAll();
     }
 
     public void load(DriverInterface driverData) {
@@ -52,6 +69,12 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
         } finally {
             this.setManaged(true);
         }
+    }
+    
+    public void updateAll() {
+        getChildren().forEach(node -> {
+            if(node instanceof ActivityBlock activityBlock) activityBlock.update();
+        });
     }
 
     public DriverInterface getDriverInterface() {

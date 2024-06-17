@@ -147,7 +147,6 @@ public class MainController implements Initializable {
     private void toggleDayDivider(ActionEvent event){
         ToggleButton toggleButton = (ToggleButton) event.getSource();
         activityPane.setRenderDayDividers(toggleButton.isSelected());
-        activityPane.reload(driverInterface.getBlocks());
         updateToggleButton(toggleButton);
     }
 
@@ -155,7 +154,6 @@ public class MainController implements Initializable {
     public void toggleWeekDivider(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
         activityPane.setRenderWeekDividers(toggleButton.isSelected());
-        activityPane.reload(driverInterface.getBlocks());
         updateToggleButton(toggleButton);
     }
 
@@ -163,7 +161,6 @@ public class MainController implements Initializable {
     public void toggleCardStatus(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
         activityPane.setRenderCardStatus(toggleButton.isSelected());
-        activityPane.reload(driverInterface.getBlocks());
         updateToggleButton(toggleButton);
     }
 
@@ -171,7 +168,6 @@ public class MainController implements Initializable {
     public void toggleSpecificConditions(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
         activityPane.setRenderSpecificConditions(toggleButton.isSelected());
-        activityPane.reload(driverInterface.getBlocks());
         updateToggleButton(toggleButton);
     }
 
