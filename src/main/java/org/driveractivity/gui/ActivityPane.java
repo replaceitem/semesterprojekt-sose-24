@@ -45,7 +45,7 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
         updateAll();
     }
 
-    public void load(DriverInterface driverData) {
+    public void initialize(DriverInterface driverData) {
         this.driverData = driverData;
         driverData.addDriverServiceListener(this);
         reload(driverData.getBlocks());

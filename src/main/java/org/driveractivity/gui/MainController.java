@@ -7,7 +7,6 @@ import javafx.fxml.Initializable;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.control.Button;
-import javafx.scene.control.ContentDisplay;
 import javafx.scene.control.MenuItem;
 import javafx.scene.control.ToggleButton;
 import javafx.stage.FileChooser;
@@ -55,7 +54,7 @@ public class MainController implements Initializable {
         activityPane.setMainController(this);
         driverInterface = DriverService.getInstance();
         SampleData.populate(driverInterface, 40);
-        activityPane.load(driverInterface);
+        activityPane.initialize(driverInterface);
     }
 
     @FXML
@@ -127,7 +126,6 @@ public class MainController implements Initializable {
         } catch (FileImportException e) {
             AlertedExceptionDialog.show(e);
         }
-        activityPane.load(driverInterface);
     }
 
     @FXML
