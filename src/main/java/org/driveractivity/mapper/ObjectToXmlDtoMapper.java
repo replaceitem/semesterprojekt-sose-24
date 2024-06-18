@@ -53,7 +53,7 @@ public class ObjectToXmlDtoMapper {
     }
 
     private static ArrayList<ActivityDTO> mapToActivityDTO(ArrayList<Activity> activities) {
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("hh:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm");
         return activities.stream().map(activity ->
                 ActivityDTO.builder()
                         .activity(activity.getType().toString().toLowerCase())
