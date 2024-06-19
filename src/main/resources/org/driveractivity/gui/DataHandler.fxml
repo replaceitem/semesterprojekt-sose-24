@@ -5,61 +5,67 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" fillWidth="false" prefHeight="200.0" prefWidth="381.0" spacing="10.0" style="-fx-background-color: White; -fx-font-size: 14px" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.driveractivity.gui.DateHandler">
+<VBox alignment="CENTER" fillWidth="false" prefHeight="200.0" prefWidth="381.0" spacing="10.0"
+      style="-fx-background-color: White; -fx-font-size: 14px" xmlns="http://javafx.com/javafx/17.0.2-ea"
+      xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.driveractivity.gui.DateHandler">
     <GridPane snapToPixel="false">
         <columnConstraints>
-            <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="30.0" prefWidth="100.0" />
-            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="145.0" minWidth="30.0" prefWidth="111.0" />
-         <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="145.0" minWidth="6.0" prefWidth="6.0" />
-            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="203.0" minWidth="30.0" prefWidth="174.0" />
+            <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="30.0" prefWidth="100.0"/>
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="145.0" minWidth="30.0" prefWidth="111.0"/>
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="145.0" minWidth="6.0" prefWidth="6.0"/>
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="203.0" minWidth="30.0" prefWidth="174.0"/>
         </columnConstraints>
         <rowConstraints>
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="70.0" valignment="CENTER" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="70.0" valignment="CENTER" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="70.0" valignment="CENTER" vgrow="SOMETIMES"/>
+            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="70.0" valignment="CENTER" vgrow="SOMETIMES"/>
+            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES"/>
         </rowConstraints>
-        <Label contentDisplay="CENTER" text="Start Zeit">
-         </Label>
-        <Label contentDisplay="CENTER" text="End Zeit" GridPane.rowIndex="1">
-         </Label>
-        <Label contentDisplay="CENTER" text="Dauer" GridPane.rowIndex="2">
-         </Label>
-      <TextField fx:id="cbHourStart" disable="true" prefHeight="0.0" prefWidth="98.0" text="0" GridPane.columnIndex="1">
-         <GridPane.margin>
-            <Insets bottom="10.0" />
-         </GridPane.margin></TextField>
-      <TextField fx:id="cbMinuteStart" disable="true" prefHeight="30.0" prefWidth="100.0" text="0" GridPane.columnIndex="3">
-         <GridPane.margin>
-            <Insets bottom="10.0" />
-         </GridPane.margin></TextField>
-      <TextField fx:id="cbHourEnd" prefHeight="0.0" prefWidth="98.0" text="0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
-         <GridPane.margin>
-            <Insets bottom="10.0" top="10.0" />
-         </GridPane.margin></TextField>
-      <TextField fx:id="cbMinuteEnd" prefHeight="30.0" prefWidth="100.0" text="0" GridPane.columnIndex="3" GridPane.rowIndex="1">
-         <GridPane.margin>
-            <Insets bottom="10.0" top="10.0" />
-         </GridPane.margin></TextField>
-      <TextField fx:id="cbHourDuration" prefHeight="0.0" prefWidth="98.0" text="0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
-         <GridPane.margin>
-            <Insets top="10.0" />
-         </GridPane.margin></TextField>
-      <TextField fx:id="cbMinuteDuration" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="100.0" text="0" GridPane.columnIndex="3" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
-         <GridPane.margin>
-            <Insets top="10.0" />
-         </GridPane.margin></TextField>
+        <Label contentDisplay="CENTER" text="Start Zeit"/>
+        <Label contentDisplay="CENTER" text="End Zeit" GridPane.rowIndex="1"/>
+        <Label contentDisplay="CENTER" text="Dauer" GridPane.rowIndex="2"/>
+        <TextField fx:id="cbHourStart" disable="true" prefHeight="0.0" prefWidth="98.0" text="0" GridPane.columnIndex="1">
+            <GridPane.margin>
+                <Insets bottom="10.0"/>
+            </GridPane.margin>
+        </TextField>
+        <TextField fx:id="cbMinuteStart" disable="true" prefHeight="30.0" prefWidth="100.0" text="0" GridPane.columnIndex="3">
+            <GridPane.margin>
+                <Insets bottom="10.0"/>
+            </GridPane.margin>
+        </TextField>
+        <TextField fx:id="cbHourEnd" prefHeight="0.0" prefWidth="98.0" text="0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
+            <GridPane.margin>
+                <Insets bottom="10.0" top="10.0"/>
+            </GridPane.margin>
+        </TextField>
+        <TextField fx:id="cbMinuteEnd" prefHeight="30.0" prefWidth="100.0" text="0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+            <GridPane.margin>
+                <Insets bottom="10.0" top="10.0"/>
+            </GridPane.margin>
+        </TextField>
+        <TextField fx:id="cbHourDuration" prefHeight="0.0" prefWidth="98.0" text="0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+            <GridPane.margin>
+                <Insets top="10.0"/>
+            </GridPane.margin>
+        </TextField>
+        <TextField fx:id="cbMinuteDuration" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="100.0" text="0" GridPane.columnIndex="3" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+            <GridPane.margin>
+                <Insets top="10.0"/>
+            </GridPane.margin>
+        </TextField>
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text=":" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text=":" GridPane.columnIndex="2"/>
         <Text strokeType="OUTSIDE" strokeWidth="0.0" text=":" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
-      <VBox.margin>
-         <Insets left="30.0" top="10.0" />
-      </VBox.margin>
+        <VBox.margin>
+            <Insets left="30.0" top="10.0"/>
+        </VBox.margin>
     </GridPane>
-    <Label fx:id="errorLabel" text="Start Zeit größer oder gleich Endzeit" textFill="RED"></Label>
-   <CheckBox fx:id="cardInserted" mnemonicParsing="false" onAction="#onCardInserted" text="Card Insterted" />
-   <Text fx:id="DayText" strokeType="OUTSIDE" strokeWidth="0.0" />
-    <Button fx:id="processButton" alignment="CENTER" onAction="#onActionProcess" prefHeight="40.0" prefWidth="151.0" text="Process Date"></Button>
-   <padding>
-      <Insets bottom="10.0" />
-   </padding>
+    <Label fx:id="errorLabel" text="Start Zeit größer oder gleich Endzeit" textFill="RED"/>
+    <CheckBox fx:id="cardInserted" mnemonicParsing="false" onAction="#onCardInserted" text="Card Insterted"/>
+    <Text fx:id="DayText" strokeType="OUTSIDE" strokeWidth="0.0"/>
+    <Button fx:id="processButton" alignment="CENTER" onAction="#onActionProcess" prefHeight="40.0" prefWidth="151.0"
+            text="Process Date"/>
+    <padding>
+        <Insets bottom="10.0"/>
+    </padding>
 </VBox>
