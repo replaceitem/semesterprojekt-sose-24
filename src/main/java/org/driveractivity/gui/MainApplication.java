@@ -16,7 +16,7 @@ public class MainApplication extends javafx.application.Application {
 
         controller.setStage(stage);
 
-        stage.setTitle("Test");
+        stage.setTitle("Driver Activity Visualization");
         stage.setScene(scene);
         stage.show();
     }
