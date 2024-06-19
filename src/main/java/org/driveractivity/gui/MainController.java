@@ -53,7 +53,6 @@ public class MainController implements Initializable {
     public void initialize(URL location, ResourceBundle resources) {
         activityPane.setMainController(this);
         driverInterface = DriverService.getInstance();
-        SampleData.populate(driverInterface, 40);
         activityPane.initialize(driverInterface);
     }
 
