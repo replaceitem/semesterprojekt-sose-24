@@ -7,6 +7,7 @@ import javafx.animation.Timeline;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -15,6 +16,7 @@ import javafx.scene.control.Menu;
 import javafx.scene.control.MenuItem;
 import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyCodeCombination;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.StackPane;
@@ -53,7 +55,6 @@ import java.util.stream.Stream;
 public class ActivityBlock extends StackPane {
     
     private static final DateTimeFormatter START_TIME_FORMATTER = DateTimeFormatter.ofPattern("HH:mm");
-    
     private static final DateTimeFormatter DATE_MARKER_FORMATTER_YEAR = DateTimeFormatter.ofPattern("dd.MM.yy");
     private static final DateTimeFormatter DATE_MARKER_FORMATTER_MONTH = DateTimeFormatter.ofPattern("dd.MM.");
 
@@ -100,6 +101,13 @@ public class ActivityBlock extends StackPane {
         this.getChildren().addAll(block, overlays);
         
         block.setOnContextMenuRequested(event -> getContextMenu().show(this, event.getScreenX(), event.getScreenY()));
+        
+        block.setOnMouseClicked(mouseEvent -> {
+            if(mouseEvent.getButton() == MouseButton.PRIMARY) {
+                mouseEvent.consume();
+                activityPane.setSelectedBlock(activityIndex);
+            }
+        });
         
         update();
     }

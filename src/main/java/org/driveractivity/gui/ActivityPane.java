@@ -1,8 +1,10 @@
 package org.driveractivity.gui;
 
 import javafx.collections.ObservableList;
+import javafx.css.PseudoClass;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
+import javafx.scene.input.MouseButton;
 import javafx.scene.layout.FlowPane;
 import lombok.Getter;
 import lombok.Setter;
@@ -15,9 +17,13 @@ import java.util.List;
 import java.util.ListIterator;
 
 public class ActivityPane extends FlowPane implements DriverServiceListener {
+    private static final PseudoClass PSEUDO_CLASS_SELECTED = PseudoClass.getPseudoClass("selected");
+    
     private DriverInterface driverData;
     @Setter @Getter
     private MainController mainController;
+    
+    private ActivityBlock selectedBlock;
     
     @Getter private boolean renderDayDividers = true;
     @Getter private boolean renderWeekDividers = true;
@@ -26,6 +32,12 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
 
     public ActivityPane() {
         this.setRowValignment(VPos.BOTTOM);
+        this.setOnMouseClicked(mouseEvent -> {
+            if(mouseEvent.getButton() == MouseButton.PRIMARY) {
+                mouseEvent.consume();
+                setSelectedBlock(-1);
+            }
+        });
     }
     
     public void setRenderDayDividers(boolean value) {
@@ -75,6 +87,14 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
         getChildren().forEach(node -> {
             if(node instanceof ActivityBlock activityBlock) activityBlock.update();
         });
+    }
+    
+    public void setSelectedBlock(int index) {
+        if(selectedBlock != null) selectedBlock.pseudoClassStateChanged(PSEUDO_CLASS_SELECTED, false);
+        if(index >= 0 && index < getChildren().size() && getChildren().get(index) instanceof ActivityBlock activityBlock) {
+            selectedBlock = activityBlock;
+            selectedBlock.pseudoClassStateChanged(PSEUDO_CLASS_SELECTED, true);
+        }
     }
 
     public DriverInterface getDriverInterface() {

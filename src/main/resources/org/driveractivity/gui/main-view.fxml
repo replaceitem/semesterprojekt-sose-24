@@ -65,7 +65,7 @@
 </left>
 
 <center>
-    <ScrollPane fitToWidth="true">
+    <ScrollPane fitToWidth="true" fitToHeight="true">
         <ActivityPane fx:id="activityPane"/>
     </ScrollPane>
 </center>
