@@ -134,7 +134,6 @@ public class ActivityBlock extends StackPane {
         if(contextMenu == null) {
             MenuItem editItem = new MenuItem("Edit", Icons.create(Icons.EDIT, 16));
             editItem.setOnAction(actionEvent -> {
-                System.out.println("Edit");
                 activityPane.getMainController().openDateHandlerStage(this.activity.getType(), activityIndex, this.activity);
             });
 
