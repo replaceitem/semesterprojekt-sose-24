@@ -1,4 +1,5 @@
 package org.driveractivity.gui;
+import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 
 import javafx.scene.control.*;
@@ -41,6 +42,7 @@ public class DateHandler {
     @FXML
     public Text DayText;
     private LocalDate myDate;
+    private boolean CardInserted = false;
     public void initialize(MainController mainController, ActivityType activityType, int insertionIndex) {
         this.mainController = mainController;
         this.currentActivityType = activityType;
@@ -268,5 +270,9 @@ public class DateHandler {
 
         Optional<LocalDateTime> result = dialog.showAndWait();
         result.ifPresent(dateTime -> myDate= LocalDate.from(dateTime));
+    }
+
+    public void onCardInserted(ActionEvent actionEvent) {
+        CardInserted = !CardInserted;
     }
 }
