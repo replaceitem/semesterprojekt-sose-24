@@ -20,7 +20,8 @@ public class DateHandler {
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     
     private MainController mainController;
-    private int insertionIndex;
+    private int activityIndex;
+    private boolean inserting;
     
     // converter that prevents number format exceptions and clamps values in bounds
     private static IntegerStringConverter createSafeConverter(SpinnerValueFactory<Integer> factory) {
@@ -69,45 +70,57 @@ public class DateHandler {
     @FXML
     public ChoiceBox<ActivityType> activityTypeChoiceBox;
     
-    private LocalDate myDate;
+    private LocalDate startDate;
     private LocalDateTime previousEnd;
     
-    public void initialize(MainController mainController, ActivityType activityType, int insertionIndex) {
+    public void initialize(MainController mainController, int insertionIndex, ActivityType activityType, Activity editActivity) {
         this.mainController = mainController;
-        this.insertionIndex = insertionIndex;
+        this.activityIndex = insertionIndex;
+        this.inserting = editActivity == null;
         
         activityTypeChoiceBox.getItems().addAll(ActivityType.values());
-        activityTypeChoiceBox.setValue(activityType);
         errorLabel.setVisible(false);
         DriverInterface driverInterface = mainController.driverInterface;
         List<Activity> blocks = driverInterface.getBlocks();
         
         LocalTime startTime;
-        if(blocks.isEmpty() || insertionIndex == 0){
+        Duration initialDuration;
 
-            openDateTimePickerDialog();
-            if(myDate == null){
-                Stage stage = (Stage) processButton.getScene().getWindow();
-                stage.close();
-                return;
-            }
-            startTime = LocalTime.MIDNIGHT;
-            cbHourStart.setDisable(false);
-            cbMinuteStart.setDisable(false);
+        if(editActivity != null) {
+            startDate = editActivity.getStartTime().toLocalDate();
+            startTime = editActivity.getStartTime().toLocalTime();
+            initialDuration = editActivity.getDuration();
+            activityTypeChoiceBox.setValue(editActivity.getType());
+            cardInserted.setSelected(editActivity.getCardStatus().equals("inserted"));
         } else {
-            Activity previousActivity = blocks.get(insertionIndex - 1);
-            myDate = previousActivity.getEndTime().toLocalDate();
-            LocalDateTime endTime = previousActivity.getEndTime();
-            startTime = endTime.toLocalTime();
+            initialDuration = Duration.ZERO;
+            activityTypeChoiceBox.setValue(activityType);
+            cardInserted.setSelected(true);
+            
+            if (blocks.isEmpty() || insertionIndex == 0) {
+                openDateTimePickerDialog();
+                if (startDate == null) {
+                    Stage stage = (Stage) processButton.getScene().getWindow();
+                    stage.close();
+                    return;
+                }
+                startTime = LocalTime.MIDNIGHT;
+                cbHourStart.setDisable(false);
+                cbMinuteStart.setDisable(false);
+            } else {
+                Activity previousActivity = blocks.get(insertionIndex - 1);
+                startDate = previousActivity.getEndTime().toLocalDate();
+                LocalDateTime endTime = previousActivity.getEndTime();
+                startTime = endTime.toLocalTime();
+            }
         }
         
-        Duration initialDuration = Duration.ofHours(1);
-        previousEnd = LocalDateTime.of(myDate, startTime.plus(initialDuration));
+        previousEnd = LocalDateTime.of(startDate, startTime).plus(initialDuration);
         setStartTime(startTime);
         setDuration(initialDuration);
         setEndime(startTime.plus(initialDuration));
         
-        startDateLabel.setText(myDate.format(DATE_FORMATTER));
+        startDateLabel.setText(startDate.format(DATE_FORMATTER));
         endDateLabel.setText(previousEnd.toLocalDate().format(DATE_FORMATTER));
 
         Stream.of(cbHourStart, cbMinuteStart, cbHourEnd, cbMinuteEnd, cbHourDuration, cbMinuteDuration)
@@ -147,7 +160,7 @@ public class DateHandler {
                 isUpdating = true;
                 LocalTime startTime = getStartTime();
                 LocalTime endTime = getEndTime();
-                LocalDateTime startDateTime = LocalDateTime.of(myDate, startTime);
+                LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
                 // keep the same date when editing end time
                 LocalDateTime sameDateEndTime = LocalDateTime.of(previousEnd.toLocalDate(), endTime);
                 setDuration(Duration.between(startDateTime, sameDateEndTime));
@@ -163,7 +176,7 @@ public class DateHandler {
                 isUpdating = true;
                 LocalTime startTime = getStartTime();
                 Duration duration = getDuration();
-                LocalDateTime endDateTime = LocalDateTime.of(myDate, startTime).plus(duration);
+                LocalDateTime endDateTime = LocalDateTime.of(startDate, startTime).plus(duration);
                 previousEnd = endDateTime;
                 setEndime(endDateTime.toLocalTime());
                 endDateLabel.setText(endDateTime.toLocalDate().format(DATE_FORMATTER));
@@ -207,19 +220,23 @@ public class DateHandler {
     }
 
     public void onActionProcess() {
-        Duration duration = getDuration();
+        
 
         Activity activity = Activity.builder()
                 .type(activityTypeChoiceBox.getValue())
-                .startTime(LocalDateTime.of(myDate,getStartTime()))
-                .duration(duration)
+                .startTime(LocalDateTime.of(startDate,getStartTime()))
+                .duration(getDuration())
                 .cardStatus(cardInserted.isSelected() ? "inserted" : "notInserted")
                 .build();
 
-        if(mainController.driverInterface.getBlocks().isEmpty()){
-            mainController.driverInterface.addBlock(activity);
+        if(inserting) {
+            if (mainController.driverInterface.getBlocks().isEmpty()) {
+                mainController.driverInterface.addBlock(activity);
+            } else {
+                mainController.driverInterface.addBlock(activityIndex, activity);
+            }
         } else {
-            mainController.driverInterface.addBlock(insertionIndex, activity);
+            mainController.driverInterface.changeBlock(activityIndex, activity);
         }
         
         Stage stage = (Stage) processButton.getScene().getWindow();
@@ -261,6 +278,6 @@ public class DateHandler {
         });
 
         Optional<LocalDateTime> result = dialog.showAndWait();
-        result.ifPresent(dateTime -> myDate= LocalDate.from(dateTime));
+        result.ifPresent(dateTime -> startDate = LocalDate.from(dateTime));
     }
 }

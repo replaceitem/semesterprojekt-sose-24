@@ -67,7 +67,7 @@ public class MainController implements Initializable {
         else if (button == availableButton) type = AVAILABLE;
         else System.out.println("unknown button");
         int insertionIndex = activityPane.getSelectedBlock().map(integer -> integer + 1).orElse(driverInterface.getBlocks().size());
-        this.openDateHandlerStage(type, insertionIndex);
+        this.openDateHandlerStage(type, insertionIndex, null);
     }
 
     @FXML
@@ -75,12 +75,12 @@ public class MainController implements Initializable {
         driverInterface.clear();
     }
 
-    public void openDateHandlerStage(ActivityType currentActivityType, int insertionIndex) {
+    public void openDateHandlerStage(ActivityType currentActivityType, int insertionIndex, Activity editActivity) {
         try {
             FXMLLoader loader = new FXMLLoader(DateHandler.class.getResource("DataHandler.fxml"));
             Parent root = loader.load();
             DateHandler controller = loader.getController();
-            controller.initialize(this, currentActivityType, insertionIndex);
+            controller.initialize(this, insertionIndex, currentActivityType, editActivity);
             Stage dialogStage = new Stage();
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initStyle(StageStyle.UTILITY);
@@ -88,24 +88,6 @@ public class MainController implements Initializable {
             dialogStage.setTitle("Setting up " + currentActivityType + "...");
             dialogStage.toFront();
             dialogStage.showAndWait();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    public void openEditStage(Activity activity, int activityIndex) {
-        try{
-            FXMLLoader loader = new FXMLLoader(DateHandler.class.getResource("edit-view.fxml"));
-            Parent root = loader.load();
-            EditView controller = loader.getController();
-            controller.initialize(this, activity, activityIndex);
-            Stage editStage = new Stage();
-            editStage.initModality(Modality.WINDOW_MODAL);
-            editStage.initStyle(StageStyle.UTILITY);
-            editStage.setScene(new Scene(root, 500, 250));
-            editStage.setTitle("Setting up " + activity.getType() + "...");
-            editStage.toFront();
-            editStage.showAndWait();
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

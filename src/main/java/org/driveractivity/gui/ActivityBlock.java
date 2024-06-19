@@ -135,7 +135,7 @@ public class ActivityBlock extends StackPane {
             MenuItem editItem = new MenuItem("Edit", Icons.create(Icons.EDIT, 16));
             editItem.setOnAction(actionEvent -> {
                 System.out.println("Edit");
-                activityPane.getMainController().openEditStage(this.activity, activityIndex);
+                activityPane.getMainController().openDateHandlerStage(this.activity.getType(), activityIndex, this.activity);
             });
 
             MenuItem deleteItem = new MenuItem("Delete", Icons.create(Icons.DELETE, 16));
@@ -161,7 +161,7 @@ public class ActivityBlock extends StackPane {
             menuItem.getStyleClass().add(CSS_STYLE_CLASS.get(type));
             menuItem.setOnAction(actionEvent -> {
                 int insertionIndex = this.activityIndex + shift;
-                activityPane.getMainController().openDateHandlerStage(type, insertionIndex);
+                activityPane.getMainController().openDateHandlerStage(type, insertionIndex, null);
             });
             menu.getItems().add(menuItem);
         }
