@@ -187,7 +187,7 @@ public class DateHandler {
                 .duration(Duration.of(duration, ChronoUnit.MINUTES));
 
         if(mainController.driverInterface.getBlocks().isEmpty()){
-            LocalDateTime startTime = LocalDateTime.of(myDate,LocalTime.of( Integer.parseInt(cbHourStart.getText()),Integer.parseInt(cbHourEnd.getText())));
+            LocalDateTime startTime = LocalDateTime.of(myDate,LocalTime.of(Integer.parseInt(cbHourStart.getText()),Integer.parseInt(cbHourEnd.getText())));
             activityBuilder = activityBuilder.startTime(startTime);
             mainController.driverInterface.addBlock(activityBuilder.build());
         } else {

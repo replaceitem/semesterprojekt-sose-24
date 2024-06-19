@@ -66,8 +66,8 @@ public class MainController implements Initializable {
         else if (button == workButton) type = WORK;
         else if (button == availableButton) type = AVAILABLE;
         else System.out.println("unknown button");
-        //dh.startTime = LocalDateTime.of(LocalDate.now(), LocalTime.of(9,59,59));
-        this.openDateHandlerStage(type, driverInterface.getBlocks().size());
+        int insertionIndex = activityPane.getSelectedBlock().map(integer -> integer + 1).orElse(driverInterface.getBlocks().size());
+        this.openDateHandlerStage(type, insertionIndex);
     }
 
     @FXML

@@ -7,7 +7,6 @@ import javafx.animation.Timeline;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
-import javafx.css.PseudoClass;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ContextMenu;
@@ -27,6 +26,7 @@ import javafx.scene.paint.LinearGradient;
 import javafx.scene.paint.Stop;
 import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
+import lombok.Getter;
 import lombok.Setter;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityType;
@@ -60,7 +60,7 @@ public class ActivityBlock extends StackPane {
 
     private final ActivityPane activityPane;
     private final Activity activity;
-    @Setter
+    @Setter @Getter
     private int activityIndex;
 
     private final Pane overlays = new Pane();
@@ -105,7 +105,7 @@ public class ActivityBlock extends StackPane {
         block.setOnMouseClicked(mouseEvent -> {
             if(mouseEvent.getButton() == MouseButton.PRIMARY) {
                 mouseEvent.consume();
-                activityPane.setSelectedBlock(activityIndex);
+                activityPane.setSelectedBlock(this.activityIndex);
             }
         });
         

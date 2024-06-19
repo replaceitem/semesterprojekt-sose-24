@@ -15,6 +15,7 @@ import org.driveractivity.service.DriverServiceListener;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.ListIterator;
+import java.util.Optional;
 
 public class ActivityPane extends FlowPane implements DriverServiceListener {
     private static final PseudoClass PSEUDO_CLASS_SELECTED = PseudoClass.getPseudoClass("selected");
@@ -94,7 +95,13 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
         if(index >= 0 && index < getChildren().size() && getChildren().get(index) instanceof ActivityBlock activityBlock) {
             selectedBlock = activityBlock;
             selectedBlock.pseudoClassStateChanged(PSEUDO_CLASS_SELECTED, true);
+        } else {
+            selectedBlock = null;
         }
+    }
+
+    public Optional<Integer> getSelectedBlock() {
+        return Optional.ofNullable(selectedBlock).map(ActivityBlock::getActivityIndex);
     }
 
     public DriverInterface getDriverInterface() {
