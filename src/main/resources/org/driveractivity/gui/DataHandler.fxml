@@ -12,6 +12,7 @@
         <columnConstraints>
             <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="30.0" prefWidth="100.0"/>
             <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="145.0" minWidth="30.0" prefWidth="111.0"/>
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="145.0" minWidth="30.0" prefWidth="111.0"/>
             <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="145.0" minWidth="6.0" prefWidth="6.0"/>
             <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="203.0" minWidth="30.0" prefWidth="174.0"/>
         </columnConstraints>
@@ -23,39 +24,49 @@
         <Label contentDisplay="CENTER" text="Start Zeit"/>
         <Label contentDisplay="CENTER" text="End Zeit" GridPane.rowIndex="1"/>
         <Label contentDisplay="CENTER" text="Dauer" GridPane.rowIndex="2"/>
-        <TextField fx:id="cbHourStart" disable="true" prefHeight="0.0" prefWidth="98.0" text="0" GridPane.columnIndex="1">
+        
+        <Label fx:id="startDateLabel" contentDisplay="RIGHT" GridPane.columnIndex="1"/>
+        <Label fx:id="endDateLabel" contentDisplay="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="1"/>
+        
+        <Spinner fx:id="cbHourStart" editable="true" disable="true" prefHeight="0.0" prefWidth="98.0" GridPane.columnIndex="2">
+            <valueFactory><SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="23"/></valueFactory>
             <GridPane.margin>
                 <Insets bottom="10.0"/>
             </GridPane.margin>
-        </TextField>
-        <TextField fx:id="cbMinuteStart" disable="true" prefHeight="30.0" prefWidth="100.0" text="0" GridPane.columnIndex="3">
+        </Spinner>
+        <Spinner fx:id="cbMinuteStart" editable="true" disable="true" prefHeight="30.0" prefWidth="100.0" GridPane.columnIndex="4">
+            <valueFactory><SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="59"/></valueFactory>
             <GridPane.margin>
                 <Insets bottom="10.0"/>
             </GridPane.margin>
-        </TextField>
-        <TextField fx:id="cbHourEnd" prefHeight="0.0" prefWidth="98.0" text="0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
+        </Spinner>
+        <Spinner fx:id="cbHourEnd" editable="true" prefHeight="0.0" prefWidth="98.0" GridPane.columnIndex="2" GridPane.hgrow="NEVER" GridPane.rowIndex="1" GridPane.vgrow="NEVER">
+            <valueFactory><SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="23"/></valueFactory>
             <GridPane.margin>
                 <Insets bottom="10.0" top="10.0"/>
             </GridPane.margin>
-        </TextField>
-        <TextField fx:id="cbMinuteEnd" prefHeight="30.0" prefWidth="100.0" text="0" GridPane.columnIndex="3" GridPane.rowIndex="1">
+        </Spinner>
+        <Spinner fx:id="cbMinuteEnd" editable="true" prefHeight="30.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.rowIndex="1">
+            <valueFactory><SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="59"/></valueFactory>
             <GridPane.margin>
                 <Insets bottom="10.0" top="10.0"/>
             </GridPane.margin>
-        </TextField>
-        <TextField fx:id="cbHourDuration" prefHeight="0.0" prefWidth="98.0" text="0" GridPane.columnIndex="1" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+        </Spinner>
+        <Spinner fx:id="cbHourDuration" editable="true" prefHeight="0.0" prefWidth="98.0" GridPane.columnIndex="2" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+            <valueFactory><SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="99999"/></valueFactory>
             <GridPane.margin>
                 <Insets top="10.0"/>
             </GridPane.margin>
-        </TextField>
-        <TextField fx:id="cbMinuteDuration" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="100.0" text="0" GridPane.columnIndex="3" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+        </Spinner>
+        <Spinner fx:id="cbMinuteDuration" editable="true" maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" prefHeight="30.0" prefWidth="100.0" GridPane.columnIndex="4" GridPane.hgrow="NEVER" GridPane.rowIndex="2" GridPane.vgrow="NEVER">
+            <valueFactory><SpinnerValueFactory.IntegerSpinnerValueFactory min="0" max="59"/></valueFactory>
             <GridPane.margin>
                 <Insets top="10.0"/>
             </GridPane.margin>
-        </TextField>
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text=":" GridPane.columnIndex="2" GridPane.rowIndex="1"/>
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text=":" GridPane.columnIndex="2"/>
-        <Text strokeType="OUTSIDE" strokeWidth="0.0" text=":" GridPane.columnIndex="2" GridPane.rowIndex="2"/>
+        </Spinner>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text=":" GridPane.columnIndex="3" GridPane.rowIndex="1"/>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text=":" GridPane.columnIndex="3"/>
+        <Text strokeType="OUTSIDE" strokeWidth="0.0" text=":" GridPane.columnIndex="3" GridPane.rowIndex="2"/>
         <VBox.margin>
             <Insets left="30.0" top="10.0"/>
         </VBox.margin>

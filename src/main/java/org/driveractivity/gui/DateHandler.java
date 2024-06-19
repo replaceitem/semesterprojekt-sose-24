@@ -5,32 +5,62 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.scene.text.*;
 import javafx.stage.*;
+import javafx.util.*;
+import javafx.util.converter.*;
 import org.driveractivity.entity.*;
 import org.driveractivity.service.*;
 
+import java.time.Duration;
 import java.time.*;
-import java.time.temporal.*;
+import java.time.format.*;
 import java.util.*;
+import java.util.stream.*;
 
 public class DateHandler {
+    public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
+    
     private MainController mainController;
     private ActivityType currentActivityType;
     private int insertionIndex;
     
+    // converter that prevents number format exceptions and clamps values in bounds
+    private static IntegerStringConverter createSafeConverter(SpinnerValueFactory<Integer> factory) {
+        if(!(factory instanceof SpinnerValueFactory.IntegerSpinnerValueFactory integerFactory)) throw new IllegalArgumentException("Must be an integer spinner factory");
+        int min = integerFactory.getMin();
+        int max = integerFactory.getMax();
+        return new IntegerStringConverter() {
+            @Override
+            public Integer fromString(String s) {
+                try {
+                    return Math.max(Math.min(super.fromString(s), max), min);
+                } catch (NumberFormatException nfe) {
+                    return 0;
+                }
+            }
+        };
+    }
+    
     @FXML
     private Label errorLabel;
     @FXML
-    private TextField cbHourStart;
+    private Spinner<Integer> cbHourStart;
     @FXML
-    private TextField cbHourEnd;
+    private Spinner<Integer> cbHourEnd;
     @FXML
-    private TextField cbHourDuration;
+    private Spinner<Integer> cbHourDuration;
     @FXML
-    private TextField cbMinuteStart;
+    private Spinner<Integer> cbMinuteStart;
     @FXML
-    private TextField cbMinuteEnd;
+    private Spinner<Integer> cbMinuteEnd;
     @FXML
-    private TextField cbMinuteDuration;
+    private Spinner<Integer> cbMinuteDuration;
+
+
+    @FXML
+    public Label startDateLabel;
+    @FXML
+    public Label endDateLabel;
+    
     @FXML
     private Button processButton;
     @FXML
@@ -39,6 +69,7 @@ public class DateHandler {
     public CheckBox cardInserted;
     
     private LocalDate myDate;
+    private LocalDateTime previousEnd;
     
     public void initialize(MainController mainController, ActivityType activityType, int insertionIndex) {
         this.mainController = mainController;
@@ -48,190 +79,151 @@ public class DateHandler {
         errorLabel.setVisible(false);
         DriverInterface driverInterface = mainController.driverInterface;
         List<Activity> blocks = driverInterface.getBlocks();
+        
+        LocalTime startTime;
         if(blocks.isEmpty() || insertionIndex == 0){
 
             openDateTimePickerDialog();
-            if(myDate.equals(null)){
+            if(myDate == null){
                 Stage stage = (Stage) processButton.getScene().getWindow();
                 stage.close();
+                return;
             }
-            cbHourStart.setText(String.valueOf(0));
-            cbMinuteStart.setText(String.valueOf(0));
+            startTime = LocalTime.MIDNIGHT;
             cbHourStart.setDisable(false);
             cbMinuteStart.setDisable(false);
         } else {
             Activity previousActivity = blocks.get(insertionIndex - 1);
+            myDate = previousActivity.getEndTime().toLocalDate();
             LocalDateTime endTime = previousActivity.getEndTime();
-            cbHourStart.setText(String.valueOf(endTime.getHour()));
-            cbMinuteStart.setText(String.valueOf(endTime.getMinute()));
+            startTime = endTime.toLocalTime();
         }
+        
+        Duration initialDuration = Duration.ofHours(1);
+        previousEnd = LocalDateTime.of(myDate, startTime.plus(initialDuration));
+        setStartTime(startTime);
+        setDuration(initialDuration);
+        setEndime(startTime.plus(initialDuration));
+        
+        startDateLabel.setText(myDate.format(DATE_FORMATTER));
+        endDateLabel.setText(previousEnd.toLocalDate().format(DATE_FORMATTER));
 
-        cbHourStart.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if(checkforValidTime()&&!newValue){
-                processStartEnd();
-            }
-        });
-        cbMinuteStart.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if(checkforValidTime()&&!newValue){
-                processStartEnd();
-            }
-        });
+        Stream.of(cbHourStart, cbMinuteStart, cbHourEnd, cbMinuteEnd, cbHourDuration, cbMinuteDuration)
+                .forEach(spinner -> {
+                    spinner.getValueFactory().setConverter(createSafeConverter(spinner.getValueFactory()));
+                    spinner.focusedProperty().addListener((observable,before,after) -> {
+                        if(!after) { // make sure the edit box is properly reset when invalid numbers are entered
+                            StringConverter<Integer> converter = spinner.getValueFactory().getConverter();
+                            int validated = converter.fromString(spinner.getEditor().getText());
+                            spinner.getEditor().setText(converter.toString(validated));
+                        }
+                    });
+                });
 
-        cbHourEnd.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if(checkforValidTime()&&!newValue){
-                processStartEnd();
-            }
-        });
-        cbMinuteEnd.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if(checkforValidTime()&&!newValue){
-                processStartEnd();
-            }
-        });
+        cbHourStart.valueProperty().addListener((observable, oldValue, newValue) -> onStartTimeChanged());
+        cbMinuteStart.valueProperty().addListener((observable, oldValue, newValue) -> onStartTimeChanged());
+        
+        cbHourDuration.valueProperty().addListener((observable, oldValue, newValue) -> onDurationChanged());
+        cbMinuteDuration.valueProperty().addListener((observable, oldValue, newValue) -> onDurationChanged());
 
-        cbHourDuration.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if(checkforValidTime()&&!newValue){
-                durationWithStart();
-            }
-        });
-        cbMinuteDuration.focusedProperty().addListener((observable, oldValue, newValue) -> {
-            if(checkforValidTime()&&!newValue){
-                durationWithStart();
-            }
-        });
+        cbHourEnd.valueProperty().addListener((observable, oldValue, newValue) -> onEndTimeChanged());
+        cbMinuteEnd.valueProperty().addListener((observable, oldValue, newValue) -> onEndTimeChanged());
     }
 
-
-    private boolean checkforValidTime() {
-        try{
-            int ValueofMituesEnd = Integer.parseInt(cbMinuteEnd.getText());
-            int ValueofMituesDuration = Integer.parseInt(cbMinuteDuration.getText());
-            int ValueofHoursEnd = Integer.parseInt(cbHourEnd.getText());
-            int ValueofHoursDuration = Integer.parseInt(cbHourDuration.getText());
-            int ValueofHoursStart = Integer.parseInt(cbHourStart.getText());
-            int ValueofMinutesStart = Integer.parseInt(cbMinuteStart.getText());
-
-            if(ValueofMituesEnd<60&&ValueofMituesEnd>=0&&ValueofMituesDuration<60&&ValueofMituesDuration>=0&&ValueofMinutesStart<60&&ValueofMinutesStart>=0){
-                if((ValueofHoursEnd >= 0) && (ValueofHoursDuration >= 0) && (ValueofHoursStart >= 0)) {
-                    processButton.setDisable(false);
-                    errorLabel.setVisible(false);
-                    return true;
-                }
-            }
-            else {
-                processButton.setDisable(true);
-                errorLabel.setVisible(true);
-                errorLabel.setText("bitte nur eingaben zwichen 0 und 59 für Minuten");
-            }
-        } catch (NumberFormatException e) {
-            processButton.setDisable(true);
-            errorLabel.setVisible(true);
-            errorLabel.setText("ungültiges Datum");
-        }
-        return false;
+    // prevent recursive updates, which can happen because the two spinners are set after each other,
+    // but listeners will trigger after the first one with incomplete values, which would propagate
+    private boolean isUpdating = false;
+    
+    private void onStartTimeChanged() {
+        // Do the same thing as if end time changed, meaning updating duration
+        onEndTimeChanged();
     }
-            private void processStartEnd(){
-            if (cbHourEnd.getText() != null && cbMinuteEnd.getText() != null ) {
-                if (Integer.parseInt(cbHourStart.getText()) == Integer.parseInt(cbHourEnd.getText())) {
-                    if (Integer.parseInt(cbMinuteStart.getText()) <= Integer.parseInt(cbMinuteEnd.getText())) {
-                        showError("");
-                        processButton.setDisable(false);
-                        errorLabel.setVisible(false);
-                        errorLabel.setVisible(false);
-                        DayText.setText("");
-                        cbHourDuration.setText(String.valueOf(Integer.parseInt(cbHourEnd.getText()) - Integer.parseInt(cbHourStart.getText())));
-                        cbMinuteDuration.setText(String.valueOf(Integer.parseInt(cbMinuteEnd.getText()) - Integer.parseInt(cbMinuteStart.getText())));
-
-
-                    } else {
-                        showError("Start Zeit größer oder gleich Endzeit");
-                        //a.showMessageDialog(null, "Start Zeit größer oder gleich Endzeit", "Something went Wrong", JOptionPane.WARNING_MESSAGE);
-                    }
-                } else if(Integer.parseInt(cbHourStart.getText()) < Integer.parseInt(cbHourEnd.getText())){
-                    showError("");
-                    processButton.setDisable(false);
-                    errorLabel.setVisible(false);
-                    DayText.setText("");
-                    cbHourDuration.setText(String.valueOf(Integer.parseInt(cbHourEnd.getText()) - Integer.parseInt(cbHourStart.getText())));
-                    if(Integer.parseInt(cbMinuteStart.getText()) < Integer.parseInt(cbMinuteEnd.getText())){
-                        cbMinuteDuration.setText(String.valueOf(Integer.parseInt(cbMinuteEnd.getText()) - Integer.parseInt(cbMinuteStart.getText())));
-                    }else {
-                        cbMinuteDuration.setText(String.valueOf(Integer.parseInt(cbMinuteStart.getText()) - Integer.parseInt(cbMinuteEnd.getText())));
-                    }
-
-                }else {
-                    showError("");
-                    processButton.setDisable(false);
-                    errorLabel.setVisible(false);
-                    DayText.setText("Über eine Nacht");
-                    cbHourDuration.setText(String.valueOf(24-Integer.parseInt(cbHourStart.getText()) + Integer.parseInt(cbHourEnd.getText())));
-                    if(Integer.parseInt(cbMinuteStart.getText()) > Integer.parseInt(cbMinuteEnd.getText())){
-                        cbMinuteDuration.setText(String.valueOf(60-Integer.parseInt(cbMinuteStart.getText()) - Integer.parseInt(cbMinuteEnd.getText())));
-                    }else {
-                        cbMinuteDuration.setText(String.valueOf(60-Integer.parseInt(cbMinuteEnd.getText()) - Integer.parseInt(cbMinuteStart.getText())));
-                    }
-                }
+    
+    private void onEndTimeChanged() {
+        if(!isUpdating) {
+            try {
+                isUpdating = true;
+                LocalTime startTime = getStartTime();
+                LocalTime endTime = getEndTime();
+                LocalDateTime startDateTime = LocalDateTime.of(myDate, startTime);
+                // keep the same date when editing end time
+                LocalDateTime sameDateEndTime = LocalDateTime.of(previousEnd.toLocalDate(), endTime);
+                setDuration(Duration.between(startDateTime, sameDateEndTime));
+            } finally {
+                isUpdating = false;
             }
+        }
+    }
+
+    private void onDurationChanged() {
+        if(!isUpdating) {
+            try {
+                isUpdating = true;
+                LocalTime startTime = getStartTime();
+                Duration duration = getDuration();
+                LocalDateTime endDateTime = LocalDateTime.of(myDate, startTime).plus(duration);
+                previousEnd = endDateTime;
+                setEndime(endDateTime.toLocalTime());
+                endDateLabel.setText(endDateTime.toLocalDate().format(DATE_FORMATTER));
+            } finally {
+                isUpdating = false;
+            }
+        }
+    }
+
+    private LocalTime getStartTime() {
+        int hour = cbHourStart.getValue();
+        int minute = cbMinuteStart.getValue();
+        return LocalTime.of(hour, minute);
+    }
+
+    private Duration getDuration() {
+        int hour = cbHourDuration.getValue();
+        int minute = cbMinuteDuration.getValue();
+        return Duration.ofHours(hour).plusMinutes(minute);
+    }
+    
+    private LocalTime getEndTime() {
+        int hour = cbHourEnd.getValue();
+        int minute = cbMinuteEnd.getValue();
+        return LocalTime.of(hour, minute);
+    }
+    
+    private void setStartTime(LocalTime time) {
+        cbHourStart.getValueFactory().setValue(time.getHour());
+        cbMinuteStart.getValueFactory().setValue(time.getMinute());
+    }
+
+    private void setDuration(Duration time) {
+        cbHourDuration.getValueFactory().setValue(((int) time.toHours()));
+        cbMinuteDuration.getValueFactory().setValue(time.toMinutesPart());
+    }
+
+    private void setEndime(LocalTime time) {
+        cbHourEnd.getValueFactory().setValue(time.getHour());
+        cbMinuteEnd.getValueFactory().setValue(time.getMinute());
     }
 
     public void onActionProcess() {
-        int hour = Integer.parseInt(cbHourDuration.getText());
-        int minute = Integer.parseInt(cbMinuteDuration.getText());
+        Duration duration = getDuration();
 
-        int duration = hour*60 + minute;
-
-        Activity.ActivityBuilder activityBuilder = Activity.builder()
+        Activity activity = Activity.builder()
                 .type(currentActivityType)
-                .duration(Duration.of(duration, ChronoUnit.MINUTES))
-                .cardStatus(cardInserted.isSelected() ? "inserted" : "notInserted");
+                .startTime(LocalDateTime.of(myDate,getStartTime()))
+                .duration(duration)
+                .cardStatus(cardInserted.isSelected() ? "inserted" : "notInserted")
+                .build();
 
         if(mainController.driverInterface.getBlocks().isEmpty()){
-            LocalDateTime startTime = LocalDateTime.of(myDate,LocalTime.of(Integer.parseInt(cbHourStart.getText()),Integer.parseInt(cbHourEnd.getText())));
-            activityBuilder = activityBuilder.startTime(startTime);
-            mainController.driverInterface.addBlock(activityBuilder.build());
+            mainController.driverInterface.addBlock(activity);
         } else {
-            activityBuilder = activityBuilder.startTime(mainController.driverInterface.getBlocks().getLast().getEndTime());
-            mainController.driverInterface.addBlock(insertionIndex, activityBuilder.build());
+            mainController.driverInterface.addBlock(insertionIndex, activity);
         }
         
         Stage stage = (Stage) processButton.getScene().getWindow();
         stage.close();
     }
-
-
-    private void showError(String error){
-        if(error.isEmpty()){
-            errorLabel.setVisible(false);
-            processButton.setDisable(false);
-        }else {
-            errorLabel.setVisible(true);
-            processButton.setDisable(true);
-            errorLabel.setText(error);
-        }
-    }
-
-    private void durationWithStart(){
-        int newDruationMin = Integer.parseInt(cbMinuteDuration.getText());
-        int newStartMin = Integer.parseInt(cbMinuteStart.getText());
-
-        int newDruationHour = Integer.parseInt(cbHourDuration.getText());
-        int newStartHour = Integer.parseInt(cbHourStart.getText());
-
-            if(newDruationHour+newStartHour>24){
-                int t  = (newDruationHour+newStartHour)%24;
-                System.out.println(t);
-                cbHourEnd.setText(String.valueOf((t)));
-                DayText.setText("Über eine Nacht");
-            }
-
-            if(newDruationMin+newStartMin>=60){
-                cbHourEnd.setText(String.valueOf(Integer.parseInt(cbHourEnd.getText())+1));
-                cbMinuteEnd.setText(String.valueOf(Integer.parseInt(cbMinuteDuration.getText()) + Integer.parseInt(cbMinuteStart.getText())-60));
-            }
-            else {
-                cbMinuteEnd.setText(String.valueOf(Integer.parseInt(cbMinuteDuration.getText()) + Integer.parseInt(cbMinuteStart.getText())));
-            }
-
-    }
+    
     private void openDateTimePickerDialog() {
         Dialog<LocalDateTime> dialog = new Dialog<>();
         dialog.setTitle("DateTime Picker");
