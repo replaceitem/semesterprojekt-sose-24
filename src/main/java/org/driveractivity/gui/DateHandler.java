@@ -1,22 +1,16 @@
 package org.driveractivity.gui;
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
 
+import javafx.fxml.*;
 import javafx.scene.control.*;
-import javafx.scene.layout.GridPane;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
-import org.driveractivity.entity.Activity;
-import org.driveractivity.entity.ActivityType;
-import org.driveractivity.service.DriverInterface;
+import javafx.scene.layout.*;
+import javafx.scene.text.*;
+import javafx.stage.*;
+import org.driveractivity.entity.*;
+import org.driveractivity.service.*;
 
-import java.time.Duration;
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.temporal.ChronoUnit;
-import java.util.List;
-import java.util.Optional;
+import java.time.*;
+import java.time.temporal.*;
+import java.util.*;
 
 public class DateHandler {
     private MainController mainController;
@@ -41,8 +35,11 @@ public class DateHandler {
     private Button processButton;
     @FXML
     public Text DayText;
+    @FXML
+    public CheckBox cardInserted;
+    
     private LocalDate myDate;
-    private boolean CardInserted = false;
+    
     public void initialize(MainController mainController, ActivityType activityType, int insertionIndex) {
         this.mainController = mainController;
         this.currentActivityType = activityType;
@@ -184,7 +181,8 @@ public class DateHandler {
 
         Activity.ActivityBuilder activityBuilder = Activity.builder()
                 .type(currentActivityType)
-                .duration(Duration.of(duration, ChronoUnit.MINUTES));
+                .duration(Duration.of(duration, ChronoUnit.MINUTES))
+                .cardStatus(cardInserted.isSelected() ? "inserted" : "notInserted");
 
         if(mainController.driverInterface.getBlocks().isEmpty()){
             LocalDateTime startTime = LocalDateTime.of(myDate,LocalTime.of(Integer.parseInt(cbHourStart.getText()),Integer.parseInt(cbHourEnd.getText())));
@@ -270,9 +268,5 @@ public class DateHandler {
 
         Optional<LocalDateTime> result = dialog.showAndWait();
         result.ifPresent(dateTime -> myDate= LocalDate.from(dateTime));
-    }
-
-    public void onCardInserted(ActionEvent actionEvent) {
-        CardInserted = !CardInserted;
     }
 }
