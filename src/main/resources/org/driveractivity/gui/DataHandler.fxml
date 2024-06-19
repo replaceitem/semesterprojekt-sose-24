@@ -72,7 +72,9 @@
         </VBox.margin>
     </GridPane>
     <Label fx:id="errorLabel" text="Start Zeit größer oder gleich Endzeit" textFill="RED"/>
-    <CheckBox fx:id="cardInserted" mnemonicParsing="false" text="Card Insterted"/>
+    <CheckBox fx:id="cardInserted" mnemonicParsing="false" text="Card Inserted"/>
+    <Label>Activity Type</Label>
+    <ChoiceBox fx:id="activityTypeChoiceBox" prefWidth="150.0"/>
     <Text fx:id="DayText" strokeType="OUTSIDE" strokeWidth="0.0"/>
     <Button fx:id="processButton" alignment="CENTER" onAction="#onActionProcess" prefHeight="40.0" prefWidth="151.0"
             text="Process Date"/>

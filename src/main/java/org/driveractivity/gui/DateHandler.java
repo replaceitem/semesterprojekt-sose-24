@@ -20,7 +20,6 @@ public class DateHandler {
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     
     private MainController mainController;
-    private ActivityType currentActivityType;
     private int insertionIndex;
     
     // converter that prevents number format exceptions and clamps values in bounds
@@ -67,15 +66,18 @@ public class DateHandler {
     public Text DayText;
     @FXML
     public CheckBox cardInserted;
+    @FXML
+    public ChoiceBox<ActivityType> activityTypeChoiceBox;
     
     private LocalDate myDate;
     private LocalDateTime previousEnd;
     
     public void initialize(MainController mainController, ActivityType activityType, int insertionIndex) {
         this.mainController = mainController;
-        this.currentActivityType = activityType;
         this.insertionIndex = insertionIndex;
-
+        
+        activityTypeChoiceBox.getItems().addAll(ActivityType.values());
+        activityTypeChoiceBox.setValue(activityType);
         errorLabel.setVisible(false);
         DriverInterface driverInterface = mainController.driverInterface;
         List<Activity> blocks = driverInterface.getBlocks();
@@ -208,7 +210,7 @@ public class DateHandler {
         Duration duration = getDuration();
 
         Activity activity = Activity.builder()
-                .type(currentActivityType)
+                .type(activityTypeChoiceBox.getValue())
                 .startTime(LocalDateTime.of(myDate,getStartTime()))
                 .duration(duration)
                 .cardStatus(cardInserted.isSelected() ? "inserted" : "notInserted")
