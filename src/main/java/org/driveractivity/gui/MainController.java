@@ -77,9 +77,9 @@ public class MainController implements Initializable {
 
     public void openDateHandlerStage(ActivityType currentActivityType, int insertionIndex, Activity editActivity) {
         try {
-            FXMLLoader loader = new FXMLLoader(DateHandler.class.getResource("DataHandler.fxml"));
+            FXMLLoader loader = new FXMLLoader(ActivityEditor.class.getResource("activity-editor.fxml"));
             Parent root = loader.load();
-            DateHandler controller = loader.getController();
+            ActivityEditor controller = loader.getController();
             controller.initialize(this, insertionIndex, currentActivityType, editActivity);
             Stage dialogStage = new Stage();
             dialogStage.initModality(Modality.WINDOW_MODAL);

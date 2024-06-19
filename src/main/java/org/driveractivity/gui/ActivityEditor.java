@@ -16,7 +16,7 @@ import java.time.format.*;
 import java.util.*;
 import java.util.stream.*;
 
-public class DateHandler {
+public class ActivityEditor {
     public static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     
     private MainController mainController;
