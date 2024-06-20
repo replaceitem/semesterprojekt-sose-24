@@ -4,6 +4,7 @@ import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.SpecificCondition;
 import org.driveractivity.entity.SpecificConditionType;
 import org.driveractivity.exception.FileImportException;
+import org.driveractivity.exception.SpecificConditionException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -41,7 +42,7 @@ public class DriverServiceImportExportTest {
         driverService.exportToXML(new File("output.xml"));
     }
     @Test
-    public void specificConditionTest() throws FileImportException {
+    public void specificConditionTest() throws FileImportException, SpecificConditionException {
         DriverService driverService = DriverService.getInstance();
         Activity activity = Activity.builder()
                 .type(WORK)

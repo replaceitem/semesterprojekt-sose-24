@@ -11,6 +11,7 @@ import org.driveractivity.entity.ActivityGroup;
 import org.driveractivity.entity.SpecificCondition;
 import org.driveractivity.entity.SpecificConditionType;
 import org.driveractivity.exception.FileImportException;
+import org.driveractivity.exception.SpecificConditionException;
 import org.driveractivity.mapper.ObjectToXmlDtoMapper;
 import org.driveractivity.mapper.XmlDtoToObjectMapper;
 
@@ -105,22 +106,22 @@ public class DriverService implements DriverInterface {
     }
 
     @Override
-    public ArrayList<SpecificCondition> addSpecificCondition(List<SpecificCondition> inputConditions) {
+    public ArrayList<SpecificCondition> addSpecificCondition(List<SpecificCondition> inputConditions) throws SpecificConditionException {
         //if input contains OUT OF SCOPE, it must contain both
         if(inputConditions.stream().anyMatch(i -> i.getSpecificConditionType().getCondition() == SpecificConditionType.Condition.OUT_OF_SCOPE)) {
             if(!hasCompleteScopeConditions(inputConditions)) {
-                throw new IllegalArgumentException("If a BEGIN_OUT_OF_SCOPE is added, an END_OUT_OF_SCOPE must be added as well");
+                throw new SpecificConditionException("Specific Condition Exception","If a BEGIN_OUT_OF_SCOPE is added, an END_OUT_OF_SCOPE must be added as well");
             }
         }
         //if input contains BEGIN_FT, make sure that there is no BEGIN_FT without END_FT at all in the list
         if(inputConditions.stream().anyMatch(s -> s.getSpecificConditionType() == SpecificConditionType.BEGIN_FT)) {
             if(hasBeginningFTWithoutEnd()) {
-                throw new IllegalArgumentException("If a BEGIN_FT is to be added, there may not be a further unclosed BEGIN_FT in the list at all");
+                throw new SpecificConditionException("Specific Condition Exception","If a BEGIN_FT is to be added, there may not be a further unclosed BEGIN_FT in the list at all");
             }
             //furthermore, the BEGIN_FT must be the last added element, time wise
             SpecificCondition lastSpecificConditionBeforeNew = getLastFTSpecificCondition(inputConditions);
             if(lastSpecificConditionBeforeNew != null && lastSpecificConditionBeforeNew.getTimestamp().isAfter(inputConditions.getFirst().getTimestamp())) {
-                throw new IllegalArgumentException("If a BEGIN_FT without END_FT is added, it must be the last occurrence of an FT condition");
+                throw new SpecificConditionException("Specific Condition Exception","If a BEGIN_FT without END_FT is added, it must be the last occurrence of an FT condition");
             }
         }
         //if input is of type END_FT, make sure that there is a BEGIN_FT immediately before it
@@ -128,7 +129,7 @@ public class DriverService implements DriverInterface {
             SpecificCondition lastSpecificConditionBeforeNew = getLastFTSpecificCondition(inputConditions);
 
             if(lastSpecificConditionBeforeNew == null || lastSpecificConditionBeforeNew.getSpecificConditionType() != SpecificConditionType.BEGIN_FT) {
-                throw new IllegalArgumentException("If an END_FT is added, a BEGIN_FT must be added before it");
+                throw new SpecificConditionException("Specific Condition Exception","If an END_FT is added, a BEGIN_FT must be added before it");
             }
         }
         specificConditions.addAll(inputConditions);
@@ -139,10 +140,10 @@ public class DriverService implements DriverInterface {
 
 
     @Override
-    public ArrayList<SpecificCondition> removeSpecificCondition(List<SpecificCondition> inputConditions) {
+    public ArrayList<SpecificCondition> removeSpecificCondition(List<SpecificCondition> inputConditions) throws SpecificConditionException {
         if(inputConditions.stream().anyMatch(i -> i.getSpecificConditionType().getCondition() == SpecificConditionType.Condition.OUT_OF_SCOPE)) {
             if(!hasCompleteScopeConditions(inputConditions)) {
-                throw new IllegalArgumentException("If a BEGIN_OUT_OF_SCOPE is removed, an END_OUT_OF_SCOPE must be removed as well");
+                throw new SpecificConditionException("Specific Condition Exception","If a BEGIN_OUT_OF_SCOPE is removed, an END_OUT_OF_SCOPE must be removed as well");
             }
         }
         //if a beginning is to be removed, the corresponding end must be removed as well, if it exists.
