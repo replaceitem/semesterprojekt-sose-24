@@ -43,7 +43,6 @@ public class MainApplication extends javafx.application.Application {
 
     @Override
     public void stop() {
-        System.out.println("HALLO");
         DriverInterface driverInterface = DriverService.getInstance();
         driverInterface.exportToXML(new File(MainApplication.appProperties.getProperty("saveFilePath") + "/tmpFile.xml"));
         System.exit(0);
