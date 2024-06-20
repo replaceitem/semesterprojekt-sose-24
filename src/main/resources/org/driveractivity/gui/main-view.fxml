@@ -6,6 +6,7 @@
 <?import javafx.scene.layout.*?>
 
 <?import org.kordamp.ikonli.javafx.FontIcon?>
+<?import javafx.scene.text.Text?>
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.driveractivity.gui.MainController">
 <stylesheets>
     <URL value="@main-view.css" />
@@ -29,12 +30,19 @@
         <Pane/> <!-- Empty space -->
         <VBox spacing="10">
             <Pane/> <!-- Empty space -->
+            <Text styleClass="sidebar-section-heading">
+                Create activity
+            </Text>
             <VBox spacing="10">
                 <Button fx:id="restButton" text="Rest" styleClass="activity-button, activity-rest" onAction="#addActivity"/>
                 <Button fx:id="driveButton" text="Drive" styleClass="activity-button, activity-drive" onAction="#addActivity"/>
                 <Button fx:id="workButton" text="Work" styleClass="activity-button, activity-work" onAction="#addActivity"/>
                 <Button fx:id="availableButton" text="Available" styleClass="activity-button, activity-available" onAction="#addActivity"/>
             </VBox>
+            <Separator/>
+            <Text styleClass="sidebar-section-heading">
+                Move selected activity
+            </Text>
             <HBox>
                 <Button onAction="#onMoveBackward" styleClass="move-button" HBox.hgrow="ALWAYS">
                     <graphic>
@@ -47,6 +55,10 @@
                     </graphic>
                 </Button>
             </HBox>
+            <Separator/>
+            <Text styleClass="sidebar-section-heading">
+                View settings
+            </Text>
             <HBox style="-fx-alignment: center">
                 <Label>Day Dividers</Label>
                 <Pane HBox.hgrow="ALWAYS"/>

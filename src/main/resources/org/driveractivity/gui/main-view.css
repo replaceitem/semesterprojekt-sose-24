@@ -73,3 +73,7 @@
     -fx-max-width: 100px;
     -fx-pref-height: 50px;
 }
+
+.sidebar-section-heading {
+    -fx-font-weight: bold;
+}
