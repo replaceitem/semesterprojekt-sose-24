@@ -57,6 +57,35 @@
             </HBox>
             <Separator/>
             <Text styleClass="sidebar-section-heading">
+                Specific Conditions
+            </Text>
+            <VBox spacing="2">
+                <Button onAction="#onAddBeginFerryTrain" maxWidth="Infinity" alignment="BASELINE_LEFT">
+                    <graphic>
+                        <FontIcon iconLiteral="mdi2f-ferry" iconSize="16" iconColor="darkgreen"/>
+                    </graphic>
+                    Add Begin Ferry Train
+                </Button>
+                <Button onAction="#onAddEndFerryTrain" maxWidth="Infinity" alignment="BASELINE_LEFT">
+                    <graphic>
+                        <FontIcon iconLiteral="mdi2f-ferry" iconSize="16" iconColor="darkred"/>
+                    </graphic>
+                    Add End Ferry Train
+                </Button>
+                <Button onAction="#onAddOutOfScope" maxWidth="Infinity" alignment="BASELINE_LEFT">
+                    <graphic>
+                        <FontIcon iconLiteral="mdi2b-border-none-variant" iconSize="16"/>
+                    </graphic>
+                    Add Out Of Scope
+                </Button>
+            </VBox>
+            <ScrollPane fitToWidth="true">
+                <VBox fx:id="specificConditions" spacing="1">
+                    
+                </VBox>
+            </ScrollPane>
+            <Separator/>
+            <Text styleClass="sidebar-section-heading">
                 View settings
             </Text>
             <HBox style="-fx-alignment: center">

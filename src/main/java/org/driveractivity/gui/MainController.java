@@ -4,19 +4,16 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.*;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.Setter;
-import org.driveractivity.entity.Activity;
-import org.driveractivity.entity.ActivityType;
-import org.driveractivity.exception.FileImportException;
+import org.driveractivity.entity.*;
+import org.driveractivity.exception.*;
 import org.driveractivity.service.DriverInterface;
 import org.driveractivity.service.DriverService;
 
@@ -24,7 +21,8 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.time.*;
+import java.util.*;
 
 import static org.driveractivity.entity.ActivityType.*;
 
@@ -33,7 +31,6 @@ public class MainController implements Initializable {
     public ActivityPane activityPane;
     @FXML
     public Button clearButton;
-
     @FXML
     private Button restButton;
     @FXML
@@ -42,6 +39,9 @@ public class MainController implements Initializable {
     private Button workButton;
     @FXML
     private Button availableButton;
+
+    @FXML
+    public VBox specificConditions;
 
     @FXML
     private MenuItem openMenu;
@@ -134,6 +134,7 @@ public class MainController implements Initializable {
 
             try {
                 driverInterface.importFrom(file);
+                loadSpecificConditions();
             } catch (FileImportException e) {
                 AlertedExceptionDialog.show(e);
             }
@@ -243,5 +244,93 @@ public class MainController implements Initializable {
             driverInterface.addBlock(newIndex, activity);
             activityPane.setSelectedBlock(newIndex);
         });
+    }
+    
+    public void loadSpecificConditions() {
+        specificConditions.getChildren().setAll(driverInterface.getSpecificConditions().stream().map(specificCondition -> new SpecificConditionEntry(this, specificCondition)).toList());
+    }
+
+    public void onAddBeginFerryTrain(ActionEvent actionEvent) {
+        addFerryTrain(SpecificConditionType.BEGIN_FT);
+    }
+
+    public void onAddEndFerryTrain(ActionEvent actionEvent) {
+        addFerryTrain(SpecificConditionType.END_FT);
+    }
+
+    public void onAddOutOfScope(ActionEvent actionEvent) {
+        Optional<LocalDateTime> beginOutOfScopeTime = openDateTimePicker("beginOutOfScope time", "Choose a time for beginOutOfScope specific condition");
+        if(beginOutOfScopeTime.isEmpty()) return;
+        Optional<LocalDateTime> endOutOfScopeTime = openDateTimePicker("endOutOfScopeTime time", "Choose a time for endOutOfScopeTime specific condition");
+        if(endOutOfScopeTime.isEmpty()) return;
+        SpecificCondition beginCondition = SpecificCondition.builder()
+                .timestamp(beginOutOfScopeTime.get())
+                .specificConditionType(SpecificConditionType.BEGIN_OUT_OF_SCOPE)
+                .build();
+        SpecificCondition endCondition = SpecificCondition.builder()
+                .timestamp(endOutOfScopeTime.get())
+                .specificConditionType(SpecificConditionType.END_OUT_OF_SCOPE)
+                .build();
+
+        try {
+            driverInterface.addSpecificCondition(List.of(beginCondition, endCondition)); // TODO also submit end
+        } catch (SpecificConditionException e) {
+            AlertedExceptionDialog.showSilently(e);
+        }
+        loadSpecificConditions();
+    }
+    
+    public void addFerryTrain(SpecificConditionType specificConditionType) {
+        String name = specificConditionType.mapNameToString();
+        Optional<LocalDateTime> ferryTrainStartTime = openDateTimePicker(name + " time", "Choose a time for " + name + " specific condition");
+        if(ferryTrainStartTime.isEmpty()) return;
+        SpecificCondition specificCondition = SpecificCondition.builder()
+                .timestamp(ferryTrainStartTime.get())
+                .specificConditionType(specificConditionType)
+                .build();
+        try {
+            driverInterface.addSpecificCondition(List.of(specificCondition));
+        } catch (SpecificConditionException e) {
+            AlertedExceptionDialog.showSilently(e);
+        }
+        loadSpecificConditions();
+    }
+    
+    
+    
+    public Optional<LocalDateTime> openDateTimePicker(String title, String header) {
+        Dialog<LocalDateTime> dialog = new Dialog<>();
+        dialog.setTitle(title);
+        dialog.setHeaderText(header);
+
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        VBox vbox = new VBox();
+
+        Spinner<Integer> hourSpinner = new Spinner<>();
+        hourSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 0));
+        Spinner<Integer> minuteSpinner = new Spinner<>();
+        minuteSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0));
+
+        DatePicker datePicker = new DatePicker(LocalDate.now());
+        
+        vbox.getChildren().addAll(
+                new Label("Time:"),
+                new HBox(hourSpinner, minuteSpinner),
+                new Label("Date:"),
+                datePicker
+        );
+
+        dialog.getDialogPane().setContent(vbox);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                LocalTime time = LocalTime.of(hourSpinner.getValue(), minuteSpinner.getValue());
+                return LocalDateTime.of(datePicker.getValue(), time);
+            }
+            return null;
+        });
+
+        return dialog.showAndWait();
     }
 }
