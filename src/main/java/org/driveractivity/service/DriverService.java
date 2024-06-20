@@ -143,6 +143,7 @@ public class DriverService implements DriverInterface {
     @Override
     public ArrayList<SpecificCondition> removeSpecificCondition(SpecificCondition inputCondition) throws SpecificConditionException {
         ArrayList<SpecificCondition> toDelete = new ArrayList<>();
+        toDelete.add(inputCondition);
         if(inputCondition.getSpecificConditionType().getCondition() == SpecificConditionType.Condition.OUT_OF_SCOPE) {
             SpecificCondition nextEnd = findNextSpecificConditionOfType(SpecificConditionType.END_OUT_OF_SCOPE, inputCondition);
             if(nextEnd != null) {
