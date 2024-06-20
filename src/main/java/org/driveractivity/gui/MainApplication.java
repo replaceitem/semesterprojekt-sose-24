@@ -3,6 +3,8 @@ package org.driveractivity.gui;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.driveractivity.service.DriverInterface;
+import org.driveractivity.service.DriverService;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,6 +18,17 @@ public class MainApplication extends javafx.application.Application {
 
     @Override
     public void start(Stage stage) throws IOException {
+
+        DriverInterface driverInterface = DriverService.getInstance();
+        if(new File(MainApplication.appProperties.getProperty("saveFilePath") + "/tmpFile").exists()){
+            try{
+                driverInterface.importFrom(new File(MainApplication.appProperties.getProperty("saveFilePath") + "/tmpFile.xml"));
+            }catch(Exception e){
+                e.printStackTrace();
+            }
+        }
+
+
         FXMLLoader fxmlLoader = new FXMLLoader(MainApplication.class.getResource("main-view.fxml"));
         Scene scene = new Scene(fxmlLoader.load(), 1000, 800);
 
@@ -26,6 +39,14 @@ public class MainApplication extends javafx.application.Application {
         stage.setTitle("Driver Activity Visualization");
         stage.setScene(scene);
         stage.show();
+    }
+
+    @Override
+    public void stop() {
+        System.out.println("HALLO");
+        DriverInterface driverInterface = DriverService.getInstance();
+        driverInterface.exportToXML(new File(MainApplication.appProperties.getProperty("saveFilePath") + "/tmpFile.xml"));
+        System.exit(0);
     }
 
     public static void main(String[] args) {
@@ -54,7 +75,6 @@ public class MainApplication extends javafx.application.Application {
                 appProperties.setProperty("renderCardStatus", "true");
                 appProperties.setProperty("renderWeekDividers", "true");
                 appProperties.setProperty("renderDayDividers", "true");
-
                 try{
                     appProperties.store(new FileOutputStream(file), "Default App Properties");
                     System.out.println("New properties saved");
