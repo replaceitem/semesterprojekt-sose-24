@@ -108,8 +108,9 @@ public class DriverService implements DriverInterface {
     @Override
     public ArrayList<SpecificCondition> addSpecificCondition(List<SpecificCondition> inputConditions) throws SpecificConditionException {
         //if input contains OUT OF SCOPE, it must contain both
+        //also it should not be allowed to intersect with other out-of-scope conditions
         if(inputConditions.stream().anyMatch(i -> i.getSpecificConditionType().getCondition() == SpecificConditionType.Condition.OUT_OF_SCOPE)) {
-            if(!hasCompleteScopeConditions(inputConditions)) {
+            if(hasIncompleteScopeConditions(inputConditions)) {
                 throw new SpecificConditionException("Specific Condition Exception","If a BEGIN_OUT_OF_SCOPE is added, an END_OUT_OF_SCOPE must be added as well");
             }
         }
@@ -140,38 +141,26 @@ public class DriverService implements DriverInterface {
 
 
     @Override
-    public ArrayList<SpecificCondition> removeSpecificCondition(List<SpecificCondition> inputConditions) throws SpecificConditionException {
-        if(inputConditions.stream().anyMatch(i -> i.getSpecificConditionType().getCondition() == SpecificConditionType.Condition.OUT_OF_SCOPE)) {
-            if(!hasCompleteScopeConditions(inputConditions)) {
-                throw new SpecificConditionException("Specific Condition Exception","If a BEGIN_OUT_OF_SCOPE is removed, an END_OUT_OF_SCOPE must be removed as well");
+    public ArrayList<SpecificCondition> removeSpecificCondition(SpecificCondition inputCondition) throws SpecificConditionException {
+        ArrayList<SpecificCondition> toDelete = new ArrayList<>();
+        if(inputCondition.getSpecificConditionType().getCondition() == SpecificConditionType.Condition.OUT_OF_SCOPE) {
+            SpecificCondition nextEnd = findNextSpecificConditionOfType(SpecificConditionType.END_OUT_OF_SCOPE, inputCondition);
+            if(nextEnd != null) {
+                toDelete.add(nextEnd);
             }
         }
         //if a beginning is to be removed, the corresponding end must be removed as well, if it exists.
         //if it doesn't exist, we just remove the beginning
-        if(inputConditions.size() == 1 && inputConditions.getFirst().getSpecificConditionType() == SpecificConditionType.BEGIN_FT) {
-            SpecificCondition nextEnd = findNextSpecificConditionOfType(SpecificConditionType.END_FT, inputConditions.getFirst());
+        if(inputCondition.getSpecificConditionType() == SpecificConditionType.BEGIN_FT) {
+            SpecificCondition nextEnd = findNextSpecificConditionOfType(SpecificConditionType.END_FT, inputCondition);
             if(nextEnd != null) {
-                inputConditions.add(nextEnd);
+                toDelete.add(nextEnd);
             }
         }
-        specificConditions.removeAll(inputConditions);
+        specificConditions.removeAll(toDelete);
 
         IntStream.range(0, activities.size()).forEach(i -> listeners.forEach(l -> l.onActivityUpdated(i)));
         return specificConditions;
-    }
-
-    private SpecificCondition findNextSpecificConditionOfType(SpecificConditionType type, SpecificCondition inputCondition) {
-        for(SpecificCondition specificCondition : specificConditions) {
-            if(specificCondition.getSpecificConditionType() == type && specificCondition.getTimestamp().isAfter(inputCondition.getTimestamp())) {
-                return specificCondition;
-            }
-        }
-        return null;
-    }
-
-    @Override
-    public void moveBlock(int fromIndex, int toIndex) {
-
     }
 
     @Override
@@ -209,11 +198,11 @@ public class DriverService implements DriverInterface {
             ITFTestFileDTO itfTestFileDTO = (ITFTestFileDTO) unmarshaller.unmarshal(f);
 
             clear();
-            
+
             //Read the specific conditions
             Optional.ofNullable(itfTestFileDTO.getSpecificConditionsDTO())
                     .ifPresent(dto -> specificConditions.addAll(XmlDtoToObjectMapper.mapSpecificConditions(dto)));
-            
+
             //Read the activities
             ActivityGroup group = XmlDtoToObjectMapper.mapActivityGroup(itfTestFileDTO.getActivityGroup());
             ArrayList<Activity> activities = XmlDtoToObjectMapper.mapDayToActivity(group.getDays());
@@ -238,11 +227,11 @@ public class DriverService implements DriverInterface {
         activities.add(index, activity);
         listeners.forEach(l -> l.onActivityAdded(index, activity));
     }
+
     private void addActivityInternal(Activity activity) {
         activities.add(activity);
         listeners.forEach(l -> l.onActivityAdded(activities.indexOf(activity), activity));
     }
-
     private void removeActivityInternal(int index) {
         activities.remove(index);
         listeners.forEach(l -> l.onActivityRemoved(index));
@@ -254,12 +243,21 @@ public class DriverService implements DriverInterface {
         listeners.forEach(l -> l.onAllActivitiesUpdated(this.activities));
     }
 
-    private boolean hasCompleteScopeConditions(List<SpecificCondition> inputConditions) {
-        return inputConditions.stream().anyMatch(s -> s.getSpecificConditionType() == SpecificConditionType.BEGIN_OUT_OF_SCOPE) && inputConditions.stream().noneMatch(s -> s.getSpecificConditionType() == SpecificConditionType.END_OUT_OF_SCOPE);
+    private boolean hasIncompleteScopeConditions(List<SpecificCondition> inputConditions) {
+        return inputConditions.stream().noneMatch(s -> s.getSpecificConditionType() == SpecificConditionType.BEGIN_OUT_OF_SCOPE) || inputConditions.stream().anyMatch(s -> s.getSpecificConditionType() == SpecificConditionType.END_OUT_OF_SCOPE);
     }
 
     private boolean hasBeginningFTWithoutEnd() {
         return specificConditions.stream().filter(s -> s.getSpecificConditionType() == SpecificConditionType.BEGIN_FT).count() > specificConditions.stream().filter(s -> s.getSpecificConditionType() == SpecificConditionType.END_FT).count();
+    }
+
+    private SpecificCondition findNextSpecificConditionOfType(SpecificConditionType type, SpecificCondition inputCondition) {
+        for(SpecificCondition specificCondition : specificConditions) {
+            if(specificCondition.getSpecificConditionType() == type && specificCondition.getTimestamp().isAfter(inputCondition.getTimestamp())) {
+                return specificCondition;
+            }
+        }
+        return null;
     }
 
     private SpecificCondition getLastFTSpecificCondition(List<SpecificCondition> specificCondition) {
