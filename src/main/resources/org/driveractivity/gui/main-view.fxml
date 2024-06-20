@@ -62,22 +62,22 @@
             <HBox style="-fx-alignment: center">
                 <Label>Day Dividers</Label>
                 <Pane HBox.hgrow="ALWAYS"/>
-                <ToggleButton text="ON" onAction="#toggleDayDivider" selected="true" styleClass="feature-toggle-label"/>
+                <ToggleButton fx:id="dayToggle" onAction="#toggleDayDivider"  styleClass="feature-toggle-label"/>
             </HBox>
             <HBox style="-fx-alignment: center">
                 <Label>Week Dividers</Label>
                 <Pane HBox.hgrow="ALWAYS"/>
-                <ToggleButton text="ON" onAction="#toggleWeekDivider" selected="true" styleClass="feature-toggle-label"/>
+                <ToggleButton fx:id="weekToggle" onAction="#toggleWeekDivider"  styleClass="feature-toggle-label"/>
             </HBox>
             <HBox style="-fx-alignment: center">
                 <Label>Card Status</Label>
                 <Pane HBox.hgrow="ALWAYS"/>
-                <ToggleButton text="ON" onAction="#toggleCardStatus" selected="true" styleClass="feature-toggle-label"/>
+                <ToggleButton fx:id="cardToggle" onAction="#toggleCardStatus"  styleClass="feature-toggle-label"/>
             </HBox>
             <HBox style="-fx-alignment: center">
                 <Label>Specific Conditions</Label>
                 <Pane HBox.hgrow="ALWAYS"/>
-                <ToggleButton text="ON" onAction="#toggleSpecificConditions" selected="true" styleClass="feature-toggle-label"/>
+                <ToggleButton fx:id="conditionToggle" onAction="#toggleSpecificConditions"  styleClass="feature-toggle-label"/>
             </HBox>
 
             <Pane VBox.vgrow="ALWAYS"/> <!-- Empty space -->

@@ -26,10 +26,10 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
     
     private ActivityBlock selectedBlock;
     
-    @Getter private boolean renderDayDividers = true;
-    @Getter private boolean renderWeekDividers = true;
-    @Getter private boolean renderCardStatus = true;
-    @Getter private boolean renderSpecificConditions = true;
+    @Getter private boolean renderDayDividers = Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderDayDividers"));
+    @Getter private boolean renderWeekDividers = Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderWeekDividers"));;
+    @Getter private boolean renderCardStatus = Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderCardStatus"));;
+    @Getter private boolean renderSpecificConditions = Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderSpecificConditions"));;
 
     public ActivityPane() {
         this.setRowValignment(VPos.BOTTOM);

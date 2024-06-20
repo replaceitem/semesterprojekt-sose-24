@@ -21,6 +21,7 @@ import org.driveractivity.service.DriverInterface;
 import org.driveractivity.service.DriverService;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -45,6 +46,16 @@ public class MainController implements Initializable {
     @FXML
     private MenuItem openMenu;
 
+    @FXML
+    private ToggleButton dayToggle;
+    @FXML
+    private ToggleButton weekToggle;
+    @FXML
+    private ToggleButton cardToggle;
+    @FXML
+    private ToggleButton conditionToggle;
+
+
     public DriverInterface driverInterface;
     @Setter
     private Stage stage;
@@ -54,6 +65,17 @@ public class MainController implements Initializable {
         activityPane.setMainController(this);
         driverInterface = DriverService.getInstance();
         activityPane.initialize(driverInterface);
+
+        dayToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderDayDividers")));
+        weekToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderWeekDividers")));
+        cardToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderCardStatus")));
+        conditionToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderSpecificConditions")));
+
+        updateToggleButton(dayToggle);
+        updateToggleButton(weekToggle);
+        updateToggleButton(cardToggle);
+        updateToggleButton(conditionToggle);
+
     }
 
     @FXML
@@ -98,15 +120,25 @@ public class MainController implements Initializable {
         fileChooser.setTitle("Open XML-File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Files", "*.*"));
-        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        fileChooser.setInitialDirectory(new File(MainApplication.appProperties.getProperty("openFilePath")));
 
         File file = fileChooser.showOpenDialog(stage);
 
-        try {
-            driverInterface.importFrom(file);
-        } catch (FileImportException e) {
-            AlertedExceptionDialog.show(e);
+        if (file != null) {
+            try{
+                MainApplication.appProperties.setProperty("openFilePath", file.getParentFile().getAbsolutePath());
+                MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New OpenFile Path");
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+
+            try {
+                driverInterface.importFrom(file);
+            } catch (FileImportException e) {
+                AlertedExceptionDialog.show(e);
+            }
         }
+
     }
 
     @FXML
@@ -115,11 +147,20 @@ public class MainController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save XML-File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
-        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        fileChooser.setInitialDirectory(new File(MainApplication.appProperties.getProperty("saveFilePath")));
 
         File file = fileChooser.showSaveDialog(stage);
 
-        driverInterface.exportToXML(file);
+        if (file != null) {
+            try {
+                MainApplication.appProperties.setProperty("saveFilePath", file.getParentFile().getAbsolutePath());
+                MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New SaveFile Path");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            driverInterface.exportToXML(file);
+        }
     }
 
     @FXML
@@ -127,6 +168,13 @@ public class MainController implements Initializable {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
         activityPane.setRenderDayDividers(toggleButton.isSelected());
         updateToggleButton(toggleButton);
+
+        try{
+            MainApplication.appProperties.setProperty("renderDayDividers", String.valueOf(toggleButton.isSelected()));
+            MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New SaveFile Path");
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -134,6 +182,13 @@ public class MainController implements Initializable {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
         activityPane.setRenderWeekDividers(toggleButton.isSelected());
         updateToggleButton(toggleButton);
+
+        try{
+            MainApplication.appProperties.setProperty("renderWeekDividers", String.valueOf(toggleButton.isSelected()));
+            MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New SaveFile Path");
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -141,6 +196,13 @@ public class MainController implements Initializable {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
         activityPane.setRenderCardStatus(toggleButton.isSelected());
         updateToggleButton(toggleButton);
+
+        try{
+            MainApplication.appProperties.setProperty("renderCardStatus", String.valueOf(toggleButton.isSelected()));
+            MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New SaveFile Path");
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -148,6 +210,13 @@ public class MainController implements Initializable {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
         activityPane.setRenderSpecificConditions(toggleButton.isSelected());
         updateToggleButton(toggleButton);
+
+        try{
+            MainApplication.appProperties.setProperty("renderSpecificConditions", String.valueOf(toggleButton.isSelected()));
+            MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New SaveFile Path");
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     private void updateToggleButton(ToggleButton toggleButton) {
