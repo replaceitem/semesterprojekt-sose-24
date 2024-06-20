@@ -41,8 +41,6 @@ public class ActivityEditor {
     }
     
     @FXML
-    private Label errorLabel;
-    @FXML
     private Spinner<Integer> cbHourStart;
     @FXML
     private Spinner<Integer> cbHourEnd;
@@ -79,7 +77,6 @@ public class ActivityEditor {
         this.inserting = editActivity == null;
         
         activityTypeChoiceBox.getItems().addAll(ActivityType.values());
-        errorLabel.setVisible(false);
         DriverInterface driverInterface = mainController.driverInterface;
         List<Activity> blocks = driverInterface.getBlocks();
         

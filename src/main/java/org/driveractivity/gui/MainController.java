@@ -83,7 +83,7 @@ public class MainController implements Initializable {
             Stage dialogStage = new Stage();
             dialogStage.initModality(Modality.WINDOW_MODAL);
             dialogStage.initStyle(StageStyle.UTILITY);
-            dialogStage.setScene(new Scene(root, 380, 250));
+            dialogStage.setScene(new Scene(root, 380, 400));
             dialogStage.setTitle("Setting up " + currentActivityType + "...");
             dialogStage.toFront();
             dialogStage.showAndWait();
