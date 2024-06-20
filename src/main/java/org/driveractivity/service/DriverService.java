@@ -17,6 +17,7 @@ import org.driveractivity.mapper.XmlDtoToObjectMapper;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 @Getter
@@ -216,11 +217,8 @@ public class DriverService implements DriverInterface {
             clear();
             
             //Read the specific conditions
-            try {
-                specificConditions.addAll(XmlDtoToObjectMapper.mapSpecificConditions(itfTestFileDTO.getSpecificConditionsDTO()));
-            } catch(NullPointerException ignored) {
-                //No specific conditions in the file, allowed behavior
-            }
+            Optional.ofNullable(itfTestFileDTO.getSpecificConditionsDTO())
+                    .ifPresent(dto -> specificConditions.addAll(XmlDtoToObjectMapper.mapSpecificConditions(dto)));
             
             //Read the activities
             ActivityGroup group = XmlDtoToObjectMapper.mapActivityGroup(itfTestFileDTO.getActivityGroup());
