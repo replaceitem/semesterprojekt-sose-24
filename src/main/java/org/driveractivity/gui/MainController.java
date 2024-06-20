@@ -66,7 +66,7 @@ public class MainController implements Initializable {
         else if (button == availableButton) type = AVAILABLE;
         else return;
         int insertionIndex = activityPane.getSelectedBlock().map(integer -> integer + 1).orElse(driverInterface.getBlocks().size());
-        this.openDateHandlerStage(type, insertionIndex, null);
+        this.openActivityEditorStage(type, insertionIndex, null);
     }
 
     @FXML
@@ -74,7 +74,7 @@ public class MainController implements Initializable {
         driverInterface.clear();
     }
 
-    public void openDateHandlerStage(ActivityType currentActivityType, int insertionIndex, Activity editActivity) {
+    public void openActivityEditorStage(ActivityType currentActivityType, int insertionIndex, Activity editActivity) {
         try {
             FXMLLoader loader = new FXMLLoader(ActivityEditor.class.getResource("activity-editor.fxml"));
             Parent root = loader.load();
@@ -153,5 +153,26 @@ public class MainController implements Initializable {
     private void updateToggleButton(ToggleButton toggleButton) {
         boolean selected = toggleButton.isSelected();
         toggleButton.setText(selected ? "ON" : "OFF");
+    }
+
+    public void onMoveForward(ActionEvent actionEvent) {
+        moveActivity(1);
+    }
+
+    public void onMoveBackward(ActionEvent actionEvent) {
+        moveActivity(-1);
+    }
+    
+    private void moveActivity(int shift) {
+        activityPane.getSelectedBlock().ifPresent(index -> {
+            int newIndex = index+shift;
+            int maxIndex = driverInterface.getBlocks().size() - 1;
+            if(index < 0 || index > maxIndex) return;
+            if(newIndex < 0 || newIndex > maxIndex) return;
+            Activity activity = driverInterface.getBlocks().get(index);
+            driverInterface.removeBlock(index);
+            driverInterface.addBlock(newIndex, activity);
+            activityPane.setSelectedBlock(newIndex);
+        });
     }
 }

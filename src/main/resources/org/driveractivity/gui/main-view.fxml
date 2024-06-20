@@ -35,6 +35,18 @@
                 <Button fx:id="workButton" text="Work" styleClass="activity-button, activity-work" onAction="#addActivity"/>
                 <Button fx:id="availableButton" text="Available" styleClass="activity-button, activity-available" onAction="#addActivity"/>
             </VBox>
+            <HBox>
+                <Button onAction="#onMoveBackward" styleClass="move-button" HBox.hgrow="ALWAYS">
+                    <graphic>
+                        <FontIcon iconLiteral="mdi2a-arrow-left" iconSize="48"/>
+                    </graphic>
+                </Button>
+                <Button onAction="#onMoveForward" styleClass="move-button" HBox.hgrow="ALWAYS">
+                    <graphic>
+                        <FontIcon iconLiteral="mdi2a-arrow-right" iconSize="48"/>
+                    </graphic>
+                </Button>
+            </HBox>
             <HBox style="-fx-alignment: center">
                 <Label>Day Dividers</Label>
                 <Pane HBox.hgrow="ALWAYS"/>

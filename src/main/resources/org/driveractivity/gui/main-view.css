@@ -68,3 +68,8 @@
     -fx-text-fill: white;
     -fx-content-display: right;
 }
+
+.move-button {
+    -fx-max-width: 100px;
+    -fx-pref-height: 50px;
+}

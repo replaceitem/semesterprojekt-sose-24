@@ -4,6 +4,7 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
+import javafx.application.*;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -134,7 +135,7 @@ public class ActivityBlock extends StackPane {
         if(contextMenu == null) {
             MenuItem editItem = new MenuItem("Edit", Icons.create(Icons.EDIT, 16));
             editItem.setOnAction(actionEvent -> {
-                activityPane.getMainController().openDateHandlerStage(this.activity.getType(), activityIndex, this.activity);
+                activityPane.getMainController().openActivityEditorStage(this.activity.getType(), activityIndex, this.activity);
             });
 
             MenuItem deleteItem = new MenuItem("Delete", Icons.create(Icons.DELETE, 16));
@@ -160,7 +161,7 @@ public class ActivityBlock extends StackPane {
             menuItem.getStyleClass().add(CSS_STYLE_CLASS.get(type));
             menuItem.setOnAction(actionEvent -> {
                 int insertionIndex = this.activityIndex + shift;
-                activityPane.getMainController().openDateHandlerStage(type, insertionIndex, null);
+                activityPane.getMainController().openActivityEditorStage(type, insertionIndex, null);
             });
             menu.getItems().add(menuItem);
         }
@@ -344,13 +345,16 @@ public class ActivityBlock extends StackPane {
     ));
 
     public void showMergeEffect() {
+        // to make sure the prefWidth is applied from css
+        applyCss();
+        layout();
         Timeline timeline = new Timeline();
 
         KeyValue opacityStart = new KeyValue(block.opacityProperty(), 0.8, Interpolator.EASE_OUT);
         KeyValue opacityEnd = new KeyValue(block.opacityProperty(), 1, Interpolator.EASE_IN);
-        KeyValue widthStart = new KeyValue(this.prefWidthProperty(), this.getPrefWidth()*2, Interpolator.EASE_OUT);
+        KeyValue widthStart = new KeyValue(this.prefWidthProperty(), this.getPrefWidth() * 2, Interpolator.EASE_OUT);
         KeyValue widthEnd = new KeyValue(this.prefWidthProperty(), this.getPrefWidth(), Interpolator.SPLINE(0.5, 1, 0.5, 1));
-        
+
         timeline.getKeyFrames().addAll(
                 new KeyFrame(javafx.util.Duration.millis(0), opacityStart, widthStart),
                 new KeyFrame(javafx.util.Duration.millis(1000), opacityEnd, widthEnd)
