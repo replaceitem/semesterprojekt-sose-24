@@ -22,7 +22,7 @@ public class MainApplication extends javafx.application.Application {
         DriverInterface driverInterface = DriverService.getInstance();
         if(new File(MainApplication.appProperties.getProperty("saveFilePath") + "/tmpFile").exists()){
             try{
-                driverInterface.importFrom(new File(MainApplication.appProperties.getProperty("saveFilePath") + "/tmpFile"));
+                driverInterface.importFrom(new File(MainApplication.appProperties.getProperty("saveFilePath") + "/tmpFile.xml"));
             }catch(Exception e){
                 e.printStackTrace();
             }
@@ -45,7 +45,7 @@ public class MainApplication extends javafx.application.Application {
     public void stop() {
         System.out.println("HALLO");
         DriverInterface driverInterface = DriverService.getInstance();
-        driverInterface.exportToXML(new File(MainApplication.appProperties.getProperty("saveFilePath") + "/tmpFile"));
+        driverInterface.exportToXML(new File(MainApplication.appProperties.getProperty("saveFilePath") + "/tmpFile.xml"));
         System.exit(0);
     }
 
