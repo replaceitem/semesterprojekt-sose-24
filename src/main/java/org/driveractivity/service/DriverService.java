@@ -216,7 +216,11 @@ public class DriverService implements DriverInterface {
             clear();
             
             //Read the specific conditions
-            specificConditions.addAll(XmlDtoToObjectMapper.mapSpecificConditions(itfTestFileDTO.getSpecificConditionsDTO()));
+            try {
+                specificConditions.addAll(XmlDtoToObjectMapper.mapSpecificConditions(itfTestFileDTO.getSpecificConditionsDTO()));
+            } catch(NullPointerException ignored) {
+                //No specific conditions in the file, allowed behavior
+            }
             
             //Read the activities
             ActivityGroup group = XmlDtoToObjectMapper.mapActivityGroup(itfTestFileDTO.getActivityGroup());
