@@ -19,7 +19,6 @@ public interface DriverInterface {
     ArrayList<SpecificCondition> getSpecificConditions();
     ArrayList<SpecificCondition> addSpecificCondition(List<SpecificCondition> specificCondition) throws SpecificConditionException;
     ArrayList<SpecificCondition> removeSpecificCondition(List<SpecificCondition> specificCondition) throws SpecificConditionException;
-    ArrayList<SpecificCondition> changeSpecificCondition(SpecificCondition specificCondition);
     void moveBlock(int fromIndex, int toIndex);
     void addDriverServiceListener(DriverServiceListener listener);
     void clear();

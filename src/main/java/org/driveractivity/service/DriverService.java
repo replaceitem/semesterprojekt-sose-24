@@ -168,13 +168,6 @@ public class DriverService implements DriverInterface {
         }
         return null;
     }
-    @Override
-    public ArrayList<SpecificCondition> changeSpecificCondition(SpecificCondition specificCondition) {
-        SpecificCondition condition = specificConditions.get(specificConditions.indexOf(specificCondition));
-        condition.setTimestamp(specificCondition.getTimestamp());
-        condition.setSpecificConditionType(specificCondition.getSpecificConditionType());
-        return specificConditions;
-    }
 
     @Override
     public void moveBlock(int fromIndex, int toIndex) {
