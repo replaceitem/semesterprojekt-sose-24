@@ -6,6 +6,7 @@ import org.driveractivity.exception.FileImportException;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface DriverInterface {
 
@@ -15,8 +16,10 @@ public interface DriverInterface {
     void removeBlock(int index);
     void changeBlock(int index, Activity activity);
     ArrayList<SpecificCondition> getSpecificConditions();
-    void addSpecificCondition(SpecificCondition specificCondition);
-    void removeSpecificCondition(SpecificCondition specificCondition);
+    ArrayList<SpecificCondition> addSpecificCondition(List<SpecificCondition> specificCondition);
+    ArrayList<SpecificCondition> removeSpecificCondition(List<SpecificCondition> specificCondition);
+    ArrayList<SpecificCondition> changeSpecificCondition(SpecificCondition specificCondition);
+    void moveBlock(int fromIndex, int toIndex);
     void addDriverServiceListener(DriverServiceListener listener);
     void clear();
     void exportToXML(File file);

@@ -12,6 +12,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -49,7 +50,7 @@ public class DriverServiceImportExportTest {
                 .cardStatus("inserted")
                 .build();
         driverService.addBlock(activity);
-        driverService.addSpecificCondition(SpecificCondition.builder().timestamp(LocalDateTime.now()).specificConditionType(SpecificConditionType.BEGIN_FT).build());
+        driverService.addSpecificCondition(List.of(SpecificCondition.builder().timestamp(LocalDateTime.now()).specificConditionType(SpecificConditionType.BEGIN_FT).build()));
 
         File file = new File("output.xml");
         driverService.exportToXML(file);
