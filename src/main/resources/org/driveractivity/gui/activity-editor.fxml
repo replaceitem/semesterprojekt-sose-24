@@ -5,12 +5,12 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<VBox alignment="CENTER" fillWidth="false" prefHeight="200.0" prefWidth="381.0" spacing="10.0" style="-fx-background-color: White; -fx-font-size: 14px" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.driveractivity.gui.ActivityEditor">
+<VBox alignment="CENTER" fillWidth="false" prefHeight="564.0" prefWidth="381.0" spacing="10.0" style="-fx-background-color: White; -fx-font-size: 14px" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.driveractivity.gui.ActivityEditor">
     <GridPane snapToPixel="false">
         <columnConstraints>
-            <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" maxWidth="-Infinity" minWidth="30.0" prefWidth="100.0" />
-            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="145.0" minWidth="30.0" prefWidth="111.0" />
-            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="145.0" minWidth="30.0" prefWidth="111.0" />
+            <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" maxWidth="119.0" minWidth="30.0" prefWidth="108.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="145.0" minWidth="0.0" prefWidth="0.0" />
+            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="145.0" minWidth="30.0" prefWidth="85.0" />
             <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="145.0" minWidth="6.0" prefWidth="6.0" />
             <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="203.0" minWidth="30.0" prefWidth="174.0" />
         </columnConstraints>
@@ -19,13 +19,13 @@
             <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="70.0" valignment="CENTER" vgrow="SOMETIMES" />
             <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
         </rowConstraints>
-        <Label contentDisplay="CENTER" text="Start Zeit" />
-        <Label contentDisplay="CENTER" text="End Zeit" GridPane.rowIndex="1" />
-        <Label contentDisplay="CENTER" text="Dauer" GridPane.rowIndex="2" />
-        
+        <Label contentDisplay="CENTER" prefHeight="20.0" prefWidth="72.0" text="Start Time" />
+        <Label contentDisplay="CENTER" text="End Time" GridPane.rowIndex="1" />
+        <Label contentDisplay="CENTER" text="Duration" GridPane.rowIndex="2" />
+
         <Label fx:id="startDateLabel" contentDisplay="RIGHT" GridPane.columnIndex="1" />
         <Label fx:id="endDateLabel" contentDisplay="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-        
+
         <Spinner fx:id="cbHourStart" disable="true" editable="true" prefHeight="0.0" prefWidth="98.0" GridPane.columnIndex="2">
             <valueFactory><SpinnerValueFactory.IntegerSpinnerValueFactory max="23" min="0" /></valueFactory>
             <GridPane.margin>
