@@ -15,11 +15,16 @@
 <top>
     <MenuBar>
         <Menu text="File">
-            <MenuItem fx:id="openMenu" text="Open" onAction="#openFile">
+            <MenuItem text="Open" onAction="#openFile">
                 <graphic><FontIcon iconLiteral="mdi2f-folder-open" iconSize="16"/></graphic>
             </MenuItem>
-            <MenuItem fx:id="saveMenu" text="Save" onAction="#saveFile">
+            <MenuItem text="Save" onAction="#saveFile">
                 <graphic><FontIcon iconLiteral="mdi2c-content-save" iconSize="16"/></graphic>
+            </MenuItem>
+        </Menu>
+        <Menu text="Help">
+            <MenuItem text="About" onAction="#openAbout">
+                <graphic><FontIcon iconLiteral="mdi2i-information-outline" iconSize="16"/></graphic>
             </MenuItem>
         </Menu>
     </MenuBar>

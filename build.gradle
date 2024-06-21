@@ -61,6 +61,17 @@ test {
     useJUnitPlatform()
 }
 
+processResources {
+    def aboutExpansions = [
+            "version": project.version,
+            "build_timestamp": new Date().format("yyyy-MM-dd HH:mm:ss")
+    ]
+    inputs.properties(aboutExpansions)
+    filesMatching('org/driveractivity/gui/about.fxml') {
+        expand(aboutExpansions)
+    }
+}
+
 jlink {
     imageZip = project.file("${buildDir}/distributions/app-${javafx.platform.classifier}.zip")
     options = ['--strip-debug', '--compress', '2', '--no-header-files', '--no-man-pages']

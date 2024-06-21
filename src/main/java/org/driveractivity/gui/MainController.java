@@ -44,9 +44,6 @@ public class MainController implements Initializable {
     public VBox specificConditions;
 
     @FXML
-    private MenuItem openMenu;
-
-    @FXML
     private ToggleButton dayToggle;
     @FXML
     private ToggleButton weekToggle;
@@ -167,6 +164,23 @@ public class MainController implements Initializable {
             } catch (FileExportException e) {
                 AlertedExceptionDialog.show(e);
             }
+        }
+    }
+
+    @FXML
+    public void openAbout(ActionEvent actionEvent) {
+        try {
+            FXMLLoader loader = new FXMLLoader(ActivityEditor.class.getResource("about.fxml"));
+            Parent root = loader.load();
+            Stage aboutStage = new Stage(StageStyle.DECORATED);
+            aboutStage.initModality(Modality.APPLICATION_MODAL);
+            aboutStage.setResizable(false);
+            aboutStage.getIcons().addAll(Icons.APP_ICONS);
+            aboutStage.setScene(new Scene(root, 500, 400));
+            aboutStage.setTitle("About");
+            aboutStage.showAndWait();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
         }
     }
 
