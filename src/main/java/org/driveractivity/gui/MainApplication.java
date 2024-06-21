@@ -38,6 +38,7 @@ public class MainApplication extends javafx.application.Application {
         controller.setStage(stage);
 
         stage.setTitle("Driver Activity Visualization");
+        stage.getIcons().addAll(Icons.APP_ICONS);
         stage.setScene(scene);
         stage.show();
     }

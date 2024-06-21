@@ -103,8 +103,10 @@ public class MainController implements Initializable {
             ActivityEditor controller = loader.getController();
             controller.initialize(this, insertionIndex, currentActivityType, editActivity);
             Stage dialogStage = new Stage();
-            dialogStage.initModality(Modality.WINDOW_MODAL);
-            dialogStage.initStyle(StageStyle.UTILITY);
+            dialogStage.initModality(Modality.APPLICATION_MODAL);
+            dialogStage.initStyle(StageStyle.DECORATED);
+            dialogStage.setResizable(false);
+            dialogStage.getIcons().addAll(Icons.APP_ICONS);
             dialogStage.setScene(new Scene(root, 380, 400));
             dialogStage.setTitle("Setting up " + currentActivityType + "...");
             dialogStage.toFront();

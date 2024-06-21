@@ -252,6 +252,9 @@ public class ActivityEditor {
         Dialog<LocalDate> dialog = new Dialog<>();
         dialog.setTitle("DateTime Picker");
         dialog.setHeaderText("Select Date and Time");
+        if(dialog.getDialogPane().getScene().getWindow() instanceof Stage stage) {
+            stage.getIcons().addAll(Icons.APP_ICONS);
+        }
 
         ButtonType okButtonType = new ButtonType("OK", ButtonBar.ButtonData.OK_DONE);
         dialog.getDialogPane().getButtonTypes().addAll(okButtonType, ButtonType.CANCEL);
