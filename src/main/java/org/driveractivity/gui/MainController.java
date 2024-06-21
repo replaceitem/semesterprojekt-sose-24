@@ -277,7 +277,7 @@ public class MainController implements Initializable {
                 .build();
 
         try {
-            driverInterface.addSpecificCondition(List.of(beginCondition, endCondition)); // TODO also submit end
+            driverInterface.addSpecificCondition(List.of(beginCondition, endCondition));
         } catch (SpecificConditionException e) {
             AlertedExceptionDialog.show(e);
         }
