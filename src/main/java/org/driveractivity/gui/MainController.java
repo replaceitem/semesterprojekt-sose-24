@@ -78,7 +78,7 @@ public class MainController implements Initializable {
     @FXML
     private void addActivity(ActionEvent event) {
         Button button = (Button) event.getSource();
-        ActivityType type = null;
+        ActivityType type;
         if (button == restButton) type = REST;
         else if (button == driveButton) type = DRIVING;
         else if (button == workButton) type = WORK;
@@ -89,7 +89,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void clearActivities(ActionEvent event) {
+    private void clearActivities() {
         driverInterface.clear();
     }
 
@@ -114,7 +114,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void openFile(ActionEvent event) {
+    private void openFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Open XML-File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
@@ -142,8 +142,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void saveFile(ActionEvent event) {
-
+    private void saveFile() {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save XML-File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
@@ -168,7 +167,7 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    public void openAbout(ActionEvent actionEvent) {
+    public void openAbout() {
         try {
             FXMLLoader loader = new FXMLLoader(ActivityEditor.class.getResource("about.fxml"));
             Parent root = loader.load();
@@ -245,11 +244,11 @@ public class MainController implements Initializable {
         toggleButton.setText(selected ? "ON" : "OFF");
     }
 
-    public void onMoveForward(ActionEvent actionEvent) {
+    public void onMoveForward() {
         moveActivity(1);
     }
 
-    public void onMoveBackward(ActionEvent actionEvent) {
+    public void onMoveBackward() {
         moveActivity(-1);
     }
     
@@ -270,15 +269,15 @@ public class MainController implements Initializable {
         specificConditions.getChildren().setAll(driverInterface.getSpecificConditions().stream().map(specificCondition -> new SpecificConditionEntry(this, specificCondition)).toList());
     }
 
-    public void onAddBeginFerryTrain(ActionEvent actionEvent) {
+    public void onAddBeginFerryTrain() {
         addFerryTrain(SpecificConditionType.BEGIN_FT);
     }
 
-    public void onAddEndFerryTrain(ActionEvent actionEvent) {
+    public void onAddEndFerryTrain() {
         addFerryTrain(SpecificConditionType.END_FT);
     }
 
-    public void onAddOutOfScope(ActionEvent actionEvent) {
+    public void onAddOutOfScope() {
         Optional<LocalDateTime> beginOutOfScopeTime = openDateTimePicker("beginOutOfScope time", "Choose a time for beginOutOfScope specific condition");
         if(beginOutOfScopeTime.isEmpty()) return;
         Optional<LocalDateTime> endOutOfScopeTime = openDateTimePicker("endOutOfScopeTime time", "Choose a time for endOutOfScopeTime specific condition");

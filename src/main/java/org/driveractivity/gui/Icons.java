@@ -22,7 +22,6 @@ public class Icons {
     public static final Ikon INSERT_BEFORE = MaterialDesignA.ARROW_EXPAND_LEFT;
     public static final Ikon INSERT_AFTER = MaterialDesignA.ARROW_EXPAND_RIGHT;
 
-    public static final Ikon CARD_INSERTED = MaterialDesignC.CREDIT_CARD;
     public static final Ikon CARD_NOT_INSERTED = MaterialDesignC.CREDIT_CARD_OFF;
     
     public static final Ikon FERRY_TRAIN = MaterialDesignF.FERRY;
@@ -33,7 +32,6 @@ public class Icons {
     public static final Image APP_ICON_32 = loadResourceImage("icons/icon32.png");
     public static final Image APP_ICON_64 = loadResourceImage("icons/icon64.png");
     public static final Image APP_ICON_128 = loadResourceImage("icons/icon128.png");
-    public static final Image APP_ICON_512 = loadResourceImage("icons/icon512.png");
     
     public static final Image[] APP_ICONS = {APP_ICON_16, APP_ICON_32, APP_ICON_64, APP_ICON_128};
     

@@ -4,7 +4,6 @@ import javafx.animation.Interpolator;
 import javafx.animation.KeyFrame;
 import javafx.animation.KeyValue;
 import javafx.animation.Timeline;
-import javafx.application.*;
 import javafx.beans.binding.DoubleBinding;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.ObservableList;
@@ -134,9 +133,8 @@ public class ActivityBlock extends StackPane {
     public ContextMenu getContextMenu() {
         if(contextMenu == null) {
             MenuItem editItem = new MenuItem("Edit", Icons.create(Icons.EDIT, 16));
-            editItem.setOnAction(actionEvent -> {
-                activityPane.getMainController().openActivityEditorStage(this.activity.getType(), activityIndex, this.activity);
-            });
+            editItem.setOnAction(actionEvent -> 
+                    activityPane.getMainController().openActivityEditorStage(this.activity.getType(), activityIndex, this.activity));
 
             MenuItem deleteItem = new MenuItem("Delete", Icons.create(Icons.DELETE, 16));
             deleteItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));

@@ -10,7 +10,6 @@ import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.driveractivity.entity.ActivityType.*;
-import static org.driveractivity.entity.ActivityType.DRIVING;
 
 public class DriverServiceChangeTest {
 

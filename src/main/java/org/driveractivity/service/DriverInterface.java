@@ -17,7 +17,7 @@ public interface DriverInterface {
     void changeBlock(int index, Activity activity);
     ArrayList<SpecificCondition> getSpecificConditions();
     ArrayList<SpecificCondition> addSpecificCondition(List<SpecificCondition> specificCondition) throws SpecificConditionException;
-    ArrayList<SpecificCondition> removeSpecificCondition(SpecificCondition specificCondition) throws SpecificConditionException;
+    ArrayList<SpecificCondition> removeSpecificCondition(SpecificCondition specificCondition);
     void addDriverServiceListener(DriverServiceListener listener);
     void clear();
     void exportToXML(File file) throws FileExportException;

@@ -6,13 +6,10 @@ import javafx.scene.layout.*;
 import javafx.scene.paint.*;
 import javafx.scene.text.*;
 import org.driveractivity.entity.*;
-import org.driveractivity.exception.*;
-import org.driveractivity.service.*;
 import org.kordamp.ikonli.*;
 import org.kordamp.ikonli.javafx.*;
 
 import java.time.format.*;
-import java.util.*;
 
 public class SpecificConditionEntry extends HBox {
     
@@ -27,11 +24,7 @@ public class SpecificConditionEntry extends HBox {
         deleteButton.setGraphic(deleteIcon);
         deleteButton.setPadding(new Insets(4));
         deleteButton.setOnAction(actionEvent -> {
-            try {
-                mainController.driverInterface.removeSpecificCondition(specificCondition);
-            } catch (SpecificConditionException e) {
-                AlertedExceptionDialog.show(e);
-            }
+            mainController.driverInterface.removeSpecificCondition(specificCondition);
             mainController.loadSpecificConditions();
         });
 
