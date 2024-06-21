@@ -9,12 +9,17 @@ import org.driveractivity.DTO.ITFTestFileDTO;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityGroup;
 import org.driveractivity.entity.SpecificCondition;
+import org.driveractivity.entity.SpecificConditionType;
 import org.driveractivity.exception.FileImportException;
+import org.driveractivity.exception.SpecificConditionException;
 import org.driveractivity.mapper.ObjectToXmlDtoMapper;
 import org.driveractivity.mapper.XmlDtoToObjectMapper;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.IntStream;
 
 @Getter
 public class DriverService implements DriverInterface {
@@ -101,13 +106,71 @@ public class DriverService implements DriverInterface {
     }
 
     @Override
-    public void addSpecificCondition(SpecificCondition specificCondition) {
-        specificConditions.add(specificCondition);
+    public ArrayList<SpecificCondition> addSpecificCondition(List<SpecificCondition> inputConditions) throws SpecificConditionException {
+
+        SpecificCondition beginCondition = inputConditions.stream().filter(s -> s.getSpecificConditionType() == SpecificConditionType.BEGIN_FT || s.getSpecificConditionType() == SpecificConditionType.BEGIN_OUT_OF_SCOPE).findFirst().orElse(null);
+        SpecificCondition endCondition = inputConditions.stream().filter(s -> s.getSpecificConditionType() == SpecificConditionType.END_FT || s.getSpecificConditionType() == SpecificConditionType.END_OUT_OF_SCOPE).findFirst().orElse(null);
+        if(beginCondition != null && endCondition != null) {
+            if(beginCondition.getTimestamp().isAfter(endCondition.getTimestamp())) {
+                throw new SpecificConditionException("Specific Condition Exception","The BEGIN_FT or BEGIN_OUT_OF_SCOPE must take place before the END_FT or END_OUT_OF_SCOPE");
+            }
+        }
+
+        //if input contains OUT OF SCOPE, it must contain both
+        //also it should not be allowed to intersect with other out-of-scope conditions
+        if(inputConditions.stream().anyMatch(i -> i.getSpecificConditionType().getCondition() == SpecificConditionType.Condition.OUT_OF_SCOPE)) {
+            if(hasIncompleteScopeConditions(inputConditions)) {
+                throw new SpecificConditionException("Specific Condition Exception","If a BEGIN_OUT_OF_SCOPE is added, an END_OUT_OF_SCOPE must be added as well");
+            }
+        }
+        //if input contains BEGIN_FT, make sure that there is no BEGIN_FT without END_FT at all in the list
+        if(inputConditions.stream().anyMatch(s -> s.getSpecificConditionType() == SpecificConditionType.BEGIN_FT)) {
+            if(hasBeginningFTWithoutEnd()) {
+                throw new SpecificConditionException("Specific Condition Exception","If a BEGIN_FT is to be added, there may not be a further unclosed BEGIN_FT in the list at all");
+            }
+            //furthermore, the BEGIN_FT must be the last added element, time wise
+            SpecificCondition lastSpecificConditionBeforeNew = getLastFTSpecificCondition(inputConditions);
+            if(lastSpecificConditionBeforeNew != null && lastSpecificConditionBeforeNew.getTimestamp().isAfter(inputConditions.getFirst().getTimestamp())) {
+                throw new SpecificConditionException("Specific Condition Exception","If a BEGIN_FT without END_FT is added, it must be the last occurrence of an FT condition");
+            }
+        }
+        //if input is of type END_FT, make sure that there is a BEGIN_FT immediately before it
+        if(inputConditions.size() == 1 && inputConditions.getFirst().getSpecificConditionType() == SpecificConditionType.END_FT){
+            SpecificCondition lastSpecificConditionBeforeNew = getLastFTSpecificCondition(inputConditions);
+
+            if(lastSpecificConditionBeforeNew == null || lastSpecificConditionBeforeNew.getSpecificConditionType() != SpecificConditionType.BEGIN_FT) {
+                throw new SpecificConditionException("Specific Condition Exception","If an END_FT is added, a BEGIN_FT must be added before it");
+            }
+        }
+        specificConditions.addAll(inputConditions);
+
+        IntStream.range(0, activities.size()).forEach(i -> listeners.forEach(l -> l.onActivityUpdated(i)));
+        return specificConditions;
     }
 
+
     @Override
-    public void removeSpecificCondition(SpecificCondition specificCondition) {
-        specificConditions.remove(specificCondition);
+    public ArrayList<SpecificCondition> removeSpecificCondition(SpecificCondition inputCondition) throws SpecificConditionException {
+        ArrayList<SpecificCondition> toDelete = new ArrayList<>();
+        toDelete.add(inputCondition);
+        if(inputCondition.getSpecificConditionType().getCondition() == SpecificConditionType.Condition.OUT_OF_SCOPE) {
+            SpecificCondition nextEnd = findNextSpecificConditionOfType(SpecificConditionType.END_OUT_OF_SCOPE, inputCondition);
+            if(nextEnd != null) {
+                toDelete.add(nextEnd);
+            }
+        }
+        //if a beginning is to be removed, the corresponding end must be removed as well, if it exists.
+        //if it doesn't exist, we just remove the beginning
+        if(inputCondition.getSpecificConditionType() == SpecificConditionType.BEGIN_FT) {
+            SpecificCondition nextEnd = findNextSpecificConditionOfType(SpecificConditionType.END_FT, inputCondition);
+            if(nextEnd != null) {
+                toDelete.add(nextEnd);
+            }
+        }
+        specificConditions.removeAll(toDelete);
+
+        IntStream.range(0, activities.size()).forEach(i -> listeners.forEach(l -> l.onActivityUpdated(i)));
+        return specificConditions;
     }
 
     @Override
@@ -145,10 +208,11 @@ public class DriverService implements DriverInterface {
             ITFTestFileDTO itfTestFileDTO = (ITFTestFileDTO) unmarshaller.unmarshal(f);
 
             clear();
-            
+
             //Read the specific conditions
-            specificConditions.addAll(XmlDtoToObjectMapper.mapSpecificConditions(itfTestFileDTO.getSpecificConditionsDTO()));
-            
+            Optional.ofNullable(itfTestFileDTO.getSpecificConditionsDTO())
+                    .ifPresent(dto -> specificConditions.addAll(XmlDtoToObjectMapper.mapSpecificConditions(dto)));
+
             //Read the activities
             ActivityGroup group = XmlDtoToObjectMapper.mapActivityGroup(itfTestFileDTO.getActivityGroup());
             ArrayList<Activity> activities = XmlDtoToObjectMapper.mapDayToActivity(group.getDays());
@@ -173,11 +237,11 @@ public class DriverService implements DriverInterface {
         activities.add(index, activity);
         listeners.forEach(l -> l.onActivityAdded(index, activity));
     }
+
     private void addActivityInternal(Activity activity) {
         activities.add(activity);
         listeners.forEach(l -> l.onActivityAdded(activities.indexOf(activity), activity));
     }
-
     private void removeActivityInternal(int index) {
         activities.remove(index);
         listeners.forEach(l -> l.onActivityRemoved(index));
@@ -187,6 +251,38 @@ public class DriverService implements DriverInterface {
         //This method is only used in case activities get loaded from xml
         this.activities.addAll(activities);
         listeners.forEach(l -> l.onAllActivitiesUpdated(this.activities));
+    }
+
+    private boolean hasIncompleteScopeConditions(List<SpecificCondition> inputConditions) {
+        return inputConditions.stream().filter(s -> s.getSpecificConditionType() == SpecificConditionType.BEGIN_OUT_OF_SCOPE).count() != inputConditions.stream().filter(s -> s.getSpecificConditionType() == SpecificConditionType.END_OUT_OF_SCOPE).count();
+    }
+
+    private boolean hasBeginningFTWithoutEnd() {
+        return specificConditions.stream().filter(s -> s.getSpecificConditionType() == SpecificConditionType.BEGIN_FT).count() > specificConditions.stream().filter(s -> s.getSpecificConditionType() == SpecificConditionType.END_FT).count();
+    }
+
+    private SpecificCondition findNextSpecificConditionOfType(SpecificConditionType type, SpecificCondition inputCondition) {
+        for(SpecificCondition specificCondition : specificConditions) {
+            if(specificCondition.getSpecificConditionType() == type && specificCondition.getTimestamp().isAfter(inputCondition.getTimestamp())) {
+                return specificCondition;
+            }
+        }
+        return null;
+    }
+
+    private SpecificCondition getLastFTSpecificCondition(List<SpecificCondition> specificCondition) {
+        SpecificCondition lastSpecificConditionBeforeNew = null;
+
+        for(SpecificCondition condition : specificConditions) {
+
+            if(specificCondition.getFirst().getTimestamp().isAfter(condition.getTimestamp()) && (condition.getSpecificConditionType().getCondition() == SpecificConditionType.Condition.FT)) {
+
+                if(lastSpecificConditionBeforeNew == null || condition.getTimestamp().isAfter(lastSpecificConditionBeforeNew.getTimestamp())) {
+                    lastSpecificConditionBeforeNew = condition;
+                }
+            }
+        }
+        return lastSpecificConditionBeforeNew;
     }
 
 

@@ -160,7 +160,15 @@ public class ActivityEditor {
                 LocalDateTime startDateTime = LocalDateTime.of(startDate, startTime);
                 // keep the same date when editing end time
                 LocalDateTime sameDateEndTime = LocalDateTime.of(previousEnd.toLocalDate(), endTime);
-                setDuration(Duration.between(startDateTime, sameDateEndTime));
+                Duration duration = Duration.between(startDateTime, sameDateEndTime);
+                if(duration.isNegative()) {
+                    LocalDateTime newEnd = startDateTime.plus(getDuration());
+                    previousEnd = newEnd;
+                    setEndime(newEnd.toLocalTime());
+                    endDateLabel.setText(newEnd.toLocalDate().format(DATE_FORMATTER));
+                } else {
+                    setDuration(duration);
+                }
             } finally {
                 isUpdating = false;
             }
@@ -241,7 +249,7 @@ public class ActivityEditor {
     }
     
     private void openDateTimePickerDialog() {
-        Dialog<LocalDateTime> dialog = new Dialog<>();
+        Dialog<LocalDate> dialog = new Dialog<>();
         dialog.setTitle("DateTime Picker");
         dialog.setHeaderText("Select Date and Time");
 
@@ -254,27 +262,14 @@ public class ActivityEditor {
 
         DatePicker datePicker = new DatePicker(LocalDate.now());
 
-        Spinner<Integer> hourSpinner = new Spinner<>();
-        hourSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 0));
-
-        Spinner<Integer> minuteSpinner = new Spinner<>();
-        minuteSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0));
-
         grid.add(new Label("Date:"), 0, 0);
         grid.add(datePicker, 1, 0);
 
         dialog.getDialogPane().setContent(grid);
 
-        dialog.setResultConverter(dialogButton -> {
-            if (dialogButton == okButtonType) {
-                LocalDate date = datePicker.getValue();
-                LocalTime time = LocalTime.of(hourSpinner.getValue(), minuteSpinner.getValue());
-                return LocalDateTime.of(date, time);
-            }
-            return null;
-        });
+        dialog.setResultConverter(dialogButton -> dialogButton == okButtonType ? datePicker.getValue() : null);
 
-        Optional<LocalDateTime> result = dialog.showAndWait();
-        result.ifPresent(dateTime -> startDate = LocalDate.from(dateTime));
+        Optional<LocalDate> result = dialog.showAndWait();
+        result.ifPresent(date -> startDate = date);
     }
 }

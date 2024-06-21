@@ -4,26 +4,25 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
-import javafx.scene.Parent;
-import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.MenuItem;
-import javafx.scene.control.ToggleButton;
+import javafx.scene.*;
+import javafx.scene.control.*;
+import javafx.scene.layout.*;
 import javafx.stage.FileChooser;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 import lombok.Setter;
-import org.driveractivity.entity.Activity;
-import org.driveractivity.entity.ActivityType;
-import org.driveractivity.exception.FileImportException;
+import org.driveractivity.entity.*;
+import org.driveractivity.exception.*;
 import org.driveractivity.service.DriverInterface;
 import org.driveractivity.service.DriverService;
 
 import java.io.File;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.net.URL;
-import java.util.ResourceBundle;
+import java.time.*;
+import java.util.*;
 
 import static org.driveractivity.entity.ActivityType.*;
 
@@ -32,7 +31,6 @@ public class MainController implements Initializable {
     public ActivityPane activityPane;
     @FXML
     public Button clearButton;
-
     @FXML
     private Button restButton;
     @FXML
@@ -43,7 +41,20 @@ public class MainController implements Initializable {
     private Button availableButton;
 
     @FXML
+    public VBox specificConditions;
+
+    @FXML
     private MenuItem openMenu;
+
+    @FXML
+    private ToggleButton dayToggle;
+    @FXML
+    private ToggleButton weekToggle;
+    @FXML
+    private ToggleButton cardToggle;
+    @FXML
+    private ToggleButton conditionToggle;
+
 
     public DriverInterface driverInterface;
     @Setter
@@ -54,6 +65,17 @@ public class MainController implements Initializable {
         activityPane.setMainController(this);
         driverInterface = DriverService.getInstance();
         activityPane.initialize(driverInterface);
+
+        dayToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderDayDividers")));
+        weekToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderWeekDividers")));
+        cardToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderCardStatus")));
+        conditionToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderSpecificConditions")));
+
+        updateToggleButton(dayToggle);
+        updateToggleButton(weekToggle);
+        updateToggleButton(cardToggle);
+        updateToggleButton(conditionToggle);
+
     }
 
     @FXML
@@ -98,15 +120,26 @@ public class MainController implements Initializable {
         fileChooser.setTitle("Open XML-File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Files", "*.*"));
-        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        fileChooser.setInitialDirectory(new File(MainApplication.appProperties.getProperty("openFilePath")));
 
         File file = fileChooser.showOpenDialog(stage);
 
-        try {
-            driverInterface.importFrom(file);
-        } catch (FileImportException e) {
-            AlertedExceptionDialog.show(e);
+        if (file != null) {
+            try{
+                MainApplication.appProperties.setProperty("openFilePath", file.getParentFile().getAbsolutePath());
+                MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New OpenFile Path");
+            }catch (IOException e){
+                e.printStackTrace();
+            }
+
+            try {
+                driverInterface.importFrom(file);
+                loadSpecificConditions();
+            } catch (FileImportException e) {
+                AlertedExceptionDialog.show(e);
+            }
         }
+
     }
 
     @FXML
@@ -115,11 +148,20 @@ public class MainController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save XML-File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
-        fileChooser.setInitialDirectory(new File(System.getProperty("user.home")));
+        fileChooser.setInitialDirectory(new File(MainApplication.appProperties.getProperty("saveFilePath")));
 
         File file = fileChooser.showSaveDialog(stage);
 
-        driverInterface.exportToXML(file);
+        if (file != null) {
+            try {
+                MainApplication.appProperties.setProperty("saveFilePath", file.getParentFile().getAbsolutePath());
+                MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New SaveFile Path");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+            driverInterface.exportToXML(file);
+        }
     }
 
     @FXML
@@ -127,6 +169,13 @@ public class MainController implements Initializable {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
         activityPane.setRenderDayDividers(toggleButton.isSelected());
         updateToggleButton(toggleButton);
+
+        try{
+            MainApplication.appProperties.setProperty("renderDayDividers", String.valueOf(toggleButton.isSelected()));
+            MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New SaveFile Path");
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -134,6 +183,13 @@ public class MainController implements Initializable {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
         activityPane.setRenderWeekDividers(toggleButton.isSelected());
         updateToggleButton(toggleButton);
+
+        try{
+            MainApplication.appProperties.setProperty("renderWeekDividers", String.valueOf(toggleButton.isSelected()));
+            MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New SaveFile Path");
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -141,6 +197,13 @@ public class MainController implements Initializable {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
         activityPane.setRenderCardStatus(toggleButton.isSelected());
         updateToggleButton(toggleButton);
+
+        try{
+            MainApplication.appProperties.setProperty("renderCardStatus", String.valueOf(toggleButton.isSelected()));
+            MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New SaveFile Path");
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     @FXML
@@ -148,6 +211,13 @@ public class MainController implements Initializable {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
         activityPane.setRenderSpecificConditions(toggleButton.isSelected());
         updateToggleButton(toggleButton);
+
+        try{
+            MainApplication.appProperties.setProperty("renderSpecificConditions", String.valueOf(toggleButton.isSelected()));
+            MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New SaveFile Path");
+        }catch(IOException e){
+            e.printStackTrace();
+        }
     }
 
     private void updateToggleButton(ToggleButton toggleButton) {
@@ -174,5 +244,93 @@ public class MainController implements Initializable {
             driverInterface.addBlock(newIndex, activity);
             activityPane.setSelectedBlock(newIndex);
         });
+    }
+    
+    public void loadSpecificConditions() {
+        specificConditions.getChildren().setAll(driverInterface.getSpecificConditions().stream().map(specificCondition -> new SpecificConditionEntry(this, specificCondition)).toList());
+    }
+
+    public void onAddBeginFerryTrain(ActionEvent actionEvent) {
+        addFerryTrain(SpecificConditionType.BEGIN_FT);
+    }
+
+    public void onAddEndFerryTrain(ActionEvent actionEvent) {
+        addFerryTrain(SpecificConditionType.END_FT);
+    }
+
+    public void onAddOutOfScope(ActionEvent actionEvent) {
+        Optional<LocalDateTime> beginOutOfScopeTime = openDateTimePicker("beginOutOfScope time", "Choose a time for beginOutOfScope specific condition");
+        if(beginOutOfScopeTime.isEmpty()) return;
+        Optional<LocalDateTime> endOutOfScopeTime = openDateTimePicker("endOutOfScopeTime time", "Choose a time for endOutOfScopeTime specific condition");
+        if(endOutOfScopeTime.isEmpty()) return;
+        SpecificCondition beginCondition = SpecificCondition.builder()
+                .timestamp(beginOutOfScopeTime.get())
+                .specificConditionType(SpecificConditionType.BEGIN_OUT_OF_SCOPE)
+                .build();
+        SpecificCondition endCondition = SpecificCondition.builder()
+                .timestamp(endOutOfScopeTime.get())
+                .specificConditionType(SpecificConditionType.END_OUT_OF_SCOPE)
+                .build();
+
+        try {
+            driverInterface.addSpecificCondition(List.of(beginCondition, endCondition)); // TODO also submit end
+        } catch (SpecificConditionException e) {
+            AlertedExceptionDialog.showSilently(e);
+        }
+        loadSpecificConditions();
+    }
+    
+    public void addFerryTrain(SpecificConditionType specificConditionType) {
+        String name = specificConditionType.mapNameToString();
+        Optional<LocalDateTime> ferryTrainStartTime = openDateTimePicker(name + " time", "Choose a time for " + name + " specific condition");
+        if(ferryTrainStartTime.isEmpty()) return;
+        SpecificCondition specificCondition = SpecificCondition.builder()
+                .timestamp(ferryTrainStartTime.get())
+                .specificConditionType(specificConditionType)
+                .build();
+        try {
+            driverInterface.addSpecificCondition(List.of(specificCondition));
+        } catch (SpecificConditionException e) {
+            AlertedExceptionDialog.showSilently(e);
+        }
+        loadSpecificConditions();
+    }
+    
+    
+    
+    public Optional<LocalDateTime> openDateTimePicker(String title, String header) {
+        Dialog<LocalDateTime> dialog = new Dialog<>();
+        dialog.setTitle(title);
+        dialog.setHeaderText(header);
+
+        dialog.getDialogPane().getButtonTypes().addAll(ButtonType.OK, ButtonType.CANCEL);
+
+        VBox vbox = new VBox();
+
+        Spinner<Integer> hourSpinner = new Spinner<>();
+        hourSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 0));
+        Spinner<Integer> minuteSpinner = new Spinner<>();
+        minuteSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0));
+
+        DatePicker datePicker = new DatePicker(LocalDate.now());
+        
+        vbox.getChildren().addAll(
+                new Label("Time:"),
+                new HBox(hourSpinner, minuteSpinner),
+                new Label("Date:"),
+                datePicker
+        );
+
+        dialog.getDialogPane().setContent(vbox);
+
+        dialog.setResultConverter(dialogButton -> {
+            if (dialogButton == ButtonType.OK) {
+                LocalTime time = LocalTime.of(hourSpinner.getValue(), minuteSpinner.getValue());
+                return LocalDateTime.of(datePicker.getValue(), time);
+            }
+            return null;
+        });
+
+        return dialog.showAndWait();
     }
 }

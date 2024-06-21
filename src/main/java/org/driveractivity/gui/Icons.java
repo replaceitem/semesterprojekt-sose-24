@@ -2,10 +2,7 @@ package org.driveractivity.gui;
 
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignA;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignC;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignD;
-import org.kordamp.ikonli.materialdesign2.MaterialDesignS;
+import org.kordamp.ikonli.materialdesign2.*;
 
 public class Icons {
     
@@ -24,4 +21,7 @@ public class Icons {
 
     public static final Ikon CARD_INSERTED = MaterialDesignC.CREDIT_CARD;
     public static final Ikon CARD_NOT_INSERTED = MaterialDesignC.CREDIT_CARD_OFF;
+    
+    public static final Ikon FERRY_TRAIN = MaterialDesignF.FERRY;
+    public static final Ikon OUT_OF_SCOPE = MaterialDesignB.BORDER_NONE_VARIANT;
 }

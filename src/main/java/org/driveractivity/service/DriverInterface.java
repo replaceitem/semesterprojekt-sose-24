@@ -3,9 +3,11 @@ package org.driveractivity.service;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.SpecificCondition;
 import org.driveractivity.exception.FileImportException;
+import org.driveractivity.exception.SpecificConditionException;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 public interface DriverInterface {
 
@@ -15,8 +17,8 @@ public interface DriverInterface {
     void removeBlock(int index);
     void changeBlock(int index, Activity activity);
     ArrayList<SpecificCondition> getSpecificConditions();
-    void addSpecificCondition(SpecificCondition specificCondition);
-    void removeSpecificCondition(SpecificCondition specificCondition);
+    ArrayList<SpecificCondition> addSpecificCondition(List<SpecificCondition> specificCondition) throws SpecificConditionException;
+    ArrayList<SpecificCondition> removeSpecificCondition(SpecificCondition specificCondition) throws SpecificConditionException;
     void addDriverServiceListener(DriverServiceListener listener);
     void clear();
     void exportToXML(File file);

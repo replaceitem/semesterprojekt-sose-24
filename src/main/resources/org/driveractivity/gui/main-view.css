@@ -77,3 +77,11 @@
 .sidebar-section-heading {
     -fx-font-weight: bold;
 }
+
+SpecificConditionEntry {
+    -fx-background-color: #D7D7D7;
+}
+
+SpecificConditionEntry:hover {
+    -fx-background-color: #CCF;
+}
