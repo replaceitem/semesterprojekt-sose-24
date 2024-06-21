@@ -1,13 +1,13 @@
 package org.driveractivity.exception;
 
-import lombok.Getter;
-
-@Getter
-public class AlertedException extends Exception {
-    private final String title;
-
-    public AlertedException(String title, String message) {
+public abstract class AlertedException extends Exception {
+    public AlertedException(String message) {
         super(message);
-        this.title = title;
     }
+
+    public AlertedException(String message, Throwable cause) {
+        super(message, cause);
+    }
+    
+    public abstract String getTitle();
 }
