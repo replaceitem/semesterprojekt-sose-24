@@ -107,6 +107,15 @@ public class DriverService implements DriverInterface {
 
     @Override
     public ArrayList<SpecificCondition> addSpecificCondition(List<SpecificCondition> inputConditions) throws SpecificConditionException {
+
+        SpecificCondition beginCondition = inputConditions.stream().filter(s -> s.getSpecificConditionType() == SpecificConditionType.BEGIN_FT || s.getSpecificConditionType() == SpecificConditionType.BEGIN_OUT_OF_SCOPE).findFirst().orElse(null);
+        SpecificCondition endCondition = inputConditions.stream().filter(s -> s.getSpecificConditionType() == SpecificConditionType.END_FT || s.getSpecificConditionType() == SpecificConditionType.END_OUT_OF_SCOPE).findFirst().orElse(null);
+        if(beginCondition != null && endCondition != null) {
+            if(beginCondition.getTimestamp().isAfter(endCondition.getTimestamp())) {
+                throw new SpecificConditionException("Specific Condition Exception","The BEGIN_FT or BEGIN_OUT_OF_SCOPE must take place before the END_FT or END_OUT_OF_SCOPE");
+            }
+        }
+
         //if input contains OUT OF SCOPE, it must contain both
         //also it should not be allowed to intersect with other out-of-scope conditions
         if(inputConditions.stream().anyMatch(i -> i.getSpecificConditionType().getCondition() == SpecificConditionType.Condition.OUT_OF_SCOPE)) {
