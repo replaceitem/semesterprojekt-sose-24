@@ -71,7 +71,7 @@ public class ActivityEditor {
     private LocalDate startDate;
     private LocalDateTime previousEnd;
     
-    public void initialize(MainController mainController, int insertionIndex, ActivityType activityType, Activity editActivity) {
+    public boolean initialize(MainController mainController, int insertionIndex, ActivityType activityType, Activity editActivity) {
         this.mainController = mainController;
         this.activityIndex = insertionIndex;
         this.inserting = editActivity == null;
@@ -97,9 +97,7 @@ public class ActivityEditor {
             if (blocks.isEmpty() || insertionIndex == 0) {
                 openDateTimePickerDialog();
                 if (startDate == null) {
-                    Stage stage = (Stage) processButton.getScene().getWindow();
-                    stage.close();
-                    return;
+                    return false;
                 }
                 startTime = LocalTime.MIDNIGHT;
                 cbHourStart.setDisable(false);
@@ -140,6 +138,8 @@ public class ActivityEditor {
 
         cbHourEnd.valueProperty().addListener((observable, oldValue, newValue) -> onEndTimeChanged());
         cbMinuteEnd.valueProperty().addListener((observable, oldValue, newValue) -> onEndTimeChanged());
+        
+        return true;
     }
 
     // prevent recursive updates, which can happen because the two spinners are set after each other,

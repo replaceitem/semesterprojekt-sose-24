@@ -98,7 +98,8 @@ public class MainController implements Initializable {
             FXMLLoader loader = new FXMLLoader(ActivityEditor.class.getResource("activity-editor.fxml"));
             Parent root = loader.load();
             ActivityEditor controller = loader.getController();
-            controller.initialize(this, insertionIndex, currentActivityType, editActivity);
+            boolean success = controller.initialize(this, insertionIndex, currentActivityType, editActivity);
+            if(!success) return;
             Stage dialogStage = new Stage();
             dialogStage.initModality(Modality.APPLICATION_MODAL);
             dialogStage.initStyle(StageStyle.DECORATED);
