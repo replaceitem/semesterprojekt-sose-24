@@ -245,7 +245,7 @@ public class DriverService implements DriverInterface {
     }
 
     private boolean hasIncompleteScopeConditions(List<SpecificCondition> inputConditions) {
-        return inputConditions.stream().noneMatch(s -> s.getSpecificConditionType() == SpecificConditionType.BEGIN_OUT_OF_SCOPE) || inputConditions.stream().anyMatch(s -> s.getSpecificConditionType() == SpecificConditionType.END_OUT_OF_SCOPE);
+        return inputConditions.stream().filter(s -> s.getSpecificConditionType() == SpecificConditionType.BEGIN_OUT_OF_SCOPE).count() != inputConditions.stream().filter(s -> s.getSpecificConditionType() == SpecificConditionType.END_OUT_OF_SCOPE).count();
     }
 
     private boolean hasBeginningFTWithoutEnd() {
