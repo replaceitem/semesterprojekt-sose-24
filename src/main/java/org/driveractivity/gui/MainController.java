@@ -160,7 +160,11 @@ public class MainController implements Initializable {
                 e.printStackTrace();
             }
 
-            driverInterface.exportToXML(file);
+            try {
+                driverInterface.exportToXML(file);
+            } catch (FileExportException e) {
+                AlertedExceptionDialog.show(e);
+            }
         }
     }
 
@@ -275,7 +279,7 @@ public class MainController implements Initializable {
         try {
             driverInterface.addSpecificCondition(List.of(beginCondition, endCondition)); // TODO also submit end
         } catch (SpecificConditionException e) {
-            AlertedExceptionDialog.showSilently(e);
+            AlertedExceptionDialog.show(e);
         }
         loadSpecificConditions();
     }
@@ -291,7 +295,7 @@ public class MainController implements Initializable {
         try {
             driverInterface.addSpecificCondition(List.of(specificCondition));
         } catch (SpecificConditionException e) {
-            AlertedExceptionDialog.showSilently(e);
+            AlertedExceptionDialog.show(e);
         }
         loadSpecificConditions();
     }

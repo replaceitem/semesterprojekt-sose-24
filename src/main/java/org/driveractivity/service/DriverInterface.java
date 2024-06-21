@@ -2,8 +2,7 @@ package org.driveractivity.service;
 
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.SpecificCondition;
-import org.driveractivity.exception.FileImportException;
-import org.driveractivity.exception.SpecificConditionException;
+import org.driveractivity.exception.*;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -21,6 +20,6 @@ public interface DriverInterface {
     ArrayList<SpecificCondition> removeSpecificCondition(SpecificCondition specificCondition) throws SpecificConditionException;
     void addDriverServiceListener(DriverServiceListener listener);
     void clear();
-    void exportToXML(File file);
+    void exportToXML(File file) throws FileExportException;
     void importFrom(File f) throws FileImportException;
 }

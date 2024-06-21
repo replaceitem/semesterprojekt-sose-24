@@ -10,8 +10,7 @@ import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.ActivityGroup;
 import org.driveractivity.entity.SpecificCondition;
 import org.driveractivity.entity.SpecificConditionType;
-import org.driveractivity.exception.FileImportException;
-import org.driveractivity.exception.SpecificConditionException;
+import org.driveractivity.exception.*;
 import org.driveractivity.mapper.ObjectToXmlDtoMapper;
 import org.driveractivity.mapper.XmlDtoToObjectMapper;
 
@@ -187,15 +186,15 @@ public class DriverService implements DriverInterface {
     }
 
     @Override
-    public void exportToXML(File file) {
-        ITFTestFileDTO itfTestFileDTO = ObjectToXmlDtoMapper.mapToXmlDto(activities, specificConditions);
+    public void exportToXML(File file) throws FileExportException {
         try {
+            ITFTestFileDTO itfTestFileDTO = ObjectToXmlDtoMapper.mapToXmlDto(activities, specificConditions);
             JAXBContext jaxbContext = JAXBContext.newInstance(ITFTestFileDTO.class);
             Marshaller marshaller = jaxbContext.createMarshaller();
             marshaller.setProperty(Marshaller.JAXB_FORMATTED_OUTPUT, true);
             marshaller.marshal(itfTestFileDTO,file);
-        } catch (JAXBException e) {
-            throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new FileExportException("Error exporting to " + file.getName(), e);
         }
     }
 

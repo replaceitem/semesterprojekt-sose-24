@@ -3,8 +3,7 @@ package org.driveractivity.service;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.SpecificCondition;
 import org.driveractivity.entity.SpecificConditionType;
-import org.driveractivity.exception.FileImportException;
-import org.driveractivity.exception.SpecificConditionException;
+import org.driveractivity.exception.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -42,7 +41,7 @@ public class DriverServiceImportExportTest {
         driverService.exportToXML(new File("output.xml"));
     }
     @Test
-    public void specificConditionTest() throws FileImportException, SpecificConditionException {
+    public void specificConditionTest() throws FileImportException, SpecificConditionException, FileExportException {
         DriverService driverService = DriverService.getInstance();
         Activity activity = Activity.builder()
                 .type(WORK)
@@ -62,7 +61,7 @@ public class DriverServiceImportExportTest {
     }
 
     @Test
-    public void roundTripTest() throws FileImportException {
+    public void roundTripTest() throws FileImportException, FileExportException {
         //Setup of round trip: import from file, export to file, import from file again
         //Step 1: Import from file
         ClassLoader classLoader = getClass().getClassLoader();

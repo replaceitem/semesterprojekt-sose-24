@@ -3,6 +3,7 @@ package org.driveractivity.gui;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
+import org.driveractivity.exception.*;
 import org.driveractivity.service.DriverInterface;
 import org.driveractivity.service.DriverService;
 
@@ -44,7 +45,11 @@ public class MainApplication extends javafx.application.Application {
     @Override
     public void stop() {
         DriverInterface driverInterface = DriverService.getInstance();
-        driverInterface.exportToXML(new File(MainApplication.appProperties.getProperty("saveFilePath") + "/tmpFile.xml"));
+        try {
+            driverInterface.exportToXML(new File(MainApplication.appProperties.getProperty("saveFilePath") + "/tmpFile.xml"));
+        } catch (FileExportException e) {
+            AlertedExceptionDialog.show(e);
+        }
         System.exit(0);
     }
 

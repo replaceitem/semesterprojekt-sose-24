@@ -30,7 +30,7 @@ public class SpecificConditionEntry extends HBox {
             try {
                 mainController.driverInterface.removeSpecificCondition(specificCondition);
             } catch (SpecificConditionException e) {
-                AlertedExceptionDialog.showSilently(e);
+                AlertedExceptionDialog.show(e);
             }
             mainController.loadSpecificConditions();
         });
