@@ -25,7 +25,6 @@
 
         <Label fx:id="startDateLabel" contentDisplay="RIGHT" GridPane.columnIndex="1" />
         <Label fx:id="endDateLabel" contentDisplay="RIGHT" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-
         <Spinner fx:id="cbHourStart" disable="true" editable="true" prefHeight="0.0" prefWidth="98.0" GridPane.columnIndex="2">
             <valueFactory><SpinnerValueFactory.IntegerSpinnerValueFactory max="23" min="0" /></valueFactory>
             <GridPane.margin>
