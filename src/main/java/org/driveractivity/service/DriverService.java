@@ -112,7 +112,7 @@ public class DriverService implements DriverInterface {
         SpecificCondition endCondition = inputConditions.stream().filter(s -> s.getSpecificConditionType() == SpecificConditionType.END_FT || s.getSpecificConditionType() == SpecificConditionType.END_OUT_OF_SCOPE).findFirst().orElse(null);
         if(beginCondition != null && endCondition != null) {
             if(beginCondition.getTimestamp().isAfter(endCondition.getTimestamp())) {
-                throw new SpecificConditionException("Specific Condition Exception","The BEGIN_FT or BEGIN_OUT_OF_SCOPE must take place before the END_FT or END_OUT_OF_SCOPE");
+                throw new SpecificConditionException("The BEGIN_FT or BEGIN_OUT_OF_SCOPE must take place before the END_FT or END_OUT_OF_SCOPE");
             }
         }
 
@@ -120,18 +120,18 @@ public class DriverService implements DriverInterface {
         //also it should not be allowed to intersect with other out-of-scope conditions
         if(inputConditions.stream().anyMatch(i -> i.getSpecificConditionType().getCondition() == SpecificConditionType.Condition.OUT_OF_SCOPE)) {
             if(hasIncompleteScopeConditions(inputConditions)) {
-                throw new SpecificConditionException("Specific Condition Exception","If a BEGIN_OUT_OF_SCOPE is added, an END_OUT_OF_SCOPE must be added as well");
+                throw new SpecificConditionException("If a BEGIN_OUT_OF_SCOPE is added, an END_OUT_OF_SCOPE must be added as well");
             }
         }
         //if input contains BEGIN_FT, make sure that there is no BEGIN_FT without END_FT at all in the list
         if(inputConditions.stream().anyMatch(s -> s.getSpecificConditionType() == SpecificConditionType.BEGIN_FT)) {
             if(hasBeginningFTWithoutEnd()) {
-                throw new SpecificConditionException("Specific Condition Exception","If a BEGIN_FT is to be added, there may not be a further unclosed BEGIN_FT in the list at all");
+                throw new SpecificConditionException("If a BEGIN_FT is to be added, there may not be a further unclosed BEGIN_FT in the list at all");
             }
             //furthermore, the BEGIN_FT must be the last added element, time wise
             SpecificCondition lastSpecificConditionBeforeNew = getLastFTSpecificCondition(inputConditions);
             if(lastSpecificConditionBeforeNew != null && lastSpecificConditionBeforeNew.getTimestamp().isAfter(inputConditions.getFirst().getTimestamp())) {
-                throw new SpecificConditionException("Specific Condition Exception","If a BEGIN_FT without END_FT is added, it must be the last occurrence of an FT condition");
+                throw new SpecificConditionException("If a BEGIN_FT without END_FT is added, it must be the last occurrence of an FT condition");
             }
         }
         //if input is of type END_FT, make sure that there is a BEGIN_FT immediately before it
@@ -139,7 +139,7 @@ public class DriverService implements DriverInterface {
             SpecificCondition lastSpecificConditionBeforeNew = getLastFTSpecificCondition(inputConditions);
 
             if(lastSpecificConditionBeforeNew == null || lastSpecificConditionBeforeNew.getSpecificConditionType() != SpecificConditionType.BEGIN_FT) {
-                throw new SpecificConditionException("Specific Condition Exception","If an END_FT is added, a BEGIN_FT must be added before it");
+                throw new SpecificConditionException("If an END_FT is added, a BEGIN_FT must be added before it");
             }
         }
         specificConditions.addAll(inputConditions);

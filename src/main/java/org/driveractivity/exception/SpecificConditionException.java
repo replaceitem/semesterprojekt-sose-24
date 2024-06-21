@@ -1,7 +1,7 @@
 package org.driveractivity.exception;
 
 public class SpecificConditionException extends AlertedException {
-    public SpecificConditionException(String title, String message) {
-        super(title, message);
+    public SpecificConditionException(String message) {
+        super("Specific Condition Exception", message);
     }
 }
