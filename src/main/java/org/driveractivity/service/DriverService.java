@@ -150,7 +150,7 @@ public class DriverService implements DriverInterface {
 
 
     @Override
-    public ArrayList<SpecificCondition> removeSpecificCondition(SpecificCondition inputCondition) throws SpecificConditionException {
+    public ArrayList<SpecificCondition> removeSpecificCondition(SpecificCondition inputCondition) {
         ArrayList<SpecificCondition> toDelete = new ArrayList<>();
         toDelete.add(inputCondition);
         if(inputCondition.getSpecificConditionType().getCondition() == SpecificConditionType.Condition.OUT_OF_SCOPE) {
