@@ -1,8 +1,11 @@
 package org.driveractivity.gui;
 
+import javafx.scene.image.Image;
 import org.kordamp.ikonli.Ikon;
 import org.kordamp.ikonli.javafx.FontIcon;
 import org.kordamp.ikonli.materialdesign2.*;
+
+import java.io.*;
 
 public class Icons {
     
@@ -24,4 +27,22 @@ public class Icons {
     
     public static final Ikon FERRY_TRAIN = MaterialDesignF.FERRY;
     public static final Ikon OUT_OF_SCOPE = MaterialDesignB.BORDER_NONE_VARIANT;
+    
+    
+    public static final Image APP_ICON_16 = loadResourceImage("icons/icon16.png");
+    public static final Image APP_ICON_32 = loadResourceImage("icons/icon32.png");
+    public static final Image APP_ICON_64 = loadResourceImage("icons/icon64.png");
+    public static final Image APP_ICON_128 = loadResourceImage("icons/icon128.png");
+    public static final Image APP_ICON_512 = loadResourceImage("icons/icon512.png");
+    
+    public static final Image[] APP_ICONS = {APP_ICON_16, APP_ICON_32, APP_ICON_64, APP_ICON_128};
+    
+    private static Image loadResourceImage(String name) {
+        try(InputStream inputStream = Icons.class.getResourceAsStream(name)) {
+            if(inputStream == null) throw new IOException("Resource not found");
+            return new Image(inputStream);
+        } catch (IOException e) {
+            throw new RuntimeException("Error loading " + name, e);
+        }
+    }
 }
