@@ -89,13 +89,18 @@ public class ActivityEditor {
             initialDuration = editActivity.getDuration();
             activityTypeChoiceBox.setValue(editActivity.getType());
             cardInserted.setSelected(editActivity.getCardStatus().equals("inserted"));
+            if(insertionIndex == 0) {
+                cbHourStart.setDisable(false);
+                cbMinuteStart.setDisable(false);
+                openDateTimePickerDialog(startDate);
+            }
         } else {
             initialDuration = Duration.ZERO;
             activityTypeChoiceBox.setValue(activityType);
             cardInserted.setSelected(true);
             
             if (blocks.isEmpty() || insertionIndex == 0) {
-                openDateTimePickerDialog();
+                openDateTimePickerDialog(LocalDate.now());
                 if (startDate == null) {
                     return false;
                 }
@@ -248,7 +253,7 @@ public class ActivityEditor {
         stage.close();
     }
     
-    private void openDateTimePickerDialog() {
+    private void openDateTimePickerDialog(LocalDate initialDate) {
         Dialog<LocalDate> dialog = new Dialog<>();
         dialog.setTitle("DateTime Picker");
         dialog.setHeaderText("Select Date and Time");
@@ -263,7 +268,7 @@ public class ActivityEditor {
         grid.setHgap(10);
         grid.setVgap(10);
 
-        DatePicker datePicker = new DatePicker(LocalDate.now());
+        DatePicker datePicker = new DatePicker(initialDate);
 
         grid.add(new Label("Date:"), 0, 0);
         grid.add(datePicker, 1, 0);

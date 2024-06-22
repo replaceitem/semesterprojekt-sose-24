@@ -281,7 +281,7 @@ public class MainController implements Initializable {
     public void onAddOutOfScope() {
         Optional<LocalDateTime> beginOutOfScopeTime = openDateTimePicker("beginOutOfScope time", "Choose a time for beginOutOfScope specific condition");
         if(beginOutOfScopeTime.isEmpty()) return;
-        Optional<LocalDateTime> endOutOfScopeTime = openDateTimePicker("endOutOfScopeTime time", "Choose a time for endOutOfScopeTime specific condition");
+        Optional<LocalDateTime> endOutOfScopeTime = openDateTimePicker("endOutOfScope time", "Choose a time for endOutOfScope specific condition");
         if(endOutOfScopeTime.isEmpty()) return;
         SpecificCondition beginCondition = SpecificCondition.builder()
                 .timestamp(beginOutOfScopeTime.get())
