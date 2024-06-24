@@ -105,7 +105,7 @@ public class MainController implements Initializable {
             dialogStage.initStyle(StageStyle.DECORATED);
             dialogStage.setResizable(false);
             dialogStage.getIcons().addAll(Icons.APP_ICONS);
-            dialogStage.setScene(new Scene(root, 380, 400));
+            dialogStage.setScene(new Scene(root, 450, 400));
             dialogStage.setTitle("Setting up " + currentActivityType + "...");
             dialogStage.toFront();
             dialogStage.showAndWait();
