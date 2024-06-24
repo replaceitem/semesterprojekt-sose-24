@@ -52,6 +52,12 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
                 event.consume();
             }
         });
+        this.setOnKeyPressed(event -> {
+            if(event.getCode() == KeyCode.DELETE) {
+                event.consume();
+                getSelectedBlock().flatMap(this::getActivityBlock).ifPresent(ActivityBlock::onDeleteAction);
+            }
+        });
     }
     
     public void setRenderDayDividers(boolean value) {
@@ -105,9 +111,11 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
     
     public void setSelectedBlock(int index) {
         if(selectedBlock != null) selectedBlock.pseudoClassStateChanged(PSEUDO_CLASS_SELECTED, false);
-        if(index >= 0 && index < getChildren().size() && getChildren().get(index) instanceof ActivityBlock activityBlock) {
-            selectedBlock = activityBlock;
-            selectedBlock.pseudoClassStateChanged(PSEUDO_CLASS_SELECTED, true);
+        if(index >= 0 && index < getChildren().size()) {
+            getActivityBlock(index).ifPresent(activityBlock -> { 
+                selectedBlock = activityBlock;
+                selectedBlock.pseudoClassStateChanged(PSEUDO_CLASS_SELECTED, true);
+            });
         } else {
             selectedBlock = null;
         }
@@ -129,6 +137,10 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
             }
         }
     }
+    
+    private Optional<ActivityBlock> getActivityBlock(int index) {
+        return getChildren().get(index) instanceof ActivityBlock activityBlock ? Optional.of(activityBlock) : Optional.empty();
+    }
 
     @Override
     public void onAllActivitiesUpdated(List<Activity> activities) {
@@ -138,6 +150,7 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
     @Override
     public void onActivityRemoved(int index) {
         getChildren().remove(index);
+        if(getSelectedBlock().isPresent() && index == getSelectedBlock().get()) setSelectedBlock(-1);
         updateIndices();
         // update block affected by start line change, when first block is removed
         if(index == 0 && !driverData.getBlocks().isEmpty()) {
@@ -165,16 +178,12 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
 
     @Override
     public void onActivityUpdated(int index) {
-        if(getChildren().get(index) instanceof ActivityBlock activityBlock) {
-            activityBlock.update();
-        }
+        getActivityBlock(index).ifPresent(ActivityBlock::update);
     }
 
     @Override
     public void onActivitiesMerged(int index) {
         setSelectedBlock(-1);
-        if(getChildren().get(index) instanceof ActivityBlock activityBlock) {
-            activityBlock.showMergeEffect();
-        }
+        getActivityBlock(index).ifPresent(ActivityBlock::showMergeEffect);
     }
 }

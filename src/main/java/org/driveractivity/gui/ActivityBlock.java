@@ -139,9 +139,7 @@ public class ActivityBlock extends StackPane {
 
             MenuItem deleteItem = new MenuItem("Delete", Icons.create(Icons.DELETE, 16));
             deleteItem.setAccelerator(new KeyCodeCombination(KeyCode.DELETE));
-            deleteItem.setOnAction(actionEvent -> 
-                    activityPane.getDriverInterface().removeBlock(activityIndex)
-            );
+            deleteItem.setOnAction(event -> onDeleteAction());
 
             Menu insertBeforeItem = new Menu("Insert before", Icons.create(Icons.INSERT_BEFORE, 16));
             createInsertItems(insertBeforeItem, 0);
@@ -152,6 +150,10 @@ public class ActivityBlock extends StackPane {
             contextMenu = new ContextMenu(editItem, deleteItem, insertBeforeItem, insertAfterItem);
         }
         return contextMenu;
+    }
+    
+    public void onDeleteAction() {
+        activityPane.getDriverInterface().removeBlock(activityIndex);
     }
 
     private void createInsertItems(Menu menu, int shift) {
