@@ -4,7 +4,7 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.input.MouseButton;
+import javafx.scene.input.*;
 import javafx.scene.layout.FlowPane;
 import lombok.Getter;
 import lombok.Setter;
@@ -33,10 +33,23 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
 
     public ActivityPane() {
         this.setRowValignment(VPos.BOTTOM);
+        this.setOnMousePressed(event -> {
+            this.requestFocus();
+            event.consume();
+        });
         this.setOnMouseClicked(mouseEvent -> {
             if(mouseEvent.getButton() == MouseButton.PRIMARY) {
                 mouseEvent.consume();
                 setSelectedBlock(-1);
+            }
+        });
+        this.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if(event.getCode() == KeyCode.LEFT) {
+                mainController.onMoveBackward();
+                event.consume();
+            } else if(event.getCode() == KeyCode.RIGHT) {
+                mainController.onMoveForward();
+                event.consume();
             }
         });
     }
@@ -159,6 +172,7 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
 
     @Override
     public void onActivitiesMerged(int index) {
+        setSelectedBlock(-1);
         if(getChildren().get(index) instanceof ActivityBlock activityBlock) {
             activityBlock.showMergeEffect();
         }

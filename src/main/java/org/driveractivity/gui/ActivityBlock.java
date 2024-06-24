@@ -103,6 +103,7 @@ public class ActivityBlock extends StackPane {
         block.setOnContextMenuRequested(event -> getContextMenu().show(this, event.getScreenX(), event.getScreenY()));
         
         block.setOnMouseClicked(mouseEvent -> {
+            activityPane.requestFocus();
             if(mouseEvent.getButton() == MouseButton.PRIMARY) {
                 mouseEvent.consume();
                 activityPane.setSelectedBlock(this.activityIndex);

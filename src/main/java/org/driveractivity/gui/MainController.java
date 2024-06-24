@@ -262,7 +262,9 @@ public class MainController implements Initializable {
             Activity activity = driverInterface.getBlocks().get(index);
             driverInterface.removeBlock(index);
             driverInterface.addBlock(newIndex, activity);
-            activityPane.setSelectedBlock(newIndex);
+            // might be deselected by merge
+            newIndex = Math.min(newIndex, driverInterface.getBlocks().size()-1);
+            if(activityPane.getSelectedBlock().isPresent()) activityPane.setSelectedBlock(newIndex);
         });
     }
     
