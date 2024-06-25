@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.stream.Collectors;
 
-public class XmlDtoToObjectMapper { //name is WIP
+public class XmlDtoToObjectMapper {
     private static final DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd.MM.yyyy");
     public static ActivityGroup mapActivityGroup(ActivityGroupDTO dto) {
         return ActivityGroup.builder()
