@@ -6,19 +6,7 @@
 <?import javafx.scene.text.*?>
 
 <VBox alignment="CENTER" fillWidth="false" prefHeight="564.0" prefWidth="381.0" spacing="10.0" style="-fx-background-color: White; -fx-font-size: 14px" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="org.driveractivity.gui.ActivityEditor">
-    <GridPane snapToPixel="false">
-        <columnConstraints>
-            <ColumnConstraints fillWidth="false" halignment="CENTER" hgrow="SOMETIMES" maxWidth="119.0" minWidth="30.0" prefWidth="108.0" />
-            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="145.0" minWidth="0.0" prefWidth="0.0" />
-            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="145.0" minWidth="30.0" prefWidth="85.0" />
-            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="145.0" minWidth="6.0" prefWidth="6.0" />
-            <ColumnConstraints fillWidth="false" hgrow="SOMETIMES" maxWidth="203.0" minWidth="30.0" prefWidth="174.0" />
-        </columnConstraints>
-        <rowConstraints>
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="70.0" valignment="CENTER" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="70.0" valignment="CENTER" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="-Infinity" minHeight="10.0" prefHeight="70.0" vgrow="SOMETIMES" />
-        </rowConstraints>
+    <GridPane snapToPixel="false" hgap="4">
         <Label contentDisplay="CENTER" prefHeight="20.0" prefWidth="72.0" text="Start Time" />
         <Label contentDisplay="CENTER" text="End Time" GridPane.rowIndex="1" />
         <Label contentDisplay="CENTER" text="Duration" GridPane.rowIndex="2" />

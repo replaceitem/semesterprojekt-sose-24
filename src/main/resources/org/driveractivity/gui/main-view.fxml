@@ -15,10 +15,10 @@
 <top>
     <MenuBar>
         <Menu text="File">
-            <MenuItem text="Open" onAction="#openFile">
+            <MenuItem text="Open" onAction="#openFile" accelerator="Shortcut+O">
                 <graphic><FontIcon iconLiteral="mdi2f-folder-open" iconSize="16"/></graphic>
             </MenuItem>
-            <MenuItem text="Save" onAction="#saveFile">
+            <MenuItem text="Save" onAction="#saveFile" accelerator="Shortcut+S">
                 <graphic><FontIcon iconLiteral="mdi2c-content-save" iconSize="16"/></graphic>
             </MenuItem>
         </Menu>

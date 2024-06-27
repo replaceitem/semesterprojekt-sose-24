@@ -110,7 +110,7 @@ public class MainController implements Initializable {
             dialogStage.initStyle(StageStyle.DECORATED);
             dialogStage.setResizable(false);
             dialogStage.getIcons().addAll(Icons.APP_ICONS);
-            dialogStage.setScene(new Scene(root, 380, 400));
+            dialogStage.setScene(new Scene(root, 450, 400));
             dialogStage.setTitle("Setting up " + currentActivityType + "...");
             dialogStage.toFront();
             dialogStage.showAndWait();
@@ -263,7 +263,9 @@ public class MainController implements Initializable {
             Activity activity = driverInterface.getBlocks().get(index);
             driverInterface.removeBlock(index);
             driverInterface.addBlock(newIndex, activity);
-            activityPane.setSelectedBlock(newIndex);
+            // might be deselected by merge
+            newIndex = Math.min(newIndex, driverInterface.getBlocks().size()-1);
+            if(activityPane.getSelectedBlock().isPresent()) activityPane.setSelectedBlock(newIndex);
         });
     }
     

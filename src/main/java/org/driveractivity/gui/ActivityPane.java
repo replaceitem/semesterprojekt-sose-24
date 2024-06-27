@@ -5,7 +5,7 @@ import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.geometry.VPos;
 import javafx.scene.Node;
-import javafx.scene.input.MouseButton;
+import javafx.scene.input.*;
 import javafx.scene.layout.FlowPane;
 import lombok.Getter;
 import lombok.Setter;
@@ -53,10 +53,29 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
 
     public ActivityPane() {
         this.setRowValignment(VPos.BOTTOM);
+        this.setOnMousePressed(event -> {
+            this.requestFocus();
+            event.consume();
+        });
         this.setOnMouseClicked(mouseEvent -> {
             if(mouseEvent.getButton() == MouseButton.PRIMARY) {
                 mouseEvent.consume();
                 setSelectedBlock(-1);
+            }
+        });
+        this.addEventFilter(KeyEvent.KEY_PRESSED, event -> {
+            if(event.getCode() == KeyCode.LEFT) {
+                mainController.onMoveBackward();
+                event.consume();
+            } else if(event.getCode() == KeyCode.RIGHT) {
+                mainController.onMoveForward();
+                event.consume();
+            }
+        });
+        this.setOnKeyPressed(event -> {
+            if(event.getCode() == KeyCode.DELETE) {
+                event.consume();
+                getSelectedBlock().flatMap(this::getActivityBlock).ifPresent(ActivityBlock::onDeleteAction);
             }
         });
     }
@@ -95,9 +114,11 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
     
     public void setSelectedBlock(int index) {
         if(selectedBlock != null) selectedBlock.pseudoClassStateChanged(PSEUDO_CLASS_SELECTED, false);
-        if(index >= 0 && index < getChildren().size() && getChildren().get(index) instanceof ActivityBlock activityBlock) {
-            selectedBlock = activityBlock;
-            selectedBlock.pseudoClassStateChanged(PSEUDO_CLASS_SELECTED, true);
+        if(index >= 0 && index < getChildren().size()) {
+            getActivityBlock(index).ifPresent(activityBlock -> { 
+                selectedBlock = activityBlock;
+                selectedBlock.pseudoClassStateChanged(PSEUDO_CLASS_SELECTED, true);
+            });
         } else {
             selectedBlock = null;
         }
@@ -119,6 +140,10 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
             }
         }
     }
+    
+    private Optional<ActivityBlock> getActivityBlock(int index) {
+        return getChildren().get(index) instanceof ActivityBlock activityBlock ? Optional.of(activityBlock) : Optional.empty();
+    }
 
     @Override
     public void onAllActivitiesUpdated(List<Activity> activities) {
@@ -128,6 +153,7 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
     @Override
     public void onActivityRemoved(int index) {
         getChildren().remove(index);
+        if(getSelectedBlock().isPresent() && index == getSelectedBlock().get()) setSelectedBlock(-1);
         updateIndices();
         // update block affected by start line change, when first block is removed
         if(index == 0 && !driverData.getBlocks().isEmpty()) {
@@ -155,15 +181,12 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
 
     @Override
     public void onActivityUpdated(int index) {
-        if(getChildren().get(index) instanceof ActivityBlock activityBlock) {
-            activityBlock.update();
-        }
+        getActivityBlock(index).ifPresent(ActivityBlock::update);
     }
 
     @Override
     public void onActivitiesMerged(int index) {
-        if(getChildren().get(index) instanceof ActivityBlock activityBlock) {
-            activityBlock.showMergeEffect();
-        }
+        setSelectedBlock(-1);
+        getActivityBlock(index).ifPresent(ActivityBlock::showMergeEffect);
     }
 }
