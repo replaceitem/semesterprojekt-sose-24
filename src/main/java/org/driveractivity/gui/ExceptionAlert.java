@@ -6,14 +6,16 @@ import org.driveractivity.exception.AlertedException;
 
 import java.io.*;
 
-public class AlertedExceptionDialog {
-    public static void show(AlertedException exception) {
-        Alert alert = new Alert(Alert.AlertType.ERROR);
-        alert.setTitle(exception.getTitle());
-        alert.setHeaderText(exception.getTitle());
-        alert.setContentText(exception.getMessage());
-        
+public class ExceptionAlert extends Alert {
+    public ExceptionAlert(AlertedException exception) {
+        super(AlertType.ERROR);
+        setTitle(exception.getTitle());
+        setHeaderText(exception.getTitle());
+        setContentText(exception.getMessage());
+
+        // if there are more details, show the full stack trace
         if(exception.getCause() != null) {
+            System.err.println("Caught " + exception.getCause().getClass().getName() + " wrapped in " + exception.getClass().getName() + ":");
             exception.printStackTrace(System.err);
             StringWriter sw = new StringWriter();
             PrintWriter pw = new PrintWriter(sw);
@@ -37,9 +39,7 @@ public class AlertedExceptionDialog {
             expContent.add(label, 0, 0);
             expContent.add(textArea, 0, 1);
 
-            alert.getDialogPane().setExpandableContent(expContent);
+            getDialogPane().setExpandableContent(expContent);
         }
-        
-        alert.showAndWait();
     }
 }

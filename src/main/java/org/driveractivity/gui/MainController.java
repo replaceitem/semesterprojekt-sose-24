@@ -141,7 +141,7 @@ public class MainController implements Initializable {
                 driverInterface.importFrom(file);
                 loadSpecificConditions();
             } catch (FileImportException e) {
-                AlertedExceptionDialog.show(e);
+                new ExceptionAlert(e).showAndWait();
             }
         }
 
@@ -167,7 +167,7 @@ public class MainController implements Initializable {
             try {
                 driverInterface.exportToXML(file);
             } catch (FileExportException e) {
-                AlertedExceptionDialog.show(e);
+                new ExceptionAlert(e).showAndWait();
             }
         }
     }
@@ -296,7 +296,7 @@ public class MainController implements Initializable {
         try {
             driverInterface.addSpecificCondition(List.of(beginCondition, endCondition));
         } catch (SpecificConditionException e) {
-            AlertedExceptionDialog.show(e);
+            new ExceptionAlert(e).showAndWait();
         }
         loadSpecificConditions();
     }
@@ -312,7 +312,7 @@ public class MainController implements Initializable {
         try {
             driverInterface.addSpecificCondition(List.of(specificCondition));
         } catch (SpecificConditionException e) {
-            AlertedExceptionDialog.show(e);
+            new ExceptionAlert(e).showAndWait();
         }
         loadSpecificConditions();
     }

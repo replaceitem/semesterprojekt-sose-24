@@ -49,7 +49,7 @@ public class MainApplication extends javafx.application.Application {
         try {
             driverInterface.exportToXML(new File(MainApplication.appProperties.getProperty("saveFilePath") + "/tmpFile.xml"));
         } catch (FileExportException e) {
-            AlertedExceptionDialog.show(e);
+            new ExceptionAlert(e).showAndWait();
         }
         System.exit(0);
     }
