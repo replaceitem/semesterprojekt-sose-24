@@ -1,5 +1,6 @@
 package org.driveractivity.gui;
 
+import javafx.beans.property.*;
 import javafx.collections.ObservableList;
 import javafx.css.PseudoClass;
 import javafx.geometry.VPos;
@@ -26,10 +27,29 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
     
     private ActivityBlock selectedBlock;
     
-    @Getter private boolean renderDayDividers = Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderDayDividers"));
-    @Getter private boolean renderWeekDividers = Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderWeekDividers"));
-    @Getter private boolean renderCardStatus = Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderCardStatus"));
-    @Getter private boolean renderSpecificConditions = Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderSpecificConditions"));
+    private BooleanProperty createRenderProperty(boolean initial, String name) {
+        return new BooleanPropertyBase(initial) {
+            @Override
+            public Object getBean() {
+                return ActivityPane.this;
+            }
+
+            @Override
+            public String getName() {
+                return name;
+            }
+
+            @Override
+            protected void invalidated() {
+                ActivityPane.this.updateAll();
+            }
+        };
+    }
+    
+    @Getter private final BooleanProperty renderDayDividersProperty = createRenderProperty(true, "renderDayDividers");
+    @Getter private final BooleanProperty renderWeekDividersProperty = createRenderProperty(true, "renderWeekDividers");
+    @Getter private final BooleanProperty renderCardStatusProperty = createRenderProperty(true, "renderCardStatus");
+    @Getter private final BooleanProperty renderSpecificConditionsProperty = createRenderProperty(true, "renderSpecificConditions");
 
     public ActivityPane() {
         this.setRowValignment(VPos.BOTTOM);
@@ -39,23 +59,6 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
                 setSelectedBlock(-1);
             }
         });
-    }
-    
-    public void setRenderDayDividers(boolean value) {
-        renderDayDividers = value;
-        updateAll();
-    }
-    public void setRenderWeekDividers(boolean value) {
-        renderWeekDividers = value;
-        updateAll();
-    }
-    public void setRenderCardStatus(boolean value) {
-        renderCardStatus = value;
-        updateAll();
-    }
-    public void setRenderSpecificConditions(boolean value) {
-        renderSpecificConditions = value;
-        updateAll();
     }
 
     public void initialize(DriverInterface driverData) {

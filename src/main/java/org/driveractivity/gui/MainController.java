@@ -62,6 +62,11 @@ public class MainController implements Initializable {
         activityPane.setMainController(this);
         driverInterface = DriverService.getInstance();
         activityPane.initialize(driverInterface);
+        
+        activityPane.getRenderDayDividersProperty().bind(dayToggle.selectedProperty());
+        activityPane.getRenderWeekDividersProperty().bind(weekToggle.selectedProperty());
+        activityPane.getRenderCardStatusProperty().bind(cardToggle.selectedProperty());
+        activityPane.getRenderSpecificConditionsProperty().bind(conditionToggle.selectedProperty());
 
         dayToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderDayDividers")));
         weekToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderWeekDividers")));
@@ -187,7 +192,6 @@ public class MainController implements Initializable {
     @FXML
     private void toggleDayDivider(ActionEvent event){
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-        activityPane.setRenderDayDividers(toggleButton.isSelected());
         updateToggleButton(toggleButton);
 
         try{
@@ -201,7 +205,6 @@ public class MainController implements Initializable {
     @FXML
     public void toggleWeekDivider(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-        activityPane.setRenderWeekDividers(toggleButton.isSelected());
         updateToggleButton(toggleButton);
 
         try{
@@ -215,7 +218,6 @@ public class MainController implements Initializable {
     @FXML
     public void toggleCardStatus(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-        activityPane.setRenderCardStatus(toggleButton.isSelected());
         updateToggleButton(toggleButton);
 
         try{
@@ -229,7 +231,6 @@ public class MainController implements Initializable {
     @FXML
     public void toggleSpecificConditions(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-        activityPane.setRenderSpecificConditions(toggleButton.isSelected());
         updateToggleButton(toggleButton);
 
         try{

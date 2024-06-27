@@ -117,7 +117,7 @@ public class ActivityBlock extends StackPane {
         this.durationLabel.setText(formatDuration(activity.getDuration()));
         this.typeLabel.setText(formatTypeName(activity.getType()));
         boolean cardInserted = activity.getCardStatus().equals("inserted");
-        this.cardInsertedIcon.setVisible(activityPane.isRenderCardStatus() && !cardInserted);
+        this.cardInsertedIcon.setVisible(activityPane.getRenderCardStatusProperty().get() && !cardInserted);
         
         this.getStyleClass().setAll(CSS_DIMENSIONS_CLASS.get(activity.getType()));
         long hoursDuration = activity.getDuration().toHours();
@@ -178,11 +178,11 @@ public class ActivityBlock extends StackPane {
         if(isFirstBlock) addMarker(0, overlayChildren, startDate.format(DATE_MARKER_FORMATTER_YEAR), "start-divider-line");
         if(isLastBlock) addMarker(1, overlayChildren, endDate.format(DATE_MARKER_FORMATTER_YEAR), "end-divider-line");
 
-        if(activityPane.isRenderDayDividers() || activityPane.isRenderWeekDividers()) {
+        if(activityPane.getRenderDayDividersProperty().get() || activityPane.getRenderWeekDividersProperty().get()) {
             createDayWeekMarkers(start, end, startDate, endDate, isFirstBlock);
         }
         
-        if(activityPane.isRenderSpecificConditions()) {
+        if(activityPane.getRenderSpecificConditionsProperty().get()) {
             createSpecificConditionMarkers(start, end);
         }
     }
@@ -283,8 +283,8 @@ public class ActivityBlock extends StackPane {
                 .filter(startOfDay -> !isFirstBlock || startOfDay.isAfter(start))
                 .toList();
 
-        boolean renderWeekDividers = activityPane.isRenderWeekDividers();
-        boolean renderDayDividers = activityPane.isRenderDayDividers();
+        boolean renderWeekDividers = activityPane.getRenderWeekDividersProperty().get();
+        boolean renderDayDividers = activityPane.getRenderDayDividersProperty().get();
 
         for (LocalDateTime newDayTime : newDayTimes) {
             double percentage = TimeUtil.mapInRange(newDayTime, start, end);
