@@ -316,14 +316,14 @@ public class ActivityBlock extends StackPane {
         }
     }
 
-    private static String formatTypeName(ActivityType type) {
+    protected static String formatTypeName(ActivityType type) {
         String lowerCase = type.name().toLowerCase();
         return lowerCase.substring(0, 1).toUpperCase() + lowerCase.substring(1);
     }
     
     private final static DecimalFormat DURATION_HOURS_DECIMAL_FORMAT = new DecimalFormat("0.#h");
 
-    private static String formatDuration(Duration duration) {
+    protected static String formatDuration(Duration duration) {
         if(duration.toHours() == 0) {
             return duration.toMinutes() + "m";
         } else {
