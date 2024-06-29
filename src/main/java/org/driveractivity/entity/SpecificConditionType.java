@@ -33,9 +33,7 @@ public enum SpecificConditionType {
             default -> null;
         };
     }
-    public boolean isABeginning() {
-        return (this == BEGIN_FT) || (this == BEGIN_OUT_OF_SCOPE);
-    }
+
     public static SpecificConditionType mapType(String name) {
         if(name == null || name.isEmpty()) {
             return INVALID;

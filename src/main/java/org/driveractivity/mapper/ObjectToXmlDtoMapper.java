@@ -60,7 +60,7 @@ public class ObjectToXmlDtoMapper {
                         .time(formatter.format(activity.getStartTime().toLocalTime()))
                         .slot("driver")
                         .status("single")
-                        .cardStatus(activity.getCardStatus())
+                        .cardStatus(activity.getCardStatus().mapNameToString())
                         .build()
         ).collect(Collectors.toCollection(ArrayList::new));
 

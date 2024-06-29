@@ -11,6 +11,7 @@ import java.time.temporal.ChronoUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.driveractivity.entity.ActivityType.REST;
 import static org.driveractivity.entity.ActivityType.WORK;
+import static org.driveractivity.entity.CardStatus.INSERTED;
 
 public class DriverServiceAddTest {
     @Test
@@ -23,7 +24,7 @@ public class DriverServiceAddTest {
                 .build();
         driverService.addBlock(activity);
         assertThat(driverService.getActivities().size()).isEqualTo(1);
-        assertThat(activity.getCardStatus()).isEqualTo("inserted");
+        assertThat(activity.getCardStatus()).isEqualTo(INSERTED);
     }
 
     @Test

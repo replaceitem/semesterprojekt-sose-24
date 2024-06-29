@@ -16,10 +16,11 @@ public interface DriverInterface {
     void removeBlock(int index);
     void changeBlock(int index, Activity activity);
     ArrayList<SpecificCondition> getSpecificConditions();
-    ArrayList<SpecificCondition> addSpecificCondition(List<SpecificCondition> specificCondition) throws SpecificConditionException;
-    ArrayList<SpecificCondition> removeSpecificCondition(SpecificCondition specificCondition);
+    ArrayList<SpecificCondition> addSpecificConditions(List<SpecificCondition> specificCondition) throws SpecificConditionException;
+    ArrayList<SpecificCondition> removeSpecificConditions(SpecificCondition specificCondition);
     void addDriverServiceListener(DriverServiceListener listener);
     void clear();
     void exportToXML(File file) throws FileExportException;
     void importFrom(File f) throws FileImportException;
+    boolean toggleRules();
 }

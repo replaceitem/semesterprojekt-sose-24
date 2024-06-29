@@ -10,6 +10,7 @@ import java.time.temporal.ChronoUnit;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.driveractivity.entity.ActivityType.*;
+import static org.driveractivity.entity.CardStatus.NOT_INSERTED;
 
 public class DriverServiceChangeTest {
 
@@ -251,7 +252,7 @@ public class DriverServiceChangeTest {
         Activity changedActivity = Activity.builder()
                 .type(WORK)
                 .startTime(LocalDateTime.now())
-                .cardStatus("notInserted")
+                .cardStatus(NOT_INSERTED)
                 .duration(Duration.of(15, ChronoUnit.MINUTES))
                 .build();
 

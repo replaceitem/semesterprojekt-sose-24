@@ -5,6 +5,8 @@ import lombok.*;
 import java.time.Duration;
 import java.time.LocalDateTime;
 
+import static org.driveractivity.entity.CardStatus.*;
+
 @Data
 @Builder(toBuilder = true)
 @AllArgsConstructor
@@ -14,7 +16,7 @@ public class Activity {
     private Duration duration;
     private LocalDateTime startTime;
     @Builder.Default
-    private String cardStatus = "inserted";
+    private CardStatus cardStatus = INSERTED;
     public LocalDateTime getEndTime() {
         return startTime.plusMinutes(duration.toMinutes());
     }

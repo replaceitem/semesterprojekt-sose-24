@@ -3,7 +3,9 @@ package org.driveractivity.service;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.entity.SpecificCondition;
 import org.driveractivity.entity.SpecificConditionType;
-import org.driveractivity.exception.*;
+import org.driveractivity.exception.FileExportException;
+import org.driveractivity.exception.FileImportException;
+import org.driveractivity.exception.SpecificConditionException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 
@@ -17,6 +19,7 @@ import java.util.Objects;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.driveractivity.entity.ActivityType.WORK;
+import static org.driveractivity.entity.CardStatus.INSERTED;
 
 public class DriverServiceImportExportTest {
     @Test
@@ -47,10 +50,10 @@ public class DriverServiceImportExportTest {
                 .type(WORK)
                 .startTime(LocalDateTime.now())
                 .duration(Duration.of(5, ChronoUnit.MINUTES))
-                .cardStatus("inserted")
+                .cardStatus(INSERTED)
                 .build();
         driverService.addBlock(activity);
-        driverService.addSpecificCondition(List.of(SpecificCondition.builder().timestamp(LocalDateTime.now()).specificConditionType(SpecificConditionType.BEGIN_FT).build()));
+        driverService.addSpecificConditions(List.of(SpecificCondition.builder().timestamp(LocalDateTime.now()).specificConditionType(SpecificConditionType.BEGIN_FT).build()));
 
         File file = new File("output.xml");
         driverService.exportToXML(file);

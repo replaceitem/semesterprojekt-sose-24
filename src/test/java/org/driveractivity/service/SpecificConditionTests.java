@@ -13,8 +13,7 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.assertj.core.api.Assertions.*;
 
 public class SpecificConditionTests {
     @Test
@@ -31,7 +30,7 @@ public class SpecificConditionTests {
                 .build();
         specificConditions.add(outOfScopeBegin);
         specificConditions.add(outOfScopeEnd);
-        driverService.addSpecificCondition(specificConditions);
+        driverService.addSpecificConditions(specificConditions);
         //this should work fine, so assert that they are in the list
         assertThat(driverService.getSpecificConditions()).contains(outOfScopeBegin, outOfScopeEnd);
     }
@@ -50,7 +49,7 @@ public class SpecificConditionTests {
                 .build();
         specificConditions.add(outOfScopeBegin);
         specificConditions.add(outOfScopeEnd);
-        driverService.addSpecificCondition(specificConditions);
+        driverService.addSpecificConditions(specificConditions);
         //this should work fine, so assert that they are in the list
         assertThat(driverService.getSpecificConditions()).contains(outOfScopeBegin, outOfScopeEnd);
 
@@ -66,7 +65,7 @@ public class SpecificConditionTests {
 
         specificConditions.add(outOfScopeBegin2);
         specificConditions.add(outOfScopeEnd2);
-        assertThatThrownBy(() -> driverService.addSpecificCondition(specificConditions))
+        assertThatThrownBy(() -> driverService.addSpecificConditions(specificConditions))
                 .isInstanceOf(SpecificConditionException.class)
                 .hasMessage("The new OUT_OF_SCOPE conditions intersect with existing ones");
 
@@ -85,7 +84,7 @@ public class SpecificConditionTests {
                 .build();
         specificConditions.add(outOfScopeBegin);
         specificConditions.add(outOfScopeEnd);
-        assertThatThrownBy(() -> driverService.addSpecificCondition(specificConditions))
+        assertThatThrownBy(() -> driverService.addSpecificConditions(specificConditions))
                 .isInstanceOf(SpecificConditionException.class)
                 .hasMessage("The BEGIN_FT or BEGIN_OUT_OF_SCOPE must take place before the END_FT or END_OUT_OF_SCOPE");
 
@@ -100,7 +99,7 @@ public class SpecificConditionTests {
                 .build();
         specificConditions.add(outOfScopeBegin);
 
-        assertThatThrownBy(() -> driverService.addSpecificCondition(specificConditions))
+        assertThatThrownBy(() -> driverService.addSpecificConditions(specificConditions))
                 .isInstanceOf(SpecificConditionException.class)
                 .hasMessage("If a BEGIN_OUT_OF_SCOPE is added, an END_OUT_OF_SCOPE must be added as well");
 
@@ -120,7 +119,7 @@ public class SpecificConditionTests {
                 .build();
         specificConditions.add(beginFT);
         specificConditions.add(endFT);
-        driverService.addSpecificCondition(specificConditions);
+        driverService.addSpecificConditions(specificConditions);
         //this should work fine, so assert that they are in the list
         assertThat(driverService.getSpecificConditions()).contains(beginFT, endFT);
     }
@@ -149,7 +148,7 @@ public class SpecificConditionTests {
         driverService.addBlock(drivingActivity);
 
 
-        driverService.addSpecificCondition(specificConditions);
+        driverService.addSpecificConditions(specificConditions);
         //this should work fine, so assert that they are in the list
         assertThat(driverService.getSpecificConditions().size()).isEqualTo(2);
         assertThat(driverService.getSpecificConditions().getFirst().isWithoutEnd()).isFalse();
@@ -165,7 +164,7 @@ public class SpecificConditionTests {
                 .timestamp(LocalDateTime.now())
                 .build();
         specificConditions.add(beginFT);
-        driverService.addSpecificCondition(specificConditions);
+        driverService.addSpecificConditions(specificConditions);
         //this should work fine, so assert that they are in the list
         assertThat(driverService.getSpecificConditions()).contains(beginFT);
         assertThat(driverService.getSpecificConditions().getFirst().isWithoutEnd()).isTrue();
@@ -180,7 +179,7 @@ public class SpecificConditionTests {
                 .timestamp(LocalDateTime.now())
                 .build();
         specificConditions.add(endFT);
-        assertThatThrownBy(() -> driverService.addSpecificCondition(specificConditions))
+        assertThatThrownBy(() -> driverService.addSpecificConditions(specificConditions))
                 .isInstanceOf(SpecificConditionException.class)
                 .hasMessage("If an END_FT is added, a BEGIN_FT must either already exist or be added before it.");
     }
@@ -202,7 +201,7 @@ public class SpecificConditionTests {
         specificConditions.add(beginFT);
         specificConditions.add(endFT);
 
-        driverService.addSpecificCondition(specificConditions);
+        driverService.addSpecificConditions(specificConditions);
 
         specificConditions.clear();
 
@@ -211,7 +210,7 @@ public class SpecificConditionTests {
                 .timestamp(LocalDateTime.now().plusMinutes(20))
                 .build();
         specificConditions.add(endFT2);
-        assertThatThrownBy(() -> driverService.addSpecificCondition(specificConditions))
+        assertThatThrownBy(() -> driverService.addSpecificConditions(specificConditions))
                 .isInstanceOf(SpecificConditionException.class)
                 .hasMessage("If an END_FT is added, a BEGIN_FT must either already exist or be added before it.");
     }
@@ -230,7 +229,7 @@ public class SpecificConditionTests {
                 .build();
         specificConditions.add(beginFT);
         specificConditions.add(endFT);
-        driverService.addSpecificCondition(specificConditions);
+        driverService.addSpecificConditions(specificConditions);
         //this should work fine, so assert that they are in the list
         assertThat(driverService.getSpecificConditions()).contains(beginFT, endFT);
 
@@ -246,7 +245,7 @@ public class SpecificConditionTests {
 
         specificConditions.add(beginFT2);
         specificConditions.add(endFT2);
-        assertThatThrownBy(() -> driverService.addSpecificCondition(specificConditions))
+        assertThatThrownBy(() -> driverService.addSpecificConditions(specificConditions))
                 .isInstanceOf(SpecificConditionException.class)
                 .hasMessage("The new FT conditions intersect with existing ones");
 
@@ -261,7 +260,7 @@ public class SpecificConditionTests {
                 .timestamp(LocalDateTime.now().minusMinutes(100))
                 .build();
         specificConditions.add(beginFT);
-        driverService.addSpecificCondition(specificConditions);
+        driverService.addSpecificConditions(specificConditions);
         //this should work fine, so assert that they are in the list
         assertThat(driverService.getSpecificConditions()).contains(beginFT);
         assertThat(driverService.getSpecificConditions().getFirst().isWithoutEnd()).isTrue();
@@ -279,9 +278,40 @@ public class SpecificConditionTests {
         specificConditions.add(beginFT2);
         specificConditions.add(endFT2);
 
-        assertThatThrownBy(() -> driverService.addSpecificCondition(specificConditions))
+        assertThatThrownBy(() -> driverService.addSpecificConditions(specificConditions))
                 .isInstanceOf(SpecificConditionException.class)
                 .hasMessage("Please close the unclosed FT before adding further FT conditions after it.");
+    }
+
+    @Test
+    public void testAddFTAfterUnclosedFTNoRules() throws SpecificConditionException {
+        DriverService driverService = DriverService.getInstance();
+        ArrayList<SpecificCondition> specificConditions = new ArrayList<>();
+        SpecificCondition beginFT = SpecificCondition.builder()
+                .specificConditionType(SpecificConditionType.BEGIN_FT)
+                .timestamp(LocalDateTime.now().minusMinutes(100))
+                .build();
+        specificConditions.add(beginFT);
+        driverService.addSpecificConditions(specificConditions);
+        driverService.toggleRules();
+        //this should work fine, so assert that they are in the list
+        assertThat(driverService.getSpecificConditions()).contains(beginFT);
+        assertThat(driverService.getSpecificConditions().getFirst().isWithoutEnd()).isTrue();
+
+        SpecificCondition beginFT2 = SpecificCondition.builder()
+                .specificConditionType(SpecificConditionType.BEGIN_FT)
+                .timestamp(LocalDateTime.now())
+                .build();
+        SpecificCondition endFT2 = SpecificCondition.builder()
+                .specificConditionType(SpecificConditionType.END_FT)
+                .timestamp(LocalDateTime.now().plusMinutes(15))
+                .build();
+
+        specificConditions.clear();
+        specificConditions.add(beginFT2);
+        specificConditions.add(endFT2);
+
+        assertThatNoException().isThrownBy(() -> driverService.addSpecificConditions(specificConditions));
     }
 
     @Test
@@ -297,7 +327,7 @@ public class SpecificConditionTests {
                 .timestamp(LocalDateTime.now().minusMinutes(50))
                 .build();
         specificConditions.add(beginFT);
-        driverService.addSpecificCondition(specificConditions);
+        driverService.addSpecificConditions(specificConditions);
         //this should work fine, so assert that they are in the list
         assertThat(driverService.getSpecificConditions()).contains(beginFT);
         assertThat(driverService.getSpecificConditions().getFirst().isWithoutEnd()).isTrue();
@@ -305,7 +335,7 @@ public class SpecificConditionTests {
 
         specificConditions.clear();
         specificConditions.add(endFT);
-        driverService.addSpecificCondition(specificConditions);
+        driverService.addSpecificConditions(specificConditions);
         assertThat(driverService.getSpecificConditions()).contains(beginFT, endFT);
         assertThat(driverService.getSpecificConditions().getFirst().isWithoutEnd()).isFalse();
 
@@ -324,7 +354,7 @@ public class SpecificConditionTests {
         specificConditions.add(beginFT2);
         specificConditions.add(endFT2);
 
-        driverService.addSpecificCondition(specificConditions);
+        driverService.addSpecificConditions(specificConditions);
         assertThat(driverService.getSpecificConditions()).contains(beginFT, endFT, beginFT2, endFT2);
     }
 
@@ -343,13 +373,13 @@ public class SpecificConditionTests {
         specificConditions.add(beginFT);
         specificConditions.add(endFT);
 
-        driverService.addSpecificCondition(specificConditions);
+        driverService.addSpecificConditions(specificConditions);
 
         specificConditions.clear();
 
         specificConditions.add(beginFT);
 
-        driverService.removeSpecificCondition(beginFT);
+        driverService.removeSpecificConditions(beginFT);
 
         assertThat(driverService.getSpecificConditions()).isEmpty();
 
@@ -370,8 +400,8 @@ public class SpecificConditionTests {
         specificConditions.add(beginFT);
         specificConditions.add(endFT);
 
-        driverService.addSpecificCondition(specificConditions);
-        driverService.removeSpecificCondition(beginFT);
+        driverService.addSpecificConditions(specificConditions);
+        driverService.removeSpecificConditions(beginFT);
 
         assertThat(driverService.getSpecificConditions()).isEmpty();
 
@@ -392,13 +422,13 @@ public class SpecificConditionTests {
         specificConditions.add(beginOutOfScope);
         specificConditions.add(endOutOfScope);
 
-        driverService.addSpecificCondition(specificConditions);
+        driverService.addSpecificConditions(specificConditions);
 
         specificConditions.clear();
 
         specificConditions.add(endOutOfScope);
 
-        driverService.removeSpecificCondition(beginOutOfScope);
+        driverService.removeSpecificConditions(beginOutOfScope);
 
         assertThat(driverService.getSpecificConditions()).isEmpty();
 
@@ -419,13 +449,13 @@ public class SpecificConditionTests {
         specificConditions.add(beginOutOfScope);
         specificConditions.add(endOutOfScope);
 
-        driverService.addSpecificCondition(specificConditions);
+        driverService.addSpecificConditions(specificConditions);
 
         specificConditions.clear();
 
         specificConditions.add(endOutOfScope);
 
-        driverService.removeSpecificCondition(endOutOfScope);
+        driverService.removeSpecificConditions(endOutOfScope);
 
         assertThat(driverService.getSpecificConditions()).isEmpty();
 
@@ -446,13 +476,13 @@ public class SpecificConditionTests {
         specificConditions.add(beginOutOfScope);
         specificConditions.add(endOutOfScope);
 
-        driverService.addSpecificCondition(specificConditions);
+        driverService.addSpecificConditions(specificConditions);
 
         specificConditions.clear();
 
         specificConditions.add(endOutOfScope);
 
-        driverService.removeSpecificCondition(endOutOfScope);
+        driverService.removeSpecificConditions(endOutOfScope);
 
         assertThat(driverService.getSpecificConditions()).isEmpty();
 
@@ -492,21 +522,21 @@ public class SpecificConditionTests {
         specificConditions.add(beginFT1);
         specificConditions.add(endFT1);
 
-        driverService.addSpecificCondition(specificConditions);
+        driverService.addSpecificConditions(specificConditions);
         specificConditions.clear();
 
 
         specificConditions.add(beginOutOfScope1);
         specificConditions.add(endOutOfScope1);
 
-        driverService.addSpecificCondition(specificConditions);
+        driverService.addSpecificConditions(specificConditions);
         specificConditions.clear();
 
 
         specificConditions.add(beginFT2);
         specificConditions.add(endFT2);
 
-        driverService.addSpecificCondition(specificConditions);
+        driverService.addSpecificConditions(specificConditions);
         specificConditions.clear();
 
 
@@ -514,7 +544,7 @@ public class SpecificConditionTests {
         assertThat(driverService.getSpecificConditions()).containsExactly(beginFT1, endFT1, beginOutOfScope1, endOutOfScope1, beginFT2, endFT2);
 
         // Remove the middle ones (beginOutOfScope1 and endOutOfScope1)
-        driverService.removeSpecificCondition(beginOutOfScope1);
+        driverService.removeSpecificConditions(beginOutOfScope1);
 
         // Assert that only the middle ones got removed and the rest are still there
         assertThat(driverService.getSpecificConditions()).containsExactly(beginFT1, endFT1, beginFT2, endFT2);

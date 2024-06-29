@@ -76,7 +76,7 @@ public class XmlDtoToObjectMapper {
         return Activity.builder()
                 .type(ActivityType.valueOf(activityDTO.getActivity().toUpperCase()))
                 .startTime(LocalDateTime.of(date, LocalTime.parse(activityDTO.getTime())))
-                .cardStatus(activityDTO.getCardStatus())
+                .cardStatus(CardStatus.mapNameFromString(activityDTO.getCardStatus()))
                 .build();
     }
 

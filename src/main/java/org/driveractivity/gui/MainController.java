@@ -296,7 +296,7 @@ public class MainController implements Initializable {
                 .build();
 
         try {
-            driverInterface.addSpecificCondition(List.of(beginCondition, endCondition));
+            driverInterface.addSpecificConditions(List.of(beginCondition, endCondition));
         } catch (SpecificConditionException e) {
             new ExceptionAlert(e).showAndWait();
         }
@@ -312,7 +312,7 @@ public class MainController implements Initializable {
                 .specificConditionType(specificConditionType)
                 .build();
         try {
-            driverInterface.addSpecificCondition(List.of(specificCondition));
+            driverInterface.addSpecificConditions(List.of(specificCondition));
         } catch (SpecificConditionException e) {
             new ExceptionAlert(e).showAndWait();
         }

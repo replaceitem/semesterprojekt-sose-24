@@ -24,7 +24,7 @@ public class SpecificConditionEntry extends HBox {
         deleteButton.setGraphic(deleteIcon);
         deleteButton.setPadding(new Insets(4));
         deleteButton.setOnAction(actionEvent -> {
-            mainController.driverInterface.removeSpecificCondition(specificCondition);
+            mainController.driverInterface.removeSpecificConditions(specificCondition);
             mainController.loadSpecificConditions();
         });
 

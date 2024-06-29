@@ -30,6 +30,7 @@ public class DriverService implements DriverInterface {
     @Getter
     private static final DriverService instance = new DriverService();
     private final ArrayList<DriverServiceListener> listeners;
+    private boolean applyRules = true;
 
     private DriverService() {
         specificConditions = new ArrayList<>();
@@ -109,7 +110,12 @@ public class DriverService implements DriverInterface {
     }
 
     @Override
-    public ArrayList<SpecificCondition> addSpecificCondition(List<SpecificCondition> inputConditions) throws SpecificConditionException {
+    public ArrayList<SpecificCondition> addSpecificConditions(List<SpecificCondition> inputConditions) throws SpecificConditionException {
+        if(!applyRules) {
+            specificConditions.addAll(inputConditions);
+            IntStream.range(0, activities.size()).forEach(i -> listeners.forEach(l -> l.onActivityUpdated(i)));
+            return specificConditions;
+        }
 
         SpecificCondition beginCondition = inputConditions.stream().filter(s -> s.getSpecificConditionType() == BEGIN_FT || s.getSpecificConditionType() == BEGIN_OUT_OF_SCOPE).findFirst().orElse(null);
         SpecificCondition endCondition = inputConditions.stream().filter(s -> s.getSpecificConditionType() == END_FT || s.getSpecificConditionType() == END_OUT_OF_SCOPE).findFirst().orElse(null);
@@ -201,11 +207,11 @@ public class DriverService implements DriverInterface {
 
 
     @Override
-    public ArrayList<SpecificCondition> removeSpecificCondition(SpecificCondition inputCondition) {
+    public ArrayList<SpecificCondition> removeSpecificConditions(SpecificCondition inputCondition) {
         ArrayList<SpecificCondition> toDelete = new ArrayList<>();
         toDelete.add(inputCondition);
-        SpecificCondition correspondingCondition = null;
-        if(inputCondition.getSpecificConditionType().isABeginning()) {
+        SpecificCondition correspondingCondition;
+        if(inputCondition.getSpecificConditionType().isBegin()) {
             correspondingCondition = findNextSpecificConditionOfType(inputCondition.getSpecificConditionType().getOpposite(), inputCondition);
         } else {
             correspondingCondition = findPreviousSpecificConditionOfType(inputCondition.getSpecificConditionType().getOpposite(), inputCondition);
@@ -274,6 +280,12 @@ public class DriverService implements DriverInterface {
         } catch (JAXBException e) {
             throw new FileImportException("Error while importing file, please check if the file is valid.");
         }
+    }
+
+    @Override
+    public boolean toggleRules() {
+        applyRules = !applyRules;
+        return applyRules;
     }
 
     private void adaptStartTimes(int startIndex) {

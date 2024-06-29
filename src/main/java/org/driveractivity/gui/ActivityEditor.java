@@ -236,7 +236,7 @@ public class ActivityEditor {
                 .type(activityTypeChoiceBox.getValue())
                 .startTime(LocalDateTime.of(startDate,getStartTime()))
                 .duration(getDuration())
-                .cardStatus(cardInserted.isSelected() ? "inserted" : "notInserted")
+                .cardStatus(cardInserted.isSelected() ? CardStatus.INSERTED : CardStatus.NOT_INSERTED)
                 .build();
 
         if(inserting) {
