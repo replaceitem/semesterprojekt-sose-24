@@ -88,7 +88,7 @@ public class ActivityEditor {
             startTime = editActivity.getStartTime().toLocalTime();
             initialDuration = editActivity.getDuration();
             activityTypeChoiceBox.setValue(editActivity.getType());
-            cardInserted.setSelected(editActivity.getCardStatus().equals("inserted"));
+            cardInserted.setSelected(editActivity.getCardStatus() == CardStatus.INSERTED);
             if(insertionIndex == 0) {
                 cbHourStart.setDisable(false);
                 cbMinuteStart.setDisable(false);

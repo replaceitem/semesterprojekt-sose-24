@@ -28,10 +28,7 @@ import javafx.scene.shape.Line;
 import javafx.scene.shape.Rectangle;
 import lombok.Getter;
 import lombok.Setter;
-import org.driveractivity.entity.Activity;
-import org.driveractivity.entity.ActivityType;
-import org.driveractivity.entity.SpecificCondition;
-import org.driveractivity.entity.SpecificConditionType;
+import org.driveractivity.entity.*;
 import org.driveractivity.util.ColorUtil;
 import org.driveractivity.util.TimeUtil;
 import org.kordamp.ikonli.javafx.FontIcon;
@@ -117,7 +114,7 @@ public class ActivityBlock extends StackPane {
         this.startTimeLabel.setText(activity.getStartTime().format(START_TIME_FORMATTER));
         this.durationLabel.setText(formatDuration(activity.getDuration()));
         this.typeLabel.setText(formatTypeName(activity.getType()));
-        boolean cardInserted = activity.getCardStatus().equals("inserted");
+        boolean cardInserted = activity.getCardStatus() == CardStatus.INSERTED;
         this.cardInsertedIcon.setVisible(activityPane.getRenderCardStatusProperty().get() && !cardInserted);
         
         this.getStyleClass().setAll(CSS_DIMENSIONS_CLASS.get(activity.getType()));
