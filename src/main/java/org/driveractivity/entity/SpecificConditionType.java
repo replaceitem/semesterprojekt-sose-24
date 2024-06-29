@@ -24,6 +24,18 @@ public enum SpecificConditionType {
             default -> null;
         };
     }
+    public SpecificConditionType getOpposite() {
+        return switch (this) {
+            case BEGIN_FT -> END_FT;
+            case END_FT -> BEGIN_FT;
+            case BEGIN_OUT_OF_SCOPE -> END_OUT_OF_SCOPE;
+            case END_OUT_OF_SCOPE -> BEGIN_OUT_OF_SCOPE;
+            default -> null;
+        };
+    }
+    public boolean isABeginning() {
+        return (this == BEGIN_FT) || (this == BEGIN_OUT_OF_SCOPE);
+    }
     public static SpecificConditionType mapType(String name) {
         if(name == null || name.isEmpty()) {
             return INVALID;

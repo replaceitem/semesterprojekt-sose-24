@@ -11,5 +11,7 @@ public class SpecificCondition {
     private LocalDateTime timestamp;
     @NonNull
     private SpecificConditionType specificConditionType;
+    @Builder.Default
+    private boolean isWithoutEnd = false;
 
 }
