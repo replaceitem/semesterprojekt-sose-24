@@ -331,8 +331,10 @@ public class MainController implements Initializable {
         VBox vbox = new VBox();
 
         Spinner<Integer> hourSpinner = new Spinner<>();
+        hourSpinner.setEditable(true);
         hourSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 23, 0));
         Spinner<Integer> minuteSpinner = new Spinner<>();
+        hourSpinner.setEditable(true);
         minuteSpinner.setValueFactory(new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 59, 0));
 
         DatePicker datePicker = new DatePicker(LocalDate.now());
