@@ -74,6 +74,9 @@ public class ObjectToXmlDtoMapper {
     private static ArrayList<Day> mapToDays(ArrayList<Activity> activities) {
         ArrayList<Day> days = new ArrayList<>();
         ArrayList<Activity> collectedActivities = new ArrayList<>();
+        if(activities.isEmpty()) {
+            return days;
+        }
         LocalDate date = activities.getFirst().getStartTime().toLocalDate();
         Day currentDay = Day.builder().date(date).build();
 
@@ -87,8 +90,6 @@ public class ObjectToXmlDtoMapper {
                 //create next day
                 currentDay = Day.builder().date(activity.getStartTime().toLocalDate()).build();
                 collectedActivities.add(activity);
-
-                
             } else {
                 collectedActivities.add(activity);
             }

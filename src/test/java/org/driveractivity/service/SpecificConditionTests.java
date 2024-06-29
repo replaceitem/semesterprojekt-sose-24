@@ -432,6 +432,33 @@ public class SpecificConditionTests {
     }
 
     @Test
+    public void testRemoveBeginSpecificConditionsWithSameTimestamp() throws SpecificConditionException {
+        DriverService driverService = DriverService.getInstance();
+        ArrayList<SpecificCondition> specificConditions = new ArrayList<>();
+        SpecificCondition beginOutOfScope = SpecificCondition.builder()
+                .specificConditionType(SpecificConditionType.BEGIN_OUT_OF_SCOPE)
+                .timestamp(LocalDateTime.now())
+                .build();
+        SpecificCondition endOutOfScope = SpecificCondition.builder()
+                .specificConditionType(SpecificConditionType.END_OUT_OF_SCOPE)
+                .timestamp(LocalDateTime.now())
+                .build();
+        specificConditions.add(beginOutOfScope);
+        specificConditions.add(endOutOfScope);
+
+        driverService.addSpecificCondition(specificConditions);
+
+        specificConditions.clear();
+
+        specificConditions.add(endOutOfScope);
+
+        driverService.removeSpecificCondition(endOutOfScope);
+
+        assertThat(driverService.getSpecificConditions()).isEmpty();
+
+    }
+
+    @Test
     public void specificConditionRoundTripTest() throws SpecificConditionException {
         DriverService driverService = DriverService.getInstance();
         ArrayList<SpecificCondition> specificConditions = new ArrayList<>();

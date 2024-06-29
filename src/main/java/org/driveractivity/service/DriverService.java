@@ -139,7 +139,7 @@ public class DriverService implements DriverInterface {
             //if input is ONLY beginFT, make sure that it ends with the next DRIVING activity
             //if there is no following DRIVING activity, then this FT does not have an end, set the flag that it has no end
             if(beginCondition != null && endCondition == null) {
-                Activity nextDriving = findNextActivityOfType(ActivityType.DRIVING, beginCondition.getTimestamp());
+                Activity nextDriving = findNextDrivingActivity(beginCondition.getTimestamp());
                 if(nextDriving != null) {
                     inputConditions.add(SpecificCondition.builder()
                             .specificConditionType(END_FT)
@@ -163,7 +163,7 @@ public class DriverService implements DriverInterface {
             //if input is beginFT with endFT, they may not have a driving activity in between
             //if this is the case, the endFT should be set to the start of the next driving activity
             if(beginCondition != null && endCondition != null) {
-                Activity nextDriving = findNextActivityOfType(ActivityType.DRIVING, beginCondition.getTimestamp());
+                Activity nextDriving = findNextDrivingActivity(beginCondition.getTimestamp());
                 if(nextDriving != null) {
                     if(isTimestampWithinRange(beginCondition, endCondition, nextDriving.getStartTime())) {
                         endCondition.setTimestamp(nextDriving.getStartTime());
@@ -330,7 +330,7 @@ public class DriverService implements DriverInterface {
             return null;
         }
         for(SpecificCondition specificCondition : specificConditions) {
-            if(specificCondition.getTimestamp().isBefore(inputCondition.getTimestamp()) && specificCondition.getSpecificConditionType() == type) {
+            if(specificCondition.getTimestamp().isBefore(inputCondition.getTimestamp()) || specificCondition.getTimestamp().isEqual(inputCondition.getTimestamp()) && specificCondition.getSpecificConditionType() == type) {
                 if(specificCondition.getTimestamp().isAfter(previousCondition.getTimestamp())) {
                     previousCondition = specificCondition;
                 }
@@ -339,9 +339,9 @@ public class DriverService implements DriverInterface {
         return previousCondition;
     }
 
-    private Activity findNextActivityOfType(ActivityType type, LocalDateTime timestamp) {
+    private Activity findNextDrivingActivity(LocalDateTime timestamp) {
         for(Activity activity : activities) {
-            if(activity.getType() == type && (activity.getStartTime().isAfter(timestamp) || activity.getStartTime().isEqual(timestamp))) {
+            if(activity.getType() == ActivityType.DRIVING && (activity.getStartTime().isAfter(timestamp) || activity.getStartTime().isEqual(timestamp))) {
                 return activity;
             }
         }
