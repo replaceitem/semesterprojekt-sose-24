@@ -21,7 +21,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.driveractivity.entity.ActivityType.WORK;
 import static org.driveractivity.entity.CardStatus.INSERTED;
 
-public class DriverServiceImportExportTest {
+public class ImportExportActivitiesTests {
     @Test
     public void importFrom() throws Exception {
         ClassLoader classLoader = getClass().getClassLoader();
@@ -40,7 +40,7 @@ public class DriverServiceImportExportTest {
         File file = new File(Objects.requireNonNull(classLoader.getResource("Beispiel2.xml")).getFile());
         DriverService driverService = DriverService.getInstance();
         driverService.importFrom(file);
-        assertThat(driverService.getActivities()).isNotNull();
+        assertThat(driverService.getBlocks()).isNotNull();
         driverService.exportToXML(new File("output.xml"));
     }
     @Test
@@ -72,7 +72,7 @@ public class DriverServiceImportExportTest {
         DriverService driverService = DriverService.getInstance();
         driverService.importFrom(file);
         //Save activities and specific conditions to compare after round trip
-        ArrayList<Activity> savedActivities = driverService.getActivities();
+        ArrayList<Activity> savedActivities = driverService.getBlocks();
         ArrayList<SpecificCondition> savedSpecificConditions = driverService.getSpecificConditions();
 
         //Step 2: Export to file
@@ -82,7 +82,7 @@ public class DriverServiceImportExportTest {
         //Step 3: Import from file again
         driverService.importFrom(file2);
         //Check if activities and specific conditions are the same as before the round trip
-        assertThat(driverService.getActivities()).isEqualTo(savedActivities);
+        assertThat(driverService.getBlocks()).isEqualTo(savedActivities);
         assertThat(driverService.getSpecificConditions()).isEqualTo(savedSpecificConditions);
     }
 

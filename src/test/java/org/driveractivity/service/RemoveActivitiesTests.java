@@ -11,7 +11,7 @@ import java.time.temporal.ChronoUnit;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.driveractivity.entity.ActivityType.*;
 
-public class DriverServiceRemoveTest {
+public class RemoveActivitiesTests {
 
     @Test
     public void testRemoveBlock() {
@@ -23,7 +23,7 @@ public class DriverServiceRemoveTest {
                 .build();
         driverService.addBlock(activity);
         driverService.removeBlock(0);
-        assertThat(driverService.getActivities().size()).isEqualTo(0);
+        assertThat(driverService.getBlocks().size()).isEqualTo(0);
     }
 
     @Test
@@ -66,7 +66,7 @@ public class DriverServiceRemoveTest {
         driverService.addBlock(activity3);
 
         driverService.removeBlock(1);
-        assertThat(driverService.getActivities().size()).isEqualTo(2); // size 2 because REST and AVAILABLE should not get merged
+        assertThat(driverService.getBlocks().size()).isEqualTo(2); // size 2 because REST and AVAILABLE should not get merged
     }
     @Test
     public void testRemoveBlockAndMerge() {
@@ -90,8 +90,8 @@ public class DriverServiceRemoveTest {
         driverService.addBlock(activity2);
         driverService.addBlock(activity3);
         driverService.removeBlock(1);
-        assertThat(driverService.getActivities().size()).isEqualTo(1); // size 1 because WORK and WORK should get merged
-        assertThat(driverService.getActivities().getFirst().getDuration()).isEqualTo(Duration.of(10, ChronoUnit.MINUTES));
+        assertThat(driverService.getBlocks().size()).isEqualTo(1); // size 1 because WORK and WORK should get merged
+        assertThat(driverService.getBlocks().getFirst().getDuration()).isEqualTo(Duration.of(10, ChronoUnit.MINUTES));
     }
     @Test
     public void testRemoveFirstBlock() {
@@ -120,12 +120,12 @@ public class DriverServiceRemoveTest {
         LocalDateTime activity2StartTime = activity2.getStartTime(); // save activity2 start time after it is added
 
         driverService.removeBlock(0);
-        assertThat(driverService.getActivities()).doesNotContain(activity);
-        assertThat(driverService.getActivities().getFirst()).isEqualTo(activity2);
-        assertThat(driverService.getActivities().size()).isEqualTo(2);
-        assertThat(driverService.getActivities().getFirst().getDuration()).isEqualTo(Duration.of(5, ChronoUnit.MINUTES));
-        assertThat(driverService.getActivities().getLast().getDuration()).isEqualTo(Duration.of(5, ChronoUnit.MINUTES));
-        assertThat(driverService.getActivities().getFirst().getStartTime()).isEqualTo(activity2StartTime); // activity2 should be first activity and its startTime should not change
+        assertThat(driverService.getBlocks()).doesNotContain(activity);
+        assertThat(driverService.getBlocks().getFirst()).isEqualTo(activity2);
+        assertThat(driverService.getBlocks().size()).isEqualTo(2);
+        assertThat(driverService.getBlocks().getFirst().getDuration()).isEqualTo(Duration.of(5, ChronoUnit.MINUTES));
+        assertThat(driverService.getBlocks().getLast().getDuration()).isEqualTo(Duration.of(5, ChronoUnit.MINUTES));
+        assertThat(driverService.getBlocks().getFirst().getStartTime()).isEqualTo(activity2StartTime); // activity2 should be first activity and its startTime should not change
     }
 
     @Test
@@ -153,9 +153,9 @@ public class DriverServiceRemoveTest {
         driverService.addBlock(activity3);
 
         driverService.removeBlock(2);
-        assertThat(driverService.getActivities()).doesNotContain(activity3);
-        assertThat(driverService.getActivities().size()).isEqualTo(2);
-        assertThat(driverService.getActivities().getLast().getDuration()).isEqualTo(Duration.of(5, ChronoUnit.MINUTES));
+        assertThat(driverService.getBlocks()).doesNotContain(activity3);
+        assertThat(driverService.getBlocks().size()).isEqualTo(2);
+        assertThat(driverService.getBlocks().getLast().getDuration()).isEqualTo(Duration.of(5, ChronoUnit.MINUTES));
 
     }
 

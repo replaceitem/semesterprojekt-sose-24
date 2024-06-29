@@ -13,7 +13,7 @@ import static org.driveractivity.entity.ActivityType.REST;
 import static org.driveractivity.entity.ActivityType.WORK;
 import static org.driveractivity.entity.CardStatus.INSERTED;
 
-public class DriverServiceAddTest {
+public class AddActivitiesTests {
     @Test
     public void testAddBlock() {
         DriverService driverService = DriverService.getInstance();
@@ -23,7 +23,7 @@ public class DriverServiceAddTest {
                 .duration(Duration.of(5, ChronoUnit.MINUTES))
                 .build();
         driverService.addBlock(activity);
-        assertThat(driverService.getActivities().size()).isEqualTo(1);
+        assertThat(driverService.getBlocks().size()).isEqualTo(1);
         assertThat(activity.getCardStatus()).isEqualTo(INSERTED);
     }
 
@@ -42,9 +42,9 @@ public class DriverServiceAddTest {
                 .duration(Duration.of(5, ChronoUnit.MINUTES))
                 .build();
         driverService.addBlock(0, activity2);
-        assertThat(driverService.getActivities().size()).isEqualTo(2);
-        assertThat(driverService.getActivities().get(0).getEndTime()).isEqualTo(driverService.getActivities().get(1).getStartTime());
-        assertThat(driverService.getActivities().get(0)).isNotEqualTo(activity);
+        assertThat(driverService.getBlocks().size()).isEqualTo(2);
+        assertThat(driverService.getBlocks().get(0).getEndTime()).isEqualTo(driverService.getBlocks().get(1).getStartTime());
+        assertThat(driverService.getBlocks().get(0)).isNotEqualTo(activity);
     }
     @Test
     public void testAddBlockWithIndexException() {
@@ -81,8 +81,8 @@ public class DriverServiceAddTest {
                 .build();
         driverService.addBlock(activity);
         driverService.addBlock(activity2);
-        assertThat(driverService.getActivities().size()).isEqualTo(1);
-        assertThat(driverService.getActivities().getFirst().getDuration()).isEqualTo(Duration.of(10, ChronoUnit.MINUTES));
+        assertThat(driverService.getBlocks().size()).isEqualTo(1);
+        assertThat(driverService.getBlocks().getFirst().getDuration()).isEqualTo(Duration.of(10, ChronoUnit.MINUTES));
     }
 
     @Test
@@ -112,9 +112,9 @@ public class DriverServiceAddTest {
         driverService.addBlock(activity2);
         driverService.addBlock(activity3);
         driverService.addBlock(1, activity4);
-        assertThat(driverService.getActivities().size()).isEqualTo(3);
-        assertThat(driverService.getActivities().getFirst().getDuration()).isEqualTo(Duration.of(10, ChronoUnit.MINUTES));
-        assertThat(driverService.getActivities().get(1).getType()).isEqualTo(REST);
+        assertThat(driverService.getBlocks().size()).isEqualTo(3);
+        assertThat(driverService.getBlocks().getFirst().getDuration()).isEqualTo(Duration.of(10, ChronoUnit.MINUTES));
+        assertThat(driverService.getBlocks().get(1).getType()).isEqualTo(REST);
     }
 
     @AfterEach

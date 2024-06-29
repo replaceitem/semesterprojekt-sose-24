@@ -12,7 +12,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.driveractivity.entity.ActivityType.*;
 import static org.driveractivity.entity.CardStatus.NOT_INSERTED;
 
-public class DriverServiceChangeTest {
+public class ChangeActivitiesTests {
 
     @Test
     public void changeActivityShortenEndTime() {
@@ -47,8 +47,8 @@ public class DriverServiceChangeTest {
 
         driverService.changeBlock(1, changedActivity);
 
-        assertThat(driverService.getActivities().size()).isEqualTo(3);
-        assertThat(driverService.getActivities().getLast().getEndTime()).isBefore(activity3EndTime);
+        assertThat(driverService.getBlocks().size()).isEqualTo(3);
+        assertThat(driverService.getBlocks().getLast().getEndTime()).isBefore(activity3EndTime);
     }
 
     @Test
@@ -84,8 +84,8 @@ public class DriverServiceChangeTest {
 
         driverService.changeBlock(1, changedActivity);
 
-        assertThat(driverService.getActivities().size()).isEqualTo(3);
-        assertThat(driverService.getActivities().getLast().getEndTime()).isAfter(activity3EndTime);
+        assertThat(driverService.getBlocks().size()).isEqualTo(3);
+        assertThat(driverService.getBlocks().getLast().getEndTime()).isAfter(activity3EndTime);
     }
 
     @Test
@@ -112,8 +112,8 @@ public class DriverServiceChangeTest {
                 .build();
 
         driverService.changeBlock(1, newActivity);
-        assertThat(driverService.getActivities().get(1).getDuration()).isEqualTo(Duration.of(15, ChronoUnit.MINUTES));
-        assertThat(driverService.getActivities().get(1).getType()).isEqualTo(DRIVING);
+        assertThat(driverService.getBlocks().get(1).getDuration()).isEqualTo(Duration.of(15, ChronoUnit.MINUTES));
+        assertThat(driverService.getBlocks().get(1).getType()).isEqualTo(DRIVING);
     }
 
     @Test
@@ -146,9 +146,9 @@ public class DriverServiceChangeTest {
                 .build();
 
         driverService.changeBlock(1, newActivity);
-        assertThat(driverService.getActivities().get(1).getDuration()).isEqualTo(Duration.of(20, ChronoUnit.MINUTES));
-        assertThat(driverService.getActivities().get(1).getType()).isEqualTo(DRIVING);
-        assertThat(driverService.getActivities().size()).isEqualTo(2);
+        assertThat(driverService.getBlocks().get(1).getDuration()).isEqualTo(Duration.of(20, ChronoUnit.MINUTES));
+        assertThat(driverService.getBlocks().get(1).getType()).isEqualTo(DRIVING);
+        assertThat(driverService.getBlocks().size()).isEqualTo(2);
     }
 
     @Test
@@ -183,10 +183,10 @@ public class DriverServiceChangeTest {
                 .build();
 
         driverService.changeBlock(1, newActivity);
-        assertThat(driverService.getActivities().getFirst().getDuration()).isEqualTo(Duration.of(10, ChronoUnit.MINUTES));
-        assertThat(driverService.getActivities().getFirst().getType()).isEqualTo(WORK);
-        assertThat(driverService.getActivities().size()).isEqualTo(2);
-        assertThat(driverService.getActivities().getLast().getEndTime()).isEqualTo(activity3EndTime); //end time of activity3 should not change
+        assertThat(driverService.getBlocks().getFirst().getDuration()).isEqualTo(Duration.of(10, ChronoUnit.MINUTES));
+        assertThat(driverService.getBlocks().getFirst().getType()).isEqualTo(WORK);
+        assertThat(driverService.getBlocks().size()).isEqualTo(2);
+        assertThat(driverService.getBlocks().getLast().getEndTime()).isEqualTo(activity3EndTime); //end time of activity3 should not change
     }
 
     @Test
@@ -220,8 +220,8 @@ public class DriverServiceChangeTest {
 
         driverService.changeBlock(1, changedActivity);
 
-        assertThat(driverService.getActivities().size()).isEqualTo(1);
-        assertThat(driverService.getActivities().getFirst().getDuration()).isEqualTo(Duration.of(15, ChronoUnit.MINUTES));
+        assertThat(driverService.getBlocks().size()).isEqualTo(1);
+        assertThat(driverService.getBlocks().getFirst().getDuration()).isEqualTo(Duration.of(15, ChronoUnit.MINUTES));
     }
 
     @Test
@@ -258,11 +258,11 @@ public class DriverServiceChangeTest {
 
         driverService.changeBlock(1, changedActivity);
 
-        assertThat(driverService.getActivities().size()).isEqualTo(3); // size 3 because cardStatus is different
-        assertThat(driverService.getActivities().get(1).getDuration()).isEqualTo(Duration.of(15, ChronoUnit.MINUTES));
-        assertThat(driverService.getActivities().getFirst().getDuration()).isEqualTo(Duration.of(5, ChronoUnit.MINUTES));
-        assertThat(driverService.getActivities().getLast().getDuration()).isEqualTo(Duration.of(5, ChronoUnit.MINUTES));
-        assertThat(driverService.getActivities().getLast().getEndTime()).isAfter(activity3EndTime); // end time of activity3 should change, because activity2 is extended
+        assertThat(driverService.getBlocks().size()).isEqualTo(3); // size 3 because cardStatus is different
+        assertThat(driverService.getBlocks().get(1).getDuration()).isEqualTo(Duration.of(15, ChronoUnit.MINUTES));
+        assertThat(driverService.getBlocks().getFirst().getDuration()).isEqualTo(Duration.of(5, ChronoUnit.MINUTES));
+        assertThat(driverService.getBlocks().getLast().getDuration()).isEqualTo(Duration.of(5, ChronoUnit.MINUTES));
+        assertThat(driverService.getBlocks().getLast().getEndTime()).isAfter(activity3EndTime); // end time of activity3 should change, because activity2 is extended
     }
 
     @AfterEach
