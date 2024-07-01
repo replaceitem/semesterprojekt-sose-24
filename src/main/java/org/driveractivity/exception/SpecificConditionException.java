@@ -1,5 +1,7 @@
 package org.driveractivity.exception;
 
+import org.jetbrains.annotations.*;
+
 public class SpecificConditionException extends AlertedException {
     public SpecificConditionException(String message) {
         super(message);
@@ -10,7 +12,7 @@ public class SpecificConditionException extends AlertedException {
     }
 
     @Override
-    public String getTitle() {
+    public @NotNull String getTitle() {
         return "Specific Condition Exception";
     }
 }

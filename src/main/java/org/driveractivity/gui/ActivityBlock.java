@@ -31,6 +31,7 @@ import lombok.Setter;
 import org.driveractivity.entity.*;
 import org.driveractivity.util.ColorUtil;
 import org.driveractivity.util.TimeUtil;
+import org.jetbrains.annotations.*;
 import org.kordamp.ikonli.javafx.FontIcon;
 
 import java.text.DecimalFormat;
@@ -70,6 +71,7 @@ public class ActivityBlock extends StackPane {
 
     private final ObservableList<Node> overlayChildren = this.overlays.getChildren();
     
+    @Nullable
     private ContextMenu contextMenu;
     
     public ActivityBlock(ActivityPane activityPane, Activity activity, int activityIndex) {

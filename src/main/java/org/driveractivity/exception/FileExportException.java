@@ -1,5 +1,7 @@
 package org.driveractivity.exception;
 
+import org.jetbrains.annotations.*;
+
 public class FileExportException extends AlertedException {
     public FileExportException(String message) {
         super(message);
@@ -10,7 +12,7 @@ public class FileExportException extends AlertedException {
     }
 
     @Override
-    public String getTitle() {
+    public @NotNull String getTitle() {
         return "File Export Error";
     }
 }

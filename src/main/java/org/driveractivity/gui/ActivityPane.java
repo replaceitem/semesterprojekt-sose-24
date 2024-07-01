@@ -12,6 +12,7 @@ import lombok.Setter;
 import org.driveractivity.entity.Activity;
 import org.driveractivity.service.DriverInterface;
 import org.driveractivity.service.DriverServiceListener;
+import org.jetbrains.annotations.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +26,7 @@ public class ActivityPane extends FlowPane implements DriverServiceListener {
     @Setter @Getter
     private MainController mainController;
     
+    @Nullable
     private ActivityBlock selectedBlock;
     
     private BooleanProperty createRenderProperty(boolean initial, String name) {

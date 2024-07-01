@@ -1,5 +1,7 @@
 package org.driveractivity.exception;
 
+import org.jetbrains.annotations.*;
+
 public abstract class AlertedException extends Exception {
     public AlertedException(String message) {
         super(message);
@@ -9,5 +11,5 @@ public abstract class AlertedException extends Exception {
         super(message, cause);
     }
     
-    public abstract String getTitle();
+    public abstract @NotNull String getTitle();
 }

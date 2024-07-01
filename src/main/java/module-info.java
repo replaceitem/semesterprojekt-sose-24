@@ -6,6 +6,7 @@ module org.driveractivity {
     requires org.kordamp.ikonli.javafx;
     requires org.kordamp.ikonli.materialdesign2;
     requires jakarta.xml.bind;
+    requires org.jetbrains.annotations;
 
 
     opens org.driveractivity.gui to javafx.fxml;
