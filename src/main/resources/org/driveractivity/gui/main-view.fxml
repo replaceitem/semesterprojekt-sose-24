@@ -7,6 +7,7 @@
 
 <?import org.kordamp.ikonli.javafx.FontIcon?>
 <?import javafx.scene.text.Text?>
+<?import org.driveractivity.gui.OnOffToggleButton?>
 <BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="org.driveractivity.gui.MainController">
 <stylesheets>
     <URL value="@main-view.css" />
@@ -93,26 +94,10 @@
             <Text styleClass="sidebar-section-heading">
                 View settings
             </Text>
-            <HBox style="-fx-alignment: center">
-                <Label>Day Dividers</Label>
-                <Pane HBox.hgrow="ALWAYS"/>
-                <ToggleButton fx:id="dayToggle" onAction="#toggleDayDivider"  styleClass="feature-toggle-label"/>
-            </HBox>
-            <HBox style="-fx-alignment: center">
-                <Label>Week Dividers</Label>
-                <Pane HBox.hgrow="ALWAYS"/>
-                <ToggleButton fx:id="weekToggle" onAction="#toggleWeekDivider"  styleClass="feature-toggle-label"/>
-            </HBox>
-            <HBox style="-fx-alignment: center">
-                <Label>Card Status</Label>
-                <Pane HBox.hgrow="ALWAYS"/>
-                <ToggleButton fx:id="cardToggle" onAction="#toggleCardStatus"  styleClass="feature-toggle-label"/>
-            </HBox>
-            <HBox style="-fx-alignment: center">
-                <Label>Specific Conditions</Label>
-                <Pane HBox.hgrow="ALWAYS"/>
-                <ToggleButton fx:id="conditionToggle" onAction="#toggleSpecificConditions"  styleClass="feature-toggle-label"/>
-            </HBox>
+            <OnOffToggleButton fx:id="dayToggle" onAction="#toggleDayDivider">Day Dividers</OnOffToggleButton>
+            <OnOffToggleButton fx:id="weekToggle" onAction="#toggleWeekDivider">Week Dividers</OnOffToggleButton>
+            <OnOffToggleButton fx:id="cardToggle" onAction="#toggleCardStatus">Card Status</OnOffToggleButton>
+            <OnOffToggleButton fx:id="conditionToggle" onAction="#toggleSpecificConditions">Specific Conditions</OnOffToggleButton>
 
             <Pane VBox.vgrow="ALWAYS"/> <!-- Empty space -->
             <Button fx:id="clearButton" maxWidth="Infinity" text="Clear All" onAction="#clearAll">

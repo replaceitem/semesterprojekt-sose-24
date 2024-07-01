@@ -46,13 +46,13 @@
     -fx-background-color: #1A751A;
 }
 
-.feature-toggle-label {
+OnOffToggleButton ToggleButton {
     -fx-background-color: grey;
     -fx-text-fill: black;
     -fx-content-display: left;
 }
 
-.feature-toggle-label:selected {
+OnOffToggleButton ToggleButton:selected {
     -fx-background-color: green;
     -fx-text-fill: white;
     -fx-content-display: right;

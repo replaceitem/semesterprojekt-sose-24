@@ -44,13 +44,14 @@ public class MainController implements Initializable {
     public VBox specificConditions;
 
     @FXML
-    private ToggleButton dayToggle;
+    private OnOffToggleButton dayToggle;
     @FXML
-    private ToggleButton weekToggle;
+    private OnOffToggleButton weekToggle;
     @FXML
-    private ToggleButton cardToggle;
+    private OnOffToggleButton cardToggle;
     @FXML
     private ToggleButton conditionToggle;
+    private OnOffToggleButton conditionToggle;
 
 
     public DriverInterface driverInterface;
@@ -72,12 +73,6 @@ public class MainController implements Initializable {
         weekToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderWeekDividers")));
         cardToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderCardStatus")));
         conditionToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderSpecificConditions")));
-
-        updateToggleButton(dayToggle);
-        updateToggleButton(weekToggle);
-        updateToggleButton(cardToggle);
-        updateToggleButton(conditionToggle);
-
     }
 
     @FXML
@@ -193,7 +188,6 @@ public class MainController implements Initializable {
     @FXML
     private void toggleDayDivider(ActionEvent event){
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-        updateToggleButton(toggleButton);
 
         try{
             MainApplication.appProperties.setProperty("renderDayDividers", String.valueOf(toggleButton.isSelected()));
@@ -206,7 +200,6 @@ public class MainController implements Initializable {
     @FXML
     public void toggleWeekDivider(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-        updateToggleButton(toggleButton);
 
         try{
             MainApplication.appProperties.setProperty("renderWeekDividers", String.valueOf(toggleButton.isSelected()));
@@ -219,7 +212,6 @@ public class MainController implements Initializable {
     @FXML
     public void toggleCardStatus(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-        updateToggleButton(toggleButton);
 
         try{
             MainApplication.appProperties.setProperty("renderCardStatus", String.valueOf(toggleButton.isSelected()));
@@ -232,7 +224,6 @@ public class MainController implements Initializable {
     @FXML
     public void toggleSpecificConditions(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-        updateToggleButton(toggleButton);
 
         try{
             MainApplication.appProperties.setProperty("renderSpecificConditions", String.valueOf(toggleButton.isSelected()));
@@ -240,11 +231,6 @@ public class MainController implements Initializable {
         }catch(IOException e){
             e.printStackTrace();
         }
-    }
-
-    private void updateToggleButton(ToggleButton toggleButton) {
-        boolean selected = toggleButton.isSelected();
-        toggleButton.setText(selected ? "ON" : "OFF");
     }
 
     public void onMoveForward() {
