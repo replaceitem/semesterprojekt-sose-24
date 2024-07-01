@@ -50,6 +50,7 @@ OnOffToggleButton ToggleButton {
     -fx-background-color: grey;
     -fx-text-fill: black;
     -fx-content-display: left;
+    -fx-pref-width: 3.5em;
 }
 
 OnOffToggleButton ToggleButton:selected {
