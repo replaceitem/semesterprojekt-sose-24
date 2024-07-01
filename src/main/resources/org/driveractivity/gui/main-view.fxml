@@ -115,7 +115,7 @@
             </HBox>
 
             <Pane VBox.vgrow="ALWAYS"/> <!-- Empty space -->
-            <Button fx:id="clearButton" maxWidth="Infinity" text="Clear All" onAction="#clearActivities">
+            <Button fx:id="clearButton" maxWidth="Infinity" text="Clear All" onAction="#clearAll">
                 <graphic>
                     <FontIcon iconLiteral="mdi2d-delete-outline" iconSize="16"/>
                 </graphic>

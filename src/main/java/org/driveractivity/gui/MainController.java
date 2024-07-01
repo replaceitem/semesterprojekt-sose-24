@@ -94,8 +94,9 @@ public class MainController implements Initializable {
     }
 
     @FXML
-    private void clearActivities() {
+    private void clearAll() {
         driverInterface.clear();
+        loadSpecificConditions();
     }
 
     public void openActivityEditorStage(ActivityType currentActivityType, int insertionIndex, Activity editActivity) {
