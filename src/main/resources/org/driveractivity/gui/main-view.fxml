@@ -115,7 +115,11 @@
             </HBox>
 
             <Pane VBox.vgrow="ALWAYS"/> <!-- Empty space -->
-            <Button fx:id="clearButton" text="Clear" styleClass="activity-button, activity-clear" onAction="#clearActivities"/>
+            <Button fx:id="clearButton" maxWidth="Infinity" text="Clear All" onAction="#clearActivities">
+                <graphic>
+                    <FontIcon iconLiteral="mdi2d-delete-outline" iconSize="16"/>
+                </graphic>
+            </Button>
             <Pane/> <!-- Empty space -->
         </VBox>
         <Separator orientation="VERTICAL"/> <!-- Divider -->

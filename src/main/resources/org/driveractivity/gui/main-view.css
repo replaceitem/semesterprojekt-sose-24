@@ -46,17 +46,6 @@
     -fx-background-color: #1A751A;
 }
 
-.activity-clear {
-    -fx-background-radius: 0px;
-    -fx-background-color: #990000;
-}
-.activity-clear:hover {
-    -fx-background-color: #880000;
-}
-.activity-clear:pressed {
-    -fx-background-color: #770000;
-}
-
 .feature-toggle-label {
     -fx-background-color: grey;
     -fx-text-fill: black;
