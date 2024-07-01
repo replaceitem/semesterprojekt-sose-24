@@ -256,16 +256,25 @@ public class MainController implements Initializable {
     
     private void moveActivity(int shift) {
         activityPane.getSelectedBlock().ifPresent(index -> {
-            int newIndex = index+shift;
-            int maxIndex = driverInterface.getBlocks().size() - 1;
-            if(index < 0 || index > maxIndex) return;
-            if(newIndex < 0 || newIndex > maxIndex) return;
+            if(index < 0 || index > driverInterface.getBlocks().size() - 1) return;
+            int shiftedIndex = index+shift;
+            if(shiftedIndex < 0 || shiftedIndex > driverInterface.getBlocks().size() - 1) return;
             Activity activity = driverInterface.getBlocks().get(index);
+            
+            int sizeBefore = driverInterface.getBlocks().size();
             driverInterface.removeBlock(index);
-            driverInterface.addBlock(newIndex, activity);
-            // might be deselected by merge
-            newIndex = Math.min(newIndex, driverInterface.getBlocks().size()-1);
-            if(activityPane.getSelectedBlock().isPresent()) activityPane.setSelectedBlock(newIndex);
+            // if two blocks were removed, a merge must have happened,
+            // and the merged block is now one index below selected which
+            // needs to be considered for shifting forward only.
+            if(driverInterface.getBlocks().size() < sizeBefore-1 && shift > 0) index--;
+            index += shift;
+            // constrain to valid index for insertion
+            index = Math.max(0, Math.min(driverInterface.getBlocks().size(), index));
+            
+            sizeBefore = driverInterface.getBlocks().size();
+            driverInterface.addBlock(index, activity);
+            // if no merging happened during insertion, select the moved block
+            if(sizeBefore+1 == driverInterface.getBlocks().size()) activityPane.setSelectedBlock(index);
         });
     }
     
