@@ -9,10 +9,8 @@ import javafx.scene.layout.*;
 
 @DefaultProperty("labelText")
 public class OnOffToggleButton extends HBox {
-    private final Label label;
     private final ToggleButton toggleButton;
-    
-    private StringProperty labelText = new SimpleStringProperty(this, "text", "");
+    private final StringProperty labelText = new SimpleStringProperty(this, "text", "");
     
     public StringProperty labelTextProperty() {
         return labelText;
@@ -46,13 +44,12 @@ public class OnOffToggleButton extends HBox {
     
     public OnOffToggleButton() {
         this.setAlignment(Pos.CENTER);
-        label = new Label();
+        Label label = new Label();
         label.textProperty().bind(labelText);
         label.setMaxWidth(Double.POSITIVE_INFINITY);
         HBox.setHgrow(label, Priority.ALWAYS);
         
         toggleButton = new ToggleButton();
-        //toggleButton.getStyleClass().add("feature-toggle-label");
         toggleButton.textProperty().bind(toggleButton.selectedProperty().map(b -> b ? "ON" : "OFF"));
         
         getChildren().setAll(label, toggleButton);
