@@ -199,8 +199,7 @@ public class SpecificConditionService {
     }
 
 
-    public boolean toggleRules() {
-        applyRules = !applyRules;
-        return applyRules;
+    public void setRulesEnabled(boolean enabled) {
+        applyRules = enabled;
     }
 }

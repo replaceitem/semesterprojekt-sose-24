@@ -22,5 +22,5 @@ public interface DriverInterface {
     void clear();
     void exportToXML(File file) throws FileExportException;
     void importFrom(File f) throws FileImportException;
-    boolean toggleRules();
+    void setRulesEnabled(boolean enabled);
 }

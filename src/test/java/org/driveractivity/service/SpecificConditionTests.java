@@ -293,7 +293,7 @@ public class SpecificConditionTests {
                 .build();
         specificConditions.add(beginFT);
         driverService.addSpecificConditions(specificConditions);
-        driverService.toggleRules();
+        driverService.setRulesEnabled(false);
         //this should work fine, so assert that they are in the list
         assertThat(driverService.getSpecificConditions()).contains(beginFT);
         assertThat(driverService.getSpecificConditions().getFirst().isWithoutEnd()).isTrue();

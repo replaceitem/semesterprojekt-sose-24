@@ -130,7 +130,7 @@ public class DriverService implements DriverInterface {
     }
 
     @Override
-    public boolean toggleRules() {
-        return specificConditionService.toggleRules();
+    public void setRulesEnabled(boolean enabled) {
+        specificConditionService.setRulesEnabled(enabled);
     }
 }

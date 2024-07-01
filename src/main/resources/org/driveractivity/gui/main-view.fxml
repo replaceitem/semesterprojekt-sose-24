@@ -65,6 +65,7 @@
             <Text styleClass="sidebar-section-heading">
                 Specific Conditions
             </Text>
+            <OnOffToggleButton fx:id="applyRulesToggle" onAction="#toggleRules">Apply Rules</OnOffToggleButton>
             <VBox spacing="2">
                 <Button onAction="#onAddBeginFerryTrain" maxWidth="Infinity" alignment="BASELINE_LEFT">
                     <graphic>

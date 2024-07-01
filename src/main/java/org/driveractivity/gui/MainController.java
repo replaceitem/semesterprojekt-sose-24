@@ -50,8 +50,9 @@ public class MainController implements Initializable {
     @FXML
     private OnOffToggleButton cardToggle;
     @FXML
-    private ToggleButton conditionToggle;
     private OnOffToggleButton conditionToggle;
+    @FXML
+    private OnOffToggleButton applyRulesToggle;
 
 
     public DriverInterface driverInterface;
@@ -64,11 +65,13 @@ public class MainController implements Initializable {
         driverInterface = DriverService.getInstance();
         activityPane.initialize(driverInterface);
         
+        applyRulesToggle.selectedProperty().subscribe(aBoolean -> driverInterface.setRulesEnabled(aBoolean));
         activityPane.getRenderDayDividersProperty().bind(dayToggle.selectedProperty());
         activityPane.getRenderWeekDividersProperty().bind(weekToggle.selectedProperty());
         activityPane.getRenderCardStatusProperty().bind(cardToggle.selectedProperty());
         activityPane.getRenderSpecificConditionsProperty().bind(conditionToggle.selectedProperty());
 
+        applyRulesToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("applyRules")));
         dayToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderDayDividers")));
         weekToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderWeekDividers")));
         cardToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderCardStatus")));
@@ -182,6 +185,18 @@ public class MainController implements Initializable {
             aboutStage.showAndWait();
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    @FXML
+    public void toggleRules(ActionEvent event) {
+        ToggleButton toggleButton = (ToggleButton) event.getSource();
+
+        try{
+            MainApplication.appProperties.setProperty("applyRules", String.valueOf(toggleButton.isSelected()));
+            MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New SaveFile Path");
+        }catch(IOException e){
+            e.printStackTrace();
         }
     }
 
