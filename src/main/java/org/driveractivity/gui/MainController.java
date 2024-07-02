@@ -63,11 +63,11 @@ public class MainController implements Initializable {
         activityPane.getRenderCardStatusProperty().bind(cardToggle.selectedProperty());
         activityPane.getRenderSpecificConditionsProperty().bind(conditionToggle.selectedProperty());
 
-        applyRulesToggle.setSelected(PropertiesService.getBooleanProperty("applyRules"));
-        dayToggle.setSelected(PropertiesService.getBooleanProperty("renderDayDividers"));
-        weekToggle.setSelected(PropertiesService.getBooleanProperty("renderWeekDividers"));
-        cardToggle.setSelected(PropertiesService.getBooleanProperty("renderCardStatus"));
-        conditionToggle.setSelected(PropertiesService.getBooleanProperty("renderSpecificConditions"));
+        applyRulesToggle.setSelected(PropertiesService.getBooleanProperty(PropertiesService.APPLY_RULES));
+        dayToggle.setSelected(PropertiesService.getBooleanProperty(PropertiesService.RENDER_DAY_DIVIDERS));
+        weekToggle.setSelected(PropertiesService.getBooleanProperty(PropertiesService.RENDER_WEEK_DIVIDERS));
+        cardToggle.setSelected(PropertiesService.getBooleanProperty(PropertiesService.RENDER_CARD_STATUS));
+        conditionToggle.setSelected(PropertiesService.getBooleanProperty(PropertiesService.RENDER_SPECIFIC_CONDITIONS));
     }
 
     @FXML
@@ -116,12 +116,12 @@ public class MainController implements Initializable {
         fileChooser.setTitle("Open XML-File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Files", "*.*"));
-        fileChooser.setInitialDirectory(new File(PropertiesService.getProperty("openFilePath")));
+        fileChooser.setInitialDirectory(new File(PropertiesService.getProperty(PropertiesService.OPEN_FILE_PATH)));
 
         File file = fileChooser.showOpenDialog(stage);
 
         if (file != null) {
-            PropertiesService.saveProperty("openFilePath", file.getParentFile().getAbsolutePath());
+            PropertiesService.saveProperty(PropertiesService.OPEN_FILE_PATH, file.getParentFile().getAbsolutePath());
 
             try {
                 driverInterface.importFrom(file);
@@ -138,12 +138,12 @@ public class MainController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save XML-File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
-        fileChooser.setInitialDirectory(new File(PropertiesService.getProperty("saveFilePath")));
+        fileChooser.setInitialDirectory(new File(PropertiesService.getProperty(PropertiesService.SAVE_FILE_PATH)));
 
         File file = fileChooser.showSaveDialog(stage);
 
         if (file != null) {
-            PropertiesService.saveProperty("saveFilePath", file.getParentFile().getAbsolutePath());
+            PropertiesService.saveProperty(PropertiesService.SAVE_FILE_PATH, file.getParentFile().getAbsolutePath());
 
             try {
                 driverInterface.exportToXML(file);
@@ -173,31 +173,31 @@ public class MainController implements Initializable {
     @FXML
     public void toggleRules(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-        PropertiesService.saveProperty("applyRules", toggleButton.isSelected());
+        PropertiesService.saveProperty(PropertiesService.APPLY_RULES, toggleButton.isSelected());
     }
 
     @FXML
     private void toggleDayDivider(ActionEvent event){
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-        PropertiesService.saveProperty("renderDayDividers", toggleButton.isSelected());
+        PropertiesService.saveProperty(PropertiesService.RENDER_DAY_DIVIDERS, toggleButton.isSelected());
     }
 
     @FXML
     public void toggleWeekDivider(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-        PropertiesService.saveProperty("renderWeekDividers", toggleButton.isSelected());
+        PropertiesService.saveProperty(PropertiesService.RENDER_WEEK_DIVIDERS, toggleButton.isSelected());
     }
 
     @FXML
     public void toggleCardStatus(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-        PropertiesService.saveProperty("renderCardStatus", toggleButton.isSelected());
+        PropertiesService.saveProperty(PropertiesService.RENDER_CARD_STATUS, toggleButton.isSelected());
     }
 
     @FXML
     public void toggleSpecificConditions(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-        PropertiesService.saveProperty("renderSpecificConditions", toggleButton.isSelected());
+        PropertiesService.saveProperty(PropertiesService.RENDER_SPECIFIC_CONDITIONS, toggleButton.isSelected());
     }
 
     public void onMoveForward() {

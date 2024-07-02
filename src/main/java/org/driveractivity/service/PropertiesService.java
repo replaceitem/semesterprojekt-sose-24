@@ -10,11 +10,21 @@ import java.nio.file.*;
 import java.util.Properties;
 
 public class PropertiesService {
-    static Path parentPath = Path.of(System.getProperty("user.home")).resolve("DriverActivityVisualization");
-    static File propertiesFile = parentPath.resolve("app.properties").toFile();
-    static File tempFile = parentPath.resolve("tmpFile.xml").toFile();
     
-    private static Properties appProperties = new Properties();
+    public static final String OPEN_FILE_PATH = "openFilePath";
+    public static final String SAVE_FILE_PATH = "saveFilePath";
+    
+    public static final String RENDER_SPECIFIC_CONDITIONS = "renderSpecificConditions";
+    public static final String RENDER_CARD_STATUS = "renderCardStatus";
+    public static final String RENDER_WEEK_DIVIDERS = "renderWeekDividers";
+    public static final String RENDER_DAY_DIVIDERS = "renderDayDividers";
+    public static final String APPLY_RULES = "applyRules";
+    
+    static final Path parentPath = Path.of(System.getProperty("user.home")).resolve("DriverActivityVisualization");
+    static final File propertiesFile = parentPath.resolve("app.properties").toFile();
+    static final File tempFile = parentPath.resolve("tmpFile.xml").toFile();
+    
+    private static final Properties appProperties = new Properties();
 
     public static void loadProperties() {
         try{
@@ -31,14 +41,14 @@ public class PropertiesService {
                     System.out.println("Failed to load app properties");
                 }
             }else{
-                saveProperty("openFilePath", System.getProperty("user.home"));
-                saveProperty("saveFilePath", System.getProperty("user.home"));
+                saveProperty(OPEN_FILE_PATH, System.getProperty("user.home"));
+                saveProperty(SAVE_FILE_PATH, System.getProperty("user.home"));
 
-                saveProperty("renderSpecificConditions", true);
-                saveProperty("renderCardStatus", true);
-                saveProperty("renderWeekDividers", true);
-                saveProperty("renderDayDividers", true);
-                saveProperty("applyRules", true);
+                saveProperty(RENDER_SPECIFIC_CONDITIONS, true);
+                saveProperty(RENDER_CARD_STATUS, true);
+                saveProperty(RENDER_WEEK_DIVIDERS, true);
+                saveProperty(RENDER_DAY_DIVIDERS, true);
+                saveProperty(APPLY_RULES, true);
             }
         }catch (Exception e){
             e.printStackTrace();
