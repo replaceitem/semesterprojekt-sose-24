@@ -7,14 +7,21 @@ import javafx.scene.control.*;
 import javafx.scene.layout.*;
 import javafx.stage.*;
 import lombok.*;
-import org.driveractivity.entity.*;
-import org.driveractivity.exception.*;
+import org.driveractivity.entity.Activity;
+import org.driveractivity.entity.ActivityType;
+import org.driveractivity.entity.SpecificCondition;
+import org.driveractivity.entity.SpecificConditionType;
+import org.driveractivity.exception.FileExportException;
+import org.driveractivity.exception.FileImportException;
+import org.driveractivity.exception.SpecificConditionException;
 import org.driveractivity.service.*;
 
 import java.io.*;
 import java.net.*;
 import java.time.*;
-import java.util.*;
+import java.util.List;
+import java.util.Optional;
+import java.util.ResourceBundle;
 
 import static org.driveractivity.entity.ActivityType.*;
 

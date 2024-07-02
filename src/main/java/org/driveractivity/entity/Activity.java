@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import static org.driveractivity.entity.CardStatus.*;
 
 @Data
+@With
 @Builder(toBuilder = true)
 @AllArgsConstructor
 public class Activity {

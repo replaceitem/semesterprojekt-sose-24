@@ -6,7 +6,7 @@ import org.driveractivity.entity.ActivityGroup;
 import org.driveractivity.entity.Day;
 import org.driveractivity.entity.SpecificCondition;
 
-import java.time.LocalDate;
+import java.time.*;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicInteger;
@@ -102,16 +102,17 @@ public class ObjectToXmlDtoMapper {
     private static ArrayList<Activity> splitActivities(ArrayList<Activity> activities) {
         ArrayList<Activity> returnActivities = new ArrayList<>();
         for(Activity activity : activities) {
-            LocalDate activityDate = activity.getStartTime().toLocalDate();
             returnActivities.add(activity);
-            if(activity.getStartTime().plus(activity.getDuration()).toLocalDate().isAfter(activityDate)) { //if activity goes over midnight: split it into two activities
-                LocalDate nextActivityDate = activity.getStartTime().plus(activity.getDuration()).toLocalDate();
-                Activity nextActivity = Activity.builder()
-                        .type(activity.getType())
-                        .startTime(nextActivityDate.atStartOfDay())
-                        .build();
-                returnActivities.add(nextActivity);
-            }
+
+            LocalDate startDate = activity.getStartTime().toLocalDate();
+            LocalDate firstNewDate = startDate.plusDays(1);
+            LocalDateTime endTime = activity.getStartTime().plus(activity.getDuration());
+            // create a new activity at the start of each day which overlaps the activity
+            firstNewDate.datesUntil(endTime.toLocalDate().plusDays(1))
+                    .map(LocalDate::atStartOfDay)
+                    .filter(localDateTime -> localDateTime.isBefore(endTime))
+                    .map(activity::withStartTime)
+                    .forEach(returnActivities::add);
         }
         return returnActivities;
 
