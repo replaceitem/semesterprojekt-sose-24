@@ -32,6 +32,7 @@ public class XmlDtoToObjectMapper {
 
     public static ArrayList<Activity> mapDayToActivity(ArrayList<Day> days) {
         Iterator<Day> it = days.iterator();
+        if(!it.hasNext()) return new ArrayList<>();
         Day current = it.next();
         Day next;
         while(it.hasNext()) {

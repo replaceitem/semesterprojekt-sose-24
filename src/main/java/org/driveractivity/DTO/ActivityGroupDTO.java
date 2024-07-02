@@ -1,13 +1,13 @@
 package org.driveractivity.DTO;
 
+import jakarta.xml.bind.annotation.XmlAccessType;
+import jakarta.xml.bind.annotation.XmlAccessorType;
+import jakarta.xml.bind.annotation.XmlElement;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import jakarta.xml.bind.annotation.XmlAccessType;
-import jakarta.xml.bind.annotation.XmlAccessorType;
-import jakarta.xml.bind.annotation.XmlElement;
 import java.util.ArrayList;
 
 @Data
@@ -18,5 +18,6 @@ import java.util.ArrayList;
 public class ActivityGroupDTO {
 
     @XmlElement(name = "Day")
-    private ArrayList<DayDTO> days;
+    @Builder.Default
+    private ArrayList<DayDTO> days = new ArrayList<>();
 }
