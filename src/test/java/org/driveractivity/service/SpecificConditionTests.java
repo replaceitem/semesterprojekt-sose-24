@@ -554,6 +554,7 @@ public class SpecificConditionTests {
     @AfterEach
     public void cleanUp() {
         DriverService.getInstance().clear();
+        DriverService.getInstance().setRulesEnabled(true);
     }
 
 }
