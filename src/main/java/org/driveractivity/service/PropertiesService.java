@@ -6,19 +6,20 @@ import org.driveractivity.gui.ExceptionAlert;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.nio.file.*;
 import java.util.Properties;
 
 public class PropertiesService {
-
-    static File propertiesFile = new File(System.getProperty("user.home") + "/DriverActivityVisualization/app.properties");
-    static File parentDir = new File(System.getProperty("user.home") + "/DriverActivityVisualization/");
+    static Path parentPath = Path.of(System.getProperty("user.home")).resolve("DriverActivityVisualization");
+    static File propertiesFile = parentPath.resolve("app.properties").toFile();
+    static File tempFile = parentPath.resolve("tmpFile.xml").toFile();
+    
     public static Properties appProperties = new Properties();
 
     public static void loadProperties() {
         try{
-            if(parentDir != null && !parentDir.exists()){
-                parentDir.mkdirs();
-            }
+            parentPath.toFile().mkdirs();
+            
             if(propertiesFile.exists()){
                 try{
                     appProperties.load(new FileInputStream(propertiesFile));
@@ -58,10 +59,10 @@ public class PropertiesService {
     }
 
     public static void loadTmpFile(){
-        if(new File(appProperties.getProperty("saveFilePath") + "/tmpFile.xml").exists()){
+        if(tempFile.exists()){
             try{
                 DriverInterface driverInterface = DriverService.getInstance();
-                driverInterface.importFrom(new File(appProperties.getProperty("saveFilePath") + "/tmpFile.xml"));
+                driverInterface.importFrom(tempFile);
             }catch(Exception e){
                 e.printStackTrace();
             }
@@ -71,7 +72,7 @@ public class PropertiesService {
     public static void saveTmpFile(){
         DriverInterface driverInterface = DriverService.getInstance();
         try {
-            driverInterface.exportToXML(new File(appProperties.getProperty("saveFilePath") + "/tmpFile.xml"));
+            driverInterface.exportToXML(tempFile);
         } catch (FileExportException e) {
             new ExceptionAlert(e).showAndWait();
         }
