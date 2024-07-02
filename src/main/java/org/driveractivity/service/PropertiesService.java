@@ -14,7 +14,7 @@ public class PropertiesService {
     static File propertiesFile = parentPath.resolve("app.properties").toFile();
     static File tempFile = parentPath.resolve("tmpFile.xml").toFile();
     
-    public static Properties appProperties = new Properties();
+    private static Properties appProperties = new Properties();
 
     public static void loadProperties() {
         try{
@@ -50,6 +50,13 @@ public class PropertiesService {
     }
     public static void saveProperty(String key, boolean value) {
         appProperties.setProperty(key, String.valueOf(value));
+    }
+    
+    public static String getProperty(String key) {
+        return appProperties.getProperty(key);
+    }
+    public static boolean getBooleanProperty(String key) {
+        return Boolean.parseBoolean(appProperties.getProperty(key, "false"));
     }
 
     public static void saveProperties(){

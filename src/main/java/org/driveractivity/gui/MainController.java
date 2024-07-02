@@ -63,11 +63,11 @@ public class MainController implements Initializable {
         activityPane.getRenderCardStatusProperty().bind(cardToggle.selectedProperty());
         activityPane.getRenderSpecificConditionsProperty().bind(conditionToggle.selectedProperty());
 
-        applyRulesToggle.setSelected(Boolean.parseBoolean(PropertiesService.appProperties.getProperty("applyRules")));
-        dayToggle.setSelected(Boolean.parseBoolean(PropertiesService.appProperties.getProperty("renderDayDividers")));
-        weekToggle.setSelected(Boolean.parseBoolean(PropertiesService.appProperties.getProperty("renderWeekDividers")));
-        cardToggle.setSelected(Boolean.parseBoolean(PropertiesService.appProperties.getProperty("renderCardStatus")));
-        conditionToggle.setSelected(Boolean.parseBoolean(PropertiesService.appProperties.getProperty("renderSpecificConditions")));
+        applyRulesToggle.setSelected(PropertiesService.getBooleanProperty("applyRules"));
+        dayToggle.setSelected(PropertiesService.getBooleanProperty("renderDayDividers"));
+        weekToggle.setSelected(PropertiesService.getBooleanProperty("renderWeekDividers"));
+        cardToggle.setSelected(PropertiesService.getBooleanProperty("renderCardStatus"));
+        conditionToggle.setSelected(PropertiesService.getBooleanProperty("renderSpecificConditions"));
     }
 
     @FXML
@@ -116,7 +116,7 @@ public class MainController implements Initializable {
         fileChooser.setTitle("Open XML-File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Files", "*.*"));
-        fileChooser.setInitialDirectory(new File(PropertiesService.appProperties.getProperty("openFilePath")));
+        fileChooser.setInitialDirectory(new File(PropertiesService.getProperty("openFilePath")));
 
         File file = fileChooser.showOpenDialog(stage);
 
@@ -138,7 +138,7 @@ public class MainController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save XML-File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
-        fileChooser.setInitialDirectory(new File(PropertiesService.appProperties.getProperty("saveFilePath")));
+        fileChooser.setInitialDirectory(new File(PropertiesService.getProperty("saveFilePath")));
 
         File file = fileChooser.showSaveDialog(stage);
 
