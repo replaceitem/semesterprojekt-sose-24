@@ -31,14 +31,14 @@ public class PropertiesService {
                     System.out.println("Failed to load app properties");
                 }
             }else{
-                appProperties.setProperty("openFilePath", System.getProperty("user.home"));
-                appProperties.setProperty("saveFilePath", System.getProperty("user.home"));
+                saveProperty("openFilePath", System.getProperty("user.home"));
+                saveProperty("saveFilePath", System.getProperty("user.home"));
 
-                appProperties.setProperty("renderSpecificConditions", "true");
-                appProperties.setProperty("renderCardStatus", "true");
-                appProperties.setProperty("renderWeekDividers", "true");
-                appProperties.setProperty("renderDayDividers", "true");
-                appProperties.setProperty("applyRules", "true");
+                saveProperty("renderSpecificConditions", true);
+                saveProperty("renderCardStatus", true);
+                saveProperty("renderWeekDividers", true);
+                saveProperty("renderDayDividers", true);
+                saveProperty("applyRules", true);
             }
         }catch (Exception e){
             e.printStackTrace();
@@ -47,6 +47,9 @@ public class PropertiesService {
 
     public static void saveProperty(String key, String value) {
         appProperties.setProperty(key, value);
+    }
+    public static void saveProperty(String key, boolean value) {
+        appProperties.setProperty(key, String.valueOf(value));
     }
 
     public static void saveProperties(){

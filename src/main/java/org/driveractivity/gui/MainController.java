@@ -1,27 +1,18 @@
 package org.driveractivity.gui;
 
-import javafx.event.ActionEvent;
-import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
-import javafx.fxml.Initializable;
+import javafx.event.*;
+import javafx.fxml.*;
 import javafx.scene.*;
 import javafx.scene.control.*;
 import javafx.scene.layout.*;
-import javafx.stage.FileChooser;
-import javafx.stage.Modality;
-import javafx.stage.Stage;
-import javafx.stage.StageStyle;
-import lombok.Setter;
+import javafx.stage.*;
+import lombok.*;
 import org.driveractivity.entity.*;
 import org.driveractivity.exception.*;
-import org.driveractivity.service.DriverInterface;
-import org.driveractivity.service.DriverService;
-import org.driveractivity.service.PropertiesService;
+import org.driveractivity.service.*;
 
-import java.io.File;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.net.URL;
+import java.io.*;
+import java.net.*;
 import java.time.*;
 import java.util.*;
 
@@ -182,31 +173,31 @@ public class MainController implements Initializable {
     @FXML
     public void toggleRules(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-        PropertiesService.saveProperty("applyRules", String.valueOf(toggleButton.isSelected()));
+        PropertiesService.saveProperty("applyRules", toggleButton.isSelected());
     }
 
     @FXML
     private void toggleDayDivider(ActionEvent event){
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-        PropertiesService.saveProperty("renderDayDividers", String.valueOf(toggleButton.isSelected()));
+        PropertiesService.saveProperty("renderDayDividers", toggleButton.isSelected());
     }
 
     @FXML
     public void toggleWeekDivider(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-        PropertiesService.saveProperty("renderWeekDividers", String.valueOf(toggleButton.isSelected()));
+        PropertiesService.saveProperty("renderWeekDividers", toggleButton.isSelected());
     }
 
     @FXML
     public void toggleCardStatus(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-        PropertiesService.saveProperty("renderCardStatus", String.valueOf(toggleButton.isSelected()));
+        PropertiesService.saveProperty("renderCardStatus", toggleButton.isSelected());
     }
 
     @FXML
     public void toggleSpecificConditions(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-        PropertiesService.saveProperty("renderSpecificConditions", String.valueOf(toggleButton.isSelected()));
+        PropertiesService.saveProperty("renderSpecificConditions", toggleButton.isSelected());
     }
 
     public void onMoveForward() {
