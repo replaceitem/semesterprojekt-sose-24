@@ -16,6 +16,7 @@ import org.driveractivity.entity.*;
 import org.driveractivity.exception.*;
 import org.driveractivity.service.DriverInterface;
 import org.driveractivity.service.DriverService;
+import org.driveractivity.service.PropertiesService;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -71,11 +72,11 @@ public class MainController implements Initializable {
         activityPane.getRenderCardStatusProperty().bind(cardToggle.selectedProperty());
         activityPane.getRenderSpecificConditionsProperty().bind(conditionToggle.selectedProperty());
 
-        applyRulesToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("applyRules")));
-        dayToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderDayDividers")));
-        weekToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderWeekDividers")));
-        cardToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderCardStatus")));
-        conditionToggle.setSelected(Boolean.parseBoolean(MainApplication.appProperties.getProperty("renderSpecificConditions")));
+        applyRulesToggle.setSelected(Boolean.parseBoolean(PropertiesService.appProperties.getProperty("applyRules")));
+        dayToggle.setSelected(Boolean.parseBoolean(PropertiesService.appProperties.getProperty("renderDayDividers")));
+        weekToggle.setSelected(Boolean.parseBoolean(PropertiesService.appProperties.getProperty("renderWeekDividers")));
+        cardToggle.setSelected(Boolean.parseBoolean(PropertiesService.appProperties.getProperty("renderCardStatus")));
+        conditionToggle.setSelected(Boolean.parseBoolean(PropertiesService.appProperties.getProperty("renderSpecificConditions")));
     }
 
     @FXML
@@ -124,17 +125,12 @@ public class MainController implements Initializable {
         fileChooser.setTitle("Open XML-File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("All Files", "*.*"));
-        fileChooser.setInitialDirectory(new File(MainApplication.appProperties.getProperty("openFilePath")));
+        fileChooser.setInitialDirectory(new File(PropertiesService.appProperties.getProperty("openFilePath")));
 
         File file = fileChooser.showOpenDialog(stage);
 
         if (file != null) {
-            try{
-                MainApplication.appProperties.setProperty("openFilePath", file.getParentFile().getAbsolutePath());
-                MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New OpenFile Path");
-            }catch (IOException e){
-                e.printStackTrace();
-            }
+            PropertiesService.saveProperty("openFilePath", file.getParentFile().getAbsolutePath());
 
             try {
                 driverInterface.importFrom(file);
@@ -151,17 +147,12 @@ public class MainController implements Initializable {
         FileChooser fileChooser = new FileChooser();
         fileChooser.setTitle("Save XML-File");
         fileChooser.getExtensionFilters().add(new FileChooser.ExtensionFilter("XML Files", "*.xml"));
-        fileChooser.setInitialDirectory(new File(MainApplication.appProperties.getProperty("saveFilePath")));
+        fileChooser.setInitialDirectory(new File(PropertiesService.appProperties.getProperty("saveFilePath")));
 
         File file = fileChooser.showSaveDialog(stage);
 
         if (file != null) {
-            try {
-                MainApplication.appProperties.setProperty("saveFilePath", file.getParentFile().getAbsolutePath());
-                MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New SaveFile Path");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            PropertiesService.saveProperty("saveFilePath", file.getParentFile().getAbsolutePath());
 
             try {
                 driverInterface.exportToXML(file);
@@ -191,61 +182,31 @@ public class MainController implements Initializable {
     @FXML
     public void toggleRules(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-
-        try{
-            MainApplication.appProperties.setProperty("applyRules", String.valueOf(toggleButton.isSelected()));
-            MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New SaveFile Path");
-        }catch(IOException e){
-            e.printStackTrace();
-        }
+        PropertiesService.saveProperty("applyRules", String.valueOf(toggleButton.isSelected()));
     }
 
     @FXML
     private void toggleDayDivider(ActionEvent event){
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-
-        try{
-            MainApplication.appProperties.setProperty("renderDayDividers", String.valueOf(toggleButton.isSelected()));
-            MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New SaveFile Path");
-        }catch(IOException e){
-            e.printStackTrace();
-        }
+        PropertiesService.saveProperty("renderDayDividers", String.valueOf(toggleButton.isSelected()));
     }
 
     @FXML
     public void toggleWeekDivider(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-
-        try{
-            MainApplication.appProperties.setProperty("renderWeekDividers", String.valueOf(toggleButton.isSelected()));
-            MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New SaveFile Path");
-        }catch(IOException e){
-            e.printStackTrace();
-        }
+        PropertiesService.saveProperty("renderWeekDividers", String.valueOf(toggleButton.isSelected()));
     }
 
     @FXML
     public void toggleCardStatus(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-
-        try{
-            MainApplication.appProperties.setProperty("renderCardStatus", String.valueOf(toggleButton.isSelected()));
-            MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New SaveFile Path");
-        }catch(IOException e){
-            e.printStackTrace();
-        }
+        PropertiesService.saveProperty("renderCardStatus", String.valueOf(toggleButton.isSelected()));
     }
 
     @FXML
     public void toggleSpecificConditions(ActionEvent event) {
         ToggleButton toggleButton = (ToggleButton) event.getSource();
-
-        try{
-            MainApplication.appProperties.setProperty("renderSpecificConditions", String.valueOf(toggleButton.isSelected()));
-            MainApplication.appProperties.store(new FileOutputStream(System.getProperty("user.home") + "/DriverTestApp/app.properties"), "New SaveFile Path");
-        }catch(IOException e){
-            e.printStackTrace();
-        }
+        PropertiesService.saveProperty("renderSpecificConditions", String.valueOf(toggleButton.isSelected()));
     }
 
     public void onMoveForward() {
