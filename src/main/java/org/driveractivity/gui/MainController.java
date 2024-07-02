@@ -63,6 +63,7 @@ public class MainController implements Initializable {
         activityPane.setMainController(this);
         driverInterface = DriverService.getInstance();
         activityPane.initialize(driverInterface);
+        loadSpecificConditions();
         
         applyRulesToggle.selectedProperty().subscribe(aBoolean -> driverInterface.setRulesEnabled(aBoolean));
         activityPane.getRenderDayDividersProperty().bind(dayToggle.selectedProperty());
