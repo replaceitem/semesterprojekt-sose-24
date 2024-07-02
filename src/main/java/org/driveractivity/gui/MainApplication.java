@@ -3,16 +3,9 @@ package org.driveractivity.gui;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.stage.Stage;
-import org.driveractivity.exception.*;
-import org.driveractivity.service.DriverInterface;
-import org.driveractivity.service.DriverService;
 import org.driveractivity.service.PropertiesService;
 
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Properties;
 
 public class MainApplication extends javafx.application.Application {
 
