@@ -1,6 +1,9 @@
+.sidebar {
+    -fx-pref-width: 160px;
+}
+
 .activity-button {
     -fx-background-radius: 8px;
-    -fx-pref-width: 150px;
     -fx-padding: 10px;
 }
 
@@ -60,7 +63,7 @@ OnOffToggleButton ToggleButton:selected {
 }
 
 .move-button {
-    -fx-max-width: 100px;
+    -fx-max-width: Infinity;
     -fx-pref-height: 50px;
 }
 

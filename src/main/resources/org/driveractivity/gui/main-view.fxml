@@ -34,16 +34,16 @@
 <left>
     <HBox spacing="10">
         <Pane/> <!-- Empty space -->
-        <VBox spacing="10">
+        <VBox spacing="10" styleClass="sidebar">
             <Pane/> <!-- Empty space -->
             <Text styleClass="sidebar-section-heading">
                 Create activity
             </Text>
             <VBox spacing="10">
-                <Button fx:id="restButton" text="Rest" styleClass="activity-button, activity-rest" onAction="#addActivity"/>
-                <Button fx:id="driveButton" text="Drive" styleClass="activity-button, activity-drive" onAction="#addActivity"/>
-                <Button fx:id="workButton" text="Work" styleClass="activity-button, activity-work" onAction="#addActivity"/>
-                <Button fx:id="availableButton" text="Available" styleClass="activity-button, activity-available" onAction="#addActivity"/>
+                <Button fx:id="restButton" text="Rest" maxWidth="Infinity" styleClass="activity-button, activity-rest" onAction="#addActivity"/>
+                <Button fx:id="driveButton" text="Drive" maxWidth="Infinity" styleClass="activity-button, activity-drive" onAction="#addActivity"/>
+                <Button fx:id="workButton" text="Work" maxWidth="Infinity" styleClass="activity-button, activity-work" onAction="#addActivity"/>
+                <Button fx:id="availableButton" text="Available" maxWidth="Infinity" styleClass="activity-button, activity-available" onAction="#addActivity"/>
             </VBox>
             <Separator/>
             <Text styleClass="sidebar-section-heading">
