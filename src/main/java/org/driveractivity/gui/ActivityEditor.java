@@ -76,6 +76,7 @@ public class ActivityEditor {
         this.activityIndex = insertionIndex;
         this.inserting = editActivity == null;
         
+        processButton.setText(inserting ? "Create Activity" : "Update Activity");
         activityTypeChoiceBox.getItems().addAll(ActivityType.values());
         DriverInterface driverInterface = mainController.driverInterface;
         List<Activity> blocks = driverInterface.getBlocks();
